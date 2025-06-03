@@ -1,46 +1,539 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search> 
-  
-  
-    
-    <entry>
-      <title>JVM 基础 1 - JVM介绍</title>
-      <link href="/2025/05/29/JVM%20%E5%9F%BA%E7%A1%80%201%20-%20JVM%E4%BB%8B%E7%BB%8D/"/>
-      <url>/2025/05/29/JVM%20%E5%9F%BA%E7%A1%80%201%20-%20JVM%E4%BB%8B%E7%BB%8D/</url>
-      
-        <content type="html"><![CDATA[<h1 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h1><h2 id="什么是JVM"><a href="#什么是JVM" class="headerlink" title="什么是JVM"></a>什么是JVM</h2><p>JVM 全称是 Java Virtual Machine，中文译名 Java虚拟机，是 Java 生态的核心，它负责执行字节码，提供内存管理、垃圾回收、线程管理等功能，使 Java 程序能够实现 “一次编写，到处运行” 的跨平台特性。</p>]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>JVM 基础 - Java 类加载机制</title>
-      <link href="/2025/05/16/JVM%20%E5%9F%BA%E7%A1%80%20-%20Java%20%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/"/>
-      <url>/2025/05/16/JVM%20%E5%9F%BA%E7%A1%80%20-%20Java%20%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/</url>
-      
-        <content type="html"><![CDATA[<h1 id="Java-类加载机制"><a href="#Java-类加载机制" class="headerlink" title="Java 类加载机制"></a>Java 类加载机制</h1><h2 id="类的生命周期"><a href="#类的生命周期" class="headerlink" title="类的生命周期"></a>类的生命周期</h2><p>类从被加载到虚拟机内存中开始到卸载出内存为止，它的整个生命周期可以简单概括为 7 个阶段：加载、验证、准备、解析、初始化、使用和卸载。其中，验证、准备和解析这三个阶段可以统称为链接。</p><p>![e4d69576-bfa3-4124-8bce-e122ab2921ed](JVM 基础 - Java 类加载机制.assets&#x2F;e4d69576-bfa3-4124-8bce-e122ab2921ed.png)</p><h3 id="加载（Loading）"><a href="#加载（Loading）" class="headerlink" title="加载（Loading）"></a>加载（Loading）</h3><ol><li><p>类加载器根据类的全限定名通过不同的渠道以二进制流的方式获取字节码信息，程序员可以使用Java代码拓展的不同的渠道。</p><ul><li>从本地磁盘上获取文件</li><li>运行时通过动态代理生成，比如Spring框架</li><li>Applet技术通过网络获取字节码文件</li></ul></li><li><p>类加载器在加载完类之后，Java虚拟机会将字节码中的信息保存到方法区中，方法区中生成一个InstanceKlass对象，保存类的所有信息，里边还包含实现特定功能比如多态的信息。</p><p> ![image](JVM 基础 - Java 类加载机制.assets&#x2F;image.png)</p></li><li><p>Java虚拟机同时会在堆上生成与方法区中数据类似的java.lang.Class对象，作用是在Java代码中去获取类的信息以及存储静态字段的数据（JDK8及之后）。</p><p> ![4c9d80c9-9bb3-4177-9d05-aa1f405f2e14](JVM 基础 - Java 类加载机制.assets&#x2F;4c9d80c9-9bb3-4177-9d05-aa1f405f2e14.png)</p></li></ol><h3 id="链接（Linking）"><a href="#链接（Linking）" class="headerlink" title="链接（Linking）"></a>链接（Linking）</h3><p>链接阶段将加载的类准备好以供JVM使用，分为以下三个子阶段：</p><h4 id="验证（Verification）"><a href="#验证（Verification）" class="headerlink" title="验证（Verification）"></a>验证（Verification）</h4><p>此阶段会对字节码进行校验，确保其符合 Java 虚拟机规范，不会危害虚拟机的安全。验证过程包括：</p><ul><li>文件格式验证：检查类文件的魔数（是否以0xCAFEBABE开头）、版本等基本结构。</li><li>元数据验证：检查类的内部结构，如字段、方法的描述符。</li><li>字节码验证：通过数据流和控制流分析，确定程序语义是合法的、符合逻辑的。</li><li>符号引用验证: 确保解析动作能正确执行。</li></ul><h4 id="准备（Preparation）"><a href="#准备（Preparation）" class="headerlink" title="准备（Preparation）"></a>准备（Preparation）</h4><p>准备阶段主要为类的静态变量分配内存，并设置其初始值（默认值）。注意一下几点：</p><ul><li>static 变量分配空间和赋值是两个步骤，<strong>分配空间</strong>在<strong>准备</strong>阶段完成，<strong>赋值</strong>在<strong>初始化</strong>阶段完成。</li><li>这里所设置的初始值通常情况下是数据类型默认的零值(如0、0L、null、false等)。</li><li>如果 static 变量是 ﬁnal 的基本类型，以及字符串常量，那么编译阶段值就确定了，<strong>赋值</strong>在<strong>准备</strong>阶段完成</li><li>如果 static 变量是 ﬁnal 的，但属于引用类型，那么<strong>赋值</strong>也会在<strong>初始化</strong>阶段完成</li></ul><h4 id="解析（Resolution）"><a href="#解析（Resolution）" class="headerlink" title="解析（Resolution）"></a>解析（Resolution）</h4><p>解析阶段是虚拟机将常量池内的符号引用替换为直接引用的过程。</p><h3 id="初始化-Initialization"><a href="#初始化-Initialization" class="headerlink" title="初始化(Initialization)"></a>初始化(Initialization)</h3><p>初始化阶段是类加载过程的最后一步，主要任务是执行类构造器<c1init>()方法，该方法由编译器自动生成，用于初始化类的静态变量和执行静态块。初始化阶段包括：</p><ul><li>执行静态变量的初始化赋值。</li><li>执行静态代码块。</li></ul><p><strong>类的初始化的懒惰的</strong></p><ol><li><p>以下情况会初始化</p><ul><li>main 方法所在的类，总会被首先初始化</li><li>首次访问这个类的静态变量或静态方法时</li><li>子类初始化，如果父类还没初始化，会引发</li><li>子类访问父类的静态变量，只会触发父类的初始化</li><li>反射(如Class.forName)</li><li>创建类的实例，也就是new的方式</li></ul></li><li><p>以下情况不会初始化</p><ul><li>访问类的 static ﬁnal 静态常量（基本类型和字符串）</li><li>类对象.class 不会触发初始化</li><li>创建该类对象的数组</li><li>类加载器的.loadClass方法</li><li>Class.forNamed的参数2为false时</li></ul></li></ol><blockquote><p>对上述准则的验证（注释下逐个验证）</p></blockquote><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Load2</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 不能初始化，final在准备阶段就已经赋值了</span></span><br><span class="line">        System.out.println(E.a);</span><br><span class="line">        <span class="comment">// 不能初始化，final在准备阶段就已经赋值了</span></span><br><span class="line">        System.out.println(E.b);</span><br><span class="line">        <span class="comment">// 会导致 E 类初始化，因为 Integer 是包装类</span></span><br><span class="line">        System.out.println(E.c);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">E</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">a</span> <span class="operator">=</span> <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">b</span> <span class="operator">=</span> <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Integer</span> <span class="variable">c</span> <span class="operator">=</span> <span class="number">20</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;E cinit&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Load3</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="comment">//在main类前面的静态代码块会优先初始化</span></span><br><span class="line">        System.out.println(<span class="string">&quot;main init&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">        <span class="comment">// 1. 静态常量（基本类型和字符串）不会触发初始化</span></span><br><span class="line">        System.out.println(B.b);</span><br><span class="line">        <span class="comment">// 2. 类对象.class 不会触发初始化</span></span><br><span class="line">        System.out.println(B.class);</span><br><span class="line">        <span class="comment">// 3. 创建该类的数组不会触发初始化</span></span><br><span class="line">        System.out.println(<span class="keyword">new</span> <span class="title class_">B</span>[<span class="number">0</span>]);</span><br><span class="line">        <span class="comment">// 4. 不会初始化类 B，但会加载 B、A</span></span><br><span class="line">        <span class="type">ClassLoader</span> <span class="variable">cl</span> <span class="operator">=</span> Thread.currentThread().getContextClassLoader();</span><br><span class="line">        cl.loadClass(<span class="string">&quot;cn.itcast.jvm.t3.B&quot;</span>);</span><br><span class="line">        <span class="comment">// 5. 不会初始化类 B，但会加载 B、A</span></span><br><span class="line">        <span class="type">ClassLoader</span> <span class="variable">c2</span> <span class="operator">=</span> Thread.currentThread().getContextClassLoader();</span><br><span class="line">        Class.forName(<span class="string">&quot;cn.itcast.jvm.t3.B&quot;</span>, <span class="literal">false</span>, c2);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 1. 首次访问这个类的静态变量或静态方法时</span></span><br><span class="line">        System.out.println(A.a);</span><br><span class="line">        <span class="comment">// 2. 子类初始化，如果父类还没初始化，会引发父类的初始化</span></span><br><span class="line">        System.out.println(B.c);</span><br><span class="line">        <span class="comment">// 3. 子类访问父类静态变量，只触发父类初始化</span></span><br><span class="line">        System.out.println(B.a);</span><br><span class="line">        <span class="comment">// 4. 会初始化类 B，并先初始化类 A</span></span><br><span class="line">        Class.forName(<span class="string">&quot;cn.itcast.jvm.t3.B&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="type">int</span> <span class="variable">a</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;a init&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> <span class="keyword">extends</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">static</span> <span class="type">double</span> <span class="variable">b</span> <span class="operator">=</span> <span class="number">5.0</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="type">boolean</span> <span class="variable">c</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;b init&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>类访问方法区内的数据结构的接口， 对象是Heap区的数据。</p><h3 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h3><p>Java虚拟机将结束生命周期的几种情况：</p><ul><li>执行了<code>System.exit()</code>方法</li><li>程序正常执行结束</li><li>程序在执行过程中遇到了异常或错误而异常终止</li><li>由于操作系统出现错误而导致Java虚拟机进程终止</li></ul><h2 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h2><p>类加载器从 JDK 1.0 就出现了，最初只是为了满足 Java Applet（已经被淘汰） 的需要。后来，慢慢成为 Java 程序中的一个重要组成部分，赋予了 Java 类可以被动态加载到 JVM 中并执行的能力。</p><p>根据官方 API 文档的介绍:</p><ul><li>类加载器是一个负责加载类的对象，用于实现类加载过程中的加载这一步。</li><li>每个 Java 类都有一个引用指向加载它的 <code>ClassLoader</code>。</li><li>数组类不是通过 <code>ClassLoader</code> 创建的（数组类没有对应的二进制字节流），是由 JVM 直接生成的。</li></ul><p>简单来说，类加载器的主要作用就是动态加载 Java 类的字节码（ .class 文件）到 JVM 中（在内存中生成一个代表该类的 <code>Class</code> 对象）。</p><p><strong>加载规则</strong></p><ol><li>动态加载机制<ul><li>按需加载：Java 类在首次使用时才会被加载（如通过new实例化、调用静态方法 &#x2F; 字段等）。</li><li>运行时加载：类加载过程在程序运行期间完成，而非编译时。</li></ul></li><li>类的唯一性<ul><li>类的唯一性由 类加载器 + 类的全限定名（如java.lang.String） 共同确定。不同类加载器加载的同名类被视为不同的类。</li></ul></li></ol><h3 id="类加载器类型"><a href="#类加载器类型" class="headerlink" title="类加载器类型"></a>类加载器类型</h3><table><thead><tr><th align="center"><strong>名称</strong></th><th><strong>加载的类</strong></th><th><strong>说明</strong></th></tr></thead><tbody><tr><td align="center">Bootstrap ClassLoader（启动类加载器）</td><td>%JAVA_HOME%&#x2F;lib目录下的 rt.jar、resources.jar、charsets.jar等 jar 包和类</td><td>由 JVM 底层（C++）实现，Java 代码中无法直接引用。</td></tr><tr><td align="center">Extension ClassLoader(拓展类加载器)</td><td>JAVA_HOME&#x2F;jre&#x2F;lib&#x2F;ext</td><td>由<code>sun.misc.Launcher$ExtClassLoader</code>实现。</td></tr><tr><td align="center">Application ClassLoader(应用程序类加载器)</td><td>当前应用 classpath 下的所有 jar 包和类</td><td>由<code>sun.misc.Launcher$AppClassLoader</code>实现，是<code>ClassLoader</code>类的默认加载器。</td></tr><tr><td align="center">自定义类加载器</td><td>自定义</td><td>继承<code>java.lang.ClassLoader</code>并重写关键方法（如<code>findClass()</code>）。</td></tr></tbody></table><h4 id="寻找类加载器"><a href="#寻找类加载器" class="headerlink" title="寻找类加载器"></a>寻找类加载器</h4><p>每个 <code>ClassLoader</code> 可以通过<code>getParent()</code>获取其父 <code>ClassLoader</code>，如果获取到 <code>ClassLoader</code> 为null的话，那么该类是通过 <code>BootstrapClassLoader</code> 加载的。</p><p>寻找类加载器例子如下:</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ClassLoaderTest</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">ClassLoader</span> <span class="variable">loader</span> <span class="operator">=</span> Thread.currentThread().getContextClassLoader();</span><br><span class="line">        System.out.println(loader);</span><br><span class="line">        System.out.println(loader.getParent());</span><br><span class="line">        System.out.println(loader.getParent().getParent());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;   </span><br></pre></td></tr></table></figure><p>结果如下:</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sun.misc.Launcher$AppClassLoader@18b4aac2</span><br><span class="line">sun.misc.Launcher$ExtClassLoader@1b6d3586</span><br><span class="line"><span class="literal">null</span></span><br></pre></td></tr></table></figure><p>从上面的结果可以看出，并没有获取到<code>ExtClassLoader</code>的父Loader，原因是<code>BootstrapLoader</code>(引导类加载器)是由 C++ 实现，由于这个 C++ 实现的类加载器在 Java 中是没有与之对应的类的，所以拿到的结果是 null。</p><h3 id="双亲委派模型"><a href="#双亲委派模型" class="headerlink" title="双亲委派模型"></a><strong>双亲委派模型</strong></h3><p>Java采用了双亲委派模型来组织类加载器的层次结构。具体来说，当一个类加载器接收到类加载请求时，它会首先将请求委派给父类加载器处理，只有在父类加载器无法完成加载时，子类加载器才会尝试自己加载。这种机制确保了Java核心类库的安全性和一致性，避免了类的重复加载和命名冲突。</p><h4 id="双亲委派机制过程"><a href="#双亲委派机制过程" class="headerlink" title="双亲委派机制过程"></a>双亲委派机制过程</h4><blockquote><ol><li>当AppClassLoader加载一个class时，它首先不会自己去尝试加载这个类，而是把类加载请求委派给父类加载器ExtClassLoader去完成。 </li><li>当ExtClassLoader加载一个class时，它首先也不会自己去尝试加载这个类，而是把类加载请求委派给BootStrapClassLoader去完成。</li><li>如果BootStrapClassLoader加载失败(例如在$JAVA_HOME&#x2F;jre&#x2F;lib里未查找到该class)，会使用ExtClassLoader来尝试加载。</li><li>若ExtClassLoader也加载失败，则会使用AppClassLoader来加载，如果AppClassLoader也加载失败，则会报出异常ClassNotFoundException。</li></ol></blockquote><h4 id="loadClass源码解析："><a href="#loadClass源码解析：" class="headerlink" title="loadClass源码解析："></a>loadClass源码解析：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; loadClass(String name, <span class="type">boolean</span> resolve)</span><br><span class="line">        <span class="keyword">throws</span> ClassNotFoundException</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</span><br><span class="line">            <span class="comment">// First, check if the class has already been loaded</span></span><br><span class="line">            <span class="comment">//首先，检查类是否已经加载</span></span><br><span class="line">            Class&lt;?&gt; c = findLoadedClass(name);</span><br><span class="line">            <span class="keyword">if</span> (c == <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="comment">//说明该类没有被加载过</span></span><br><span class="line">                <span class="type">long</span> <span class="variable">t0</span> <span class="operator">=</span> System.nanoTime();</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="comment">//判断父类是否为空</span></span><br><span class="line">                    <span class="keyword">if</span> (parent != <span class="literal">null</span>) &#123;</span><br><span class="line">                        <span class="comment">//当父类的加载器不为空，则通过父类的loadClass来加载该类</span></span><br><span class="line">                        c = parent.loadClass(name, <span class="literal">false</span>);</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="comment">//当父类的加载器为空，则调用启动类加载器来加载该类</span></span><br><span class="line">                        c = findBootstrapClassOrNull(name);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">                    <span class="comment">// ClassNotFoundException thrown if class not found</span></span><br><span class="line">                    <span class="comment">// from the non-null parent class loader</span></span><br><span class="line">                    <span class="comment">// 捕获异常但不处理，表示父类加载失败</span></span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (c == <span class="literal">null</span>) &#123;</span><br><span class="line">                    <span class="type">long</span> <span class="variable">t1</span> <span class="operator">=</span> System.nanoTime();</span><br><span class="line">                    <span class="comment">//如果仍未找到，则调用 findClass 以查找该类。</span></span><br><span class="line">                     <span class="comment">//用户可通过覆写该方法，来自定义类加载器</span></span><br><span class="line">                    c = findClass(name);</span><br><span class="line"></span><br><span class="line">                    <span class="comment">// this is the defining class loader; record the stats</span></span><br><span class="line">                    sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);</span><br><span class="line">                    sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</span><br><span class="line">                    sun.misc.PerfCounter.getFindClasses().increment();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (resolve) &#123;</span><br><span class="line">                resolveClass(c);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> c;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure><h4 id="自定义类加载器"><a href="#自定义类加载器" class="headerlink" title="自定义类加载器"></a>自定义类加载器</h4><h5 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h5><ul><li>想加载非 classpath 随意路径中的类文件</li><li>通过接口来使用实现，希望解耦时，常用在框架设计</li><li>这些类希望予以隔离，不同应用的同名类都可以加载，不冲突，常见于 tomcat 容器</li></ul><h5 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h5><ul><li>继承ClassLoader父类</li><li>要遵从双亲委派机制，重写 ﬁndClass 方法</li><li>不是重写loadClass方法，否则不会走双亲委派机制</li><li>读取类文件的字节码</li><li>调用父类的 deﬁneClass 方法来加载类</li><li>使用者调用该类加载器的 loadClass 方法</li></ul><blockquote><p>ClassLoader 类有两个关键的方法：</p><ul><li>protected Class loadClass(String name, boolean resolve)：加载指定二进制名称的类，实现了双亲委派机制 。name 为类的二进制名称，resolve 如果为 true，在加载时调用 resolveClass(Class&lt;?&gt; c) 方法解析该类。</li><li>protected Class findClass(String name)：根据类的二进制名称来查找类，默认实现是空方法。</li></ul></blockquote>]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Hello World</title>
-      <link href="/2024/04/03/hello-world/"/>
-      <url>/2024/04/03/hello-world/</url>
-      
-        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p><blockquote><h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ol><li>备份重要数据</li><li>检查系统兼容性</li><li>准备回滚方案</li></ol><ul><li>测试环境验证</li><li>生产环境部署</li><li>监控系统状态</li></ul></blockquote>]]></content>
-      
-      
-      
-    </entry>
-    
-    
-  
-  
+<search>
+  <entry>
+    <title>JVM 基础 1 - JVM介绍</title>
+    <url>/2025/05/21/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%201%20-%20JVM%E4%BB%8B%E7%BB%8D/</url>
+    <content><![CDATA[JVM什么是JVMJVM 全称是 Java Virtual Machine，中文译名 Java虚拟机，是 Java 生态的核心，它负责执行字节码，提供内存管理、垃圾回收、线程管理等功能，使 Java 程序能够实现 “一次编写，到处运行” 的跨平台特性。
+JVM的三大核心功能是什么？JVM 包含内存管理、解释执行虚拟机指令、即时编译三大功能。
+常见的JVM虚拟机有哪些？
+JVM知识体系
+]]></content>
+      <categories>
+        <category>JAVA</category>
+        <category>JVM</category>
+      </categories>
+      <tags>
+        <tag>Java进阶</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JVM 基础 3 - Java 类加载机制</title>
+    <url>/2025/05/23/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%203%20-%20Java%20%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/</url>
+    <content><![CDATA[Java 类加载机制类的生命周期类从被加载到虚拟机内存中开始到卸载出内存为止，它的整个生命周期可以简单概括为 7 个阶段：加载、验证、准备、解析、初始化、使用和卸载。其中，验证、准备和解析这三个阶段可以统称为链接。
+
+加载（Loading）
+类加载器根据类的全限定名通过不同的渠道以二进制流的方式获取字节码信息，程序员可以使用Java代码拓展的不同的渠道。
+
+从本地磁盘上获取文件
+运行时通过动态代理生成，比如Spring框架
+Applet技术通过网络获取字节码文件
+
+
+类加载器在加载完类之后，Java虚拟机会将字节码中的信息保存到方法区中，方法区中生成一个InstanceKlass对象，保存类的所有信息，里边还包含实现特定功能比如多态的信息。
+ 
+
+Java虚拟机同时会在堆上生成与方法区中数据类似的java.lang.Class对象，作用是在Java代码中去获取类的信息以及存储静态字段的数据（JDK8及之后）。
+ 
+
+
+链接（Linking）链接阶段将加载的类准备好以供JVM使用，分为以下三个子阶段：
+验证（Verification）此阶段会对字节码进行校验，确保其符合 Java 虚拟机规范，不会危害虚拟机的安全。验证过程包括：
+
+文件格式验证：检查类文件的魔数（是否以0xCAFEBABE开头）、版本等基本结构。
+元数据验证：检查类的内部结构，如字段、方法的描述符。
+字节码验证：通过数据流和控制流分析，确定程序语义是合法的、符合逻辑的。
+符号引用验证: 确保解析动作能正确执行。
+
+准备（Preparation）准备阶段主要为类的静态变量分配内存，并设置其初始值（默认值）。注意一下几点：
+
+static 变量分配空间和赋值是两个步骤，分配空间在准备阶段完成，赋值在初始化阶段完成。
+这里所设置的初始值通常情况下是数据类型默认的零值(如0、0L、null、false等)。
+如果 static 变量是 ﬁnal 的基本类型，以及字符串常量，那么编译阶段值就确定了，赋值在准备阶段完成
+如果 static 变量是 ﬁnal 的，但属于引用类型，那么赋值也会在初始化阶段完成
+
+解析（Resolution）解析阶段是虚拟机将常量池内的符号引用替换为直接引用的过程。
+初始化(Initialization)初始化阶段是类加载过程的最后一步，主要任务是执行类构造器()方法，该方法由编译器自动生成，用于初始化类的静态变量和执行静态块。初始化阶段包括：
+
+执行静态变量的初始化赋值。
+执行静态代码块。
+
+类的初始化的懒惰的
+
+以下情况会初始化
+
+main 方法所在的类，总会被首先初始化
+首次访问这个类的静态变量或静态方法时
+子类初始化，如果父类还没初始化，会引发
+子类访问父类的静态变量，只会触发父类的初始化
+反射(如Class.forName)
+创建类的实例，也就是new的方式
+
+
+以下情况不会初始化
+
+访问类的 static ﬁnal 静态常量（基本类型和字符串）
+类对象.class 不会触发初始化
+创建该类对象的数组
+类加载器的.loadClass方法
+Class.forNamed的参数2为false时
+
+
+
+
+对上述准则的验证（注释下逐个验证）
+
+public class Load2 &#123;    public static void main(String[] args) &#123;        // 不能初始化，final在准备阶段就已经赋值了        System.out.println(E.a);        // 不能初始化，final在准备阶段就已经赋值了        System.out.println(E.b);        // 会导致 E 类初始化，因为 Integer 是包装类        System.out.println(E.c);    &#125;&#125;class E &#123;    public static final int a = 10;    public static final String b = &quot;hello&quot;;    public static final Integer c = 20;    static &#123;        System.out.println(&quot;E cinit&quot;);    &#125;&#125;
+
+public class Load3 &#123;    static &#123;        //在main类前面的静态代码块会优先初始化        System.out.println(&quot;main init&quot;);    &#125;    public static void main(String[] args) throws ClassNotFoundException &#123;        // 1. 静态常量（基本类型和字符串）不会触发初始化        System.out.println(B.b);        // 2. 类对象.class 不会触发初始化        System.out.println(B.class);        // 3. 创建该类的数组不会触发初始化        System.out.println(new B[0]);        // 4. 不会初始化类 B，但会加载 B、A        ClassLoader cl = Thread.currentThread().getContextClassLoader();        cl.loadClass(&quot;cn.itcast.jvm.t3.B&quot;);        // 5. 不会初始化类 B，但会加载 B、A        ClassLoader c2 = Thread.currentThread().getContextClassLoader();        Class.forName(&quot;cn.itcast.jvm.t3.B&quot;, false, c2);        // 1. 首次访问这个类的静态变量或静态方法时        System.out.println(A.a);        // 2. 子类初始化，如果父类还没初始化，会引发父类的初始化        System.out.println(B.c);        // 3. 子类访问父类静态变量，只触发父类初始化        System.out.println(B.a);        // 4. 会初始化类 B，并先初始化类 A        Class.forName(&quot;cn.itcast.jvm.t3.B&quot;);    &#125;&#125;class A &#123;    static int a = 0;    static &#123;        System.out.println(&quot;a init&quot;);    &#125;&#125;class B extends A &#123;    final static double b = 5.0;    static boolean c = false;    static &#123;        System.out.println(&quot;b init&quot;);    &#125;&#125;
+
+使用类访问方法区内的数据结构的接口， 对象是Heap区的数据。
+卸载Java虚拟机将结束生命周期的几种情况：
+
+执行了System.exit()方法
+程序正常执行结束
+程序在执行过程中遇到了异常或错误而异常终止
+由于操作系统出现错误而导致Java虚拟机进程终止
+
+类加载器类加载器从 JDK 1.0 就出现了，最初只是为了满足 Java Applet（已经被淘汰） 的需要。后来，慢慢成为 Java 程序中的一个重要组成部分，赋予了 Java 类可以被动态加载到 JVM 中并执行的能力。
+根据官方 API 文档的介绍:
+
+类加载器是一个负责加载类的对象，用于实现类加载过程中的加载这一步。
+每个 Java 类都有一个引用指向加载它的 ClassLoader。
+数组类不是通过 ClassLoader 创建的（数组类没有对应的二进制字节流），是由 JVM 直接生成的。
+
+简单来说，类加载器的主要作用就是动态加载 Java 类的字节码（ .class 文件）到 JVM 中（在内存中生成一个代表该类的 Class 对象）。
+加载规则
+
+动态加载机制
+按需加载：Java 类在首次使用时才会被加载（如通过new实例化、调用静态方法 &#x2F; 字段等）。
+运行时加载：类加载过程在程序运行期间完成，而非编译时。
+
+
+类的唯一性
+类的唯一性由 类加载器 + 类的全限定名（如java.lang.String） 共同确定。不同类加载器加载的同名类被视为不同的类。
+
+
+
+类加载器类型
+
+
+名称
+加载的类
+说明
+
+
+
+Bootstrap ClassLoader（启动类加载器）
+%JAVA_HOME%&#x2F;lib目录下的 rt.jar、resources.jar、charsets.jar等 jar 包和类
+由 JVM 底层（C++）实现，Java 代码中无法直接引用。
+
+
+Extension ClassLoader(拓展类加载器)
+JAVA_HOME&#x2F;jre&#x2F;lib&#x2F;ext
+由sun.misc.Launcher$ExtClassLoader实现。
+
+
+Application ClassLoader(应用程序类加载器)
+当前应用 classpath 下的所有 jar 包和类
+由sun.misc.Launcher$AppClassLoader实现，是ClassLoader类的默认加载器。
+
+
+自定义类加载器
+自定义
+继承java.lang.ClassLoader并重写关键方法（如findClass()）。
+
+
+寻找类加载器每个 ClassLoader 可以通过getParent()获取其父 ClassLoader，如果获取到 ClassLoader 为null的话，那么该类是通过 BootstrapClassLoader 加载的。
+寻找类加载器例子如下:
+ public class ClassLoaderTest &#123;    public static void main(String[] args) &#123;        ClassLoader loader = Thread.currentThread().getContextClassLoader();        System.out.println(loader);        System.out.println(loader.getParent());        System.out.println(loader.getParent().getParent());    &#125;&#125;   
+
+结果如下:
+sun.misc.Launcher$AppClassLoader@18b4aac2sun.misc.Launcher$ExtClassLoader@1b6d3586null
+
+从上面的结果可以看出，并没有获取到ExtClassLoader的父Loader，原因是BootstrapLoader(引导类加载器)是由 C++ 实现，由于这个 C++ 实现的类加载器在 Java 中是没有与之对应的类的，所以拿到的结果是 null。
+双亲委派模型Java采用了双亲委派模型来组织类加载器的层次结构。具体来说，当一个类加载器接收到类加载请求时，它会首先将请求委派给父类加载器处理，只有在父类加载器无法完成加载时，子类加载器才会尝试自己加载。这种机制确保了Java核心类库的安全性和一致性，避免了类的重复加载和命名冲突。
+双亲委派机制过程
+
+当AppClassLoader加载一个class时，它首先不会自己去尝试加载这个类，而是把类加载请求委派给父类加载器ExtClassLoader去完成。 
+当ExtClassLoader加载一个class时，它首先也不会自己去尝试加载这个类，而是把类加载请求委派给BootStrapClassLoader去完成。
+如果BootStrapClassLoader加载失败(例如在$JAVA_HOME&#x2F;jre&#x2F;lib里未查找到该class)，会使用ExtClassLoader来尝试加载。
+若ExtClassLoader也加载失败，则会使用AppClassLoader来加载，如果AppClassLoader也加载失败，则会报出异常ClassNotFoundException。
+
+
+loadClass源码解析：protected Class&lt;?&gt; loadClass(String name, boolean resolve)        throws ClassNotFoundException    &#123;        synchronized (getClassLoadingLock(name)) &#123;            // First, check if the class has already been loaded            //首先，检查类是否已经加载            Class&lt;?&gt; c = findLoadedClass(name);            if (c == null) &#123;                //说明该类没有被加载过                long t0 = System.nanoTime();                try &#123;                    //判断父类是否为空                    if (parent != null) &#123;                        //当父类的加载器不为空，则通过父类的loadClass来加载该类                        c = parent.loadClass(name, false);                    &#125; else &#123;                        //当父类的加载器为空，则调用启动类加载器来加载该类                        c = findBootstrapClassOrNull(name);                    &#125;                &#125; catch (ClassNotFoundException e) &#123;                    // ClassNotFoundException thrown if class not found                    // from the non-null parent class loader                    // 捕获异常但不处理，表示父类加载失败                &#125;                if (c == null) &#123;                    long t1 = System.nanoTime();                    //如果仍未找到，则调用 findClass 以查找该类。                     //用户可通过覆写该方法，来自定义类加载器                    c = findClass(name);                    // this is the defining class loader; record the stats                    sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);                    sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);                    sun.misc.PerfCounter.getFindClasses().increment();                &#125;            &#125;            if (resolve) &#123;                resolveClass(c);            &#125;            return c;        &#125;    &#125;
+
+自定义类加载器使用场景
+想加载非 classpath 随意路径中的类文件
+通过接口来使用实现，希望解耦时，常用在框架设计
+这些类希望予以隔离，不同应用的同名类都可以加载，不冲突，常见于 tomcat 容器
+
+步骤
+继承ClassLoader父类
+要遵从双亲委派机制，重写 ﬁndClass 方法
+不是重写loadClass方法，否则不会走双亲委派机制
+读取类文件的字节码
+调用父类的 deﬁneClass 方法来加载类
+使用者调用该类加载器的 loadClass 方法
+
+
+ClassLoader 类有两个关键的方法：
+
+protected Class loadClass(String name, boolean resolve)：加载指定二进制名称的类，实现了双亲委派机制 。name 为类的二进制名称，resolve 如果为 true，在加载时调用 resolveClass(Class&lt;?&gt; c) 方法解析该类。
+protected Class findClass(String name)：根据类的二进制名称来查找类，默认实现是空方法。
+
+
+]]></content>
+      <categories>
+        <category>JAVA</category>
+        <category>JVM</category>
+      </categories>
+      <tags>
+        <tag>Java基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JVM 基础 4 - JVM 内存结构&#39;</title>
+    <url>/2025/05/24/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%204%20-%20JVM%20%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/</url>
+    <content><![CDATA[运行时数据区Java虚拟机在运行Java程序过程中管理的内存区域，称之为运行时数据区。《Java虚拟机规范》中规定了每一部分的作用。
+
+根据 Java 虚拟机规范的规定，运行时数据区可以分为以下几个部分：
+
+程序计数器（Program Counter Register）
+Java 虚拟机栈（Java Virtual Machine Stacks）
+本地方法栈（Native Method Stack）
+堆（Heap）
+方法区（Method Area）
+
+
+程序计数器定义|作用程序计数器（Program Counter Register）也叫PC寄存器，用来存储指向下一条指令的地址，即将要执行的指令代码。由执行引擎读取下一条指令。
+当我们的java程序被编译成二进制字节码文件后，如下图：
+
+右面，是我们写的代码，左面是二进制字节码形式（.class）
+它们将由我们的解释器来将他们转换为机械码，从而让机器运行。
+细心的你会发现，每个二进制字节码的前面都有一个类似于索引的数字。他们的作用也跟索引差不多，为当前程序标一个序号，记上他们的地址。
+即使有了地址，解释器也不知道他们的顺序是什么样的，他只负责运行。
+于是，便有了程序计数器，程序计数器记下了字节码运行的顺序，每当一行字节码走完，他就会立即告诉解释器下一个该走哪里。
+双双配合，最终实现全部代码。
+这就是程序计数器的作用，不断为解释器寻找下一个要执行的程序。
+特点
+它是唯一一个在 JVM 规范中没有规定任何 OutOfMemoryError 情况的区域
+
+内存溢出（ OutOfMemoryError ）指的是程序在使用某一块内存区域时，存放的数据需要占用的内存大小超过了虚拟机能提供的内存上限。
+
+
+它是一块很小的内存空间，几乎可以忽略不计。也是运行速度最快的存储区域
+
+在 JVM 规范中，每个线程都有它自己的程序计数器，是线程私有的，生命周期与线程的生命周期一致
+
+任何时间一个线程都只有一个方法在执行，也就是所谓的当前方法。如果当前线程正在执行的是 Java 方法，程序计数器记录的是 JVM 字节码指令地址，如果是执行 native 方法，则是未指定值（undefined）
+
+它是程序控制流的指示器，分支、循环、跳转、异常处理、线程恢复等基础功能都需要依赖这个计数器来完成
+
+字节码解释器工作时就是通过改变这个计数器的值来选取下一条需要执行的字节码指令
+
+
+Java虚拟机栈定义|作用Java虚拟机栈（Java Virtual Machine Stack）采用栈的数据结构来管理方法调用中的基本数据，先进后出（First In Last Out）,每一个方法的调用使用一个栈帧（Stack Frame）来保存。
+Java虚拟机栈的栈帧（Frame）中主要包含以下内容：
+
+局部变量表（Local Variables）：局部变量表的作用是在运行过程中存放所有的局部变量
+操作数栈（Operand Stack）：操作数栈是栈帧中虚拟机在执行指令过程中用来存放临时数据的一块区域
+帧数据：帧数据主要包含动态链接、方法出口、异常表的引用
+动态链接（Dynamic Linking）：指向运行时常量池的方法引用
+方法返回地址（Return Address）：方法正常退出或异常退出的地址
+异常表
+
+
+
+栈帧的内部结构局部变量表
+存储基本数据类型 + 对象引用 + returnAddress 类型（指向了一条字节码指令的地址，已被异常表取代）
+以**变量槽(Slot)**为最小单位（32位，64位数据占2个Slot）
+编译期确定大小，运行期不改变
+
+举个栗子：
+以下代码的局部变量表中会占用几个槽？
+public void test4(int k,int m)&#123;    &#123;        int a = 1;        int b = 2;    &#125;    &#123;        int c = 1;    &#125;    int i = 0;    long j = 1;&#125;
+
+分析：
+
+为了节省空间，局部变量表中的槽是可以复用的，一旦某个局部变量不再生效，当前槽就可以再次被使用。
+
+
+方法执行时，实例对象this、k、m 会被放入局部变量表中，占用3个槽
+
+
+
+将1的值放入局部变量表下标为3的位置上，相当于给a进行赋值。
+
+
+
+将2放入局部变量表下标为4的位置，给b赋值为2。
+
+
+
+ab已经脱离了生效范围，所以下标为3和4的这两个位置可以复用。此时c的值1就可以放入下标为3的位置。
+
+
+
+脱离c的生效范围之后，给i赋值就可以复用c的位置。
+
+
+
+最后放入j，j是一个long类型，占用两个槽。但是可以复用b所在的位置，所以占用4和5这两个位置
+
+
+所以，局部变量表数值的长度为6。这一点在编译期间就可以确定了，运行过程中只需要在栈帧中创建长度为6的数组即可。
+
+操作数栈
+方法执行的工作区（类似CPU寄存器）
+存储计算过程的中间结果
+
+举个栗子：
+public int calculate() &#123;    int a = 5;    int b = 3;    int c = a + b;  // 操作过程：                   // 1. iload_0 (压入a [将局部变量表中下标为 0 的 int 类型变量加载到操作数栈上])                   // 2. iload_1 (压入b [将局部变量表中下标为 1 的 int 类型变量加载到操作数栈上])                   // 3. iadd   (弹出两个值，相加后压回)                   // 4. istore_2(存储结果)    return c;&#125;
+
+ps：操作数中的数据类型必须与字节码指令匹配，以上面的 iadd 指令为例，该指令只能用于整型数据的加法运算，它在执行的时候，栈顶的两个数据必须是 int 类型的，不能出现一个 long 型和一个 double 型的数据进行 iadd 命令相加的情况。
+帧数据帧数据主要包含动态链接、方法返回地址、异常表的引用。
+动态链接(Dynamic Linking)当前类的字节码指令引用了其他类的属性或者方法时，需要将符号引用（编号）转换成对应的运行时常量池中的内存地址。动态链接就保存了编号到运行时常量池的内存地址的映射关系。
+
+指向运行时常量池的方法引用
+支持多态特性（后期绑定）
+
+方法返回地址(Return Address)方法出口指的是方法在正确或者异常结束时，当前栈帧会被弹出，同时程序计数器应该指向上一个栈帧中的下一条指令的地址。所以在当前栈帧中，需要存储此方法出口的地址。
+
+存储调用者的程序计数器值
+包含正常返回和异常返回两种路径
+
+异常表异常表存放的是代码中异常的处理信息，包含了异常捕获的生效范围以及异常发生后跳转到的字节码指令位置。
+栈内存异常StackOverflowError
+原因：栈深度超过虚拟机限制（通常由无限递归引起）
+// 典型示例：无限递归public void infiniteRecursion() &#123;    infiniteRecursion();&#125;
+
+调节栈大小
+-Xss256k-XX:ThreadStackSize=1024Windows（64位）下的JDK8测试最小值为180k，最大值为1024m。
+
+OutOfMemoryError
+原因：线程创建过多导致栈空间耗尽
+场景：大量线程并发执行（通常需数千线程）
+
+本地方法栈Java虚拟机栈存储了Java方法调用时的栈帧，而本地方法栈存储的是native本地方法的栈帧。
+在Hotspot虚拟机中，Java虚拟机栈和本地方法栈实现上使用了同一个栈空间。本地方法栈会在栈内存上生成一个栈帧，临时保存方法的参数同时方便出现异常时也把本地方法的栈信息打印出来。
+
+堆对于大多数应用，Java 堆是 Java 虚拟机管理的内存中最大的一块，被所有线程共享。此内存区域的唯一目的就是存放对象实例，几乎所有的对象实例以及数据都在这里分配内存。
+为了进行高效的垃圾回收，虚拟机把堆内存逻辑上划分成三块区域（分代的唯一理由就是优化 GC 性能）：
+
+新生带（年轻代）：新对象和没达到一定年龄的对象都在新生代
+老年代（养老区）：被长时间使用的对象，老年代的内存空间应该要比年轻代更大
+元空间（JDK1.8 之前叫永久代）：像一些方法中的操作临时对象等，JDK1.8 之前是占用 JVM 内存，JDK1.8 之后直接使用物理内存
+
+堆内存溢出
+**java.lang.OutOfMemoryError: GC Overhead Limit Exceeded**：当 JVM 花太多时间执行垃圾回收并且只能回收很少的堆空间时，就会发生此错误。
+java.lang.OutOfMemoryError: Java heap space :假如在创建新的对象时, 堆内存中的空间不足以存放新创建的对象, 就会引发此错误。和本机的物理内存无关，和我们配置的虚拟机内存大小有关！
+
+设置堆的大小要修改堆的大小，可以使用虚拟机参数 –Xmx（max最大值）和-Xms (初始的total)。
+语法：-Xmx值 -Xms值
+单位：字节（默认，必须是 1024 的倍数）、k或者K(KB)、m或者M(MB)、g或者G(GB)
+限制：Xmx必须大于 2 MB，Xms必须大于1MB
+堆内存诊断
+jps 工具查看当前系统中有哪些 java 进程
+jmap 工具查看堆内存占用情况 jmap - heap 进程id
+jconsole 工具图形界面的，多功能的监测工具，可以连续监测
+jvisualvm 工具
+
+方法区方法区属于是 JVM 运行时数据区域的一块逻辑区域，是各个线程共享的内存区域。在不同的 JDK 版本上有着不同的实现。在 JDK 7 的时候，方法区被称为永久代（PermGen），而在 JDK 8 的时候，永久代被彻底移除，取而代之的是元空间。
+它的结构如下：
+
+方法区内存溢出
+JDK 1.8 之前永久代还没被彻底移除的时候通常通过下面这些参数来调节方法区大小。
+
+-XX:PermSize=N &#x2F;&#x2F;方法区 (永久代) 初始大小
+
+-XX:MaxPermSize=N &#x2F;&#x2F;方法区 (永久代) 最大大小,超过这个值将会抛出 OutOfMemoryError 异常:java.lang.OutOfMemoryError: PermGen
+
+
+
+JDK 1.8 的时候，方法区（HotSpot 的永久代）被彻底移除了（JDK1.7 就已经开始了），取而代之是元空间，元空间使用的是本地内存。
+
+-XX:MetaspaceSize=N &#x2F;&#x2F;设置 Metaspace 的初始（和最小大小）
+-XX:MaxMetaspaceSize=N &#x2F;&#x2F;设置 Metaspace 的最大大小
+
+
+
+运行时常量池常量池就是一张表，虚拟机指令根据这张常量表找到要执行的类名、方法名、参数类型、字面量信息。存在.class 文件中的 Constant_Pool 表。
+举个栗子：
+public class Test &#123;    public static void main(String[] args) &#123;        System.out.println(&quot;Hello World!&quot;);    &#125;&#125;
+
+然后使用 javap -v Test.class 命令反编译查看结果。
+
+运行时常量池
+类加载时创建：JVM 加载类时，将 .class 文件的常量池转换后放入方法区
+动态性：运行时可以添加新常量（如 String.intern()）
+真实地址：将符号引用解析为直接引用（内存真实地址）
+
+动态添加栗子：
+String s1 = new String(&quot;Hello&quot;);  // 堆中创建对象String s2 = s1.intern();           // 将&quot;Hello&quot;添加到运行时常量池System.out.println(s1 == s2);       // false（不同对象）System.out.println(&quot;Hello&quot; == s2);  // true（指向常量池同一对象）
+
+常量池 vs 运行时常量池
+
+
+特性
+常量池 (Constant Pool)
+运行时常量池 (Runtime Constant Pool)
+
+
+
+存在位置
+.class 文件中
+JVM 方法区中（JDK8+ 的元空间）
+
+
+创建时机
+编译期生成
+类加载时创建
+
+
+内容是否可变
+静态不可变
+动态可变（运行时添加新常量）
+
+
+存储内容
+符号引用 + 字面量
+类加载后的真实引用 + 动态常量
+
+
+生命周期
+文件存在即存在
+类卸载时销毁
+
+
+字符串常量池字符串常量池 是 JVM 为了提升性能和减少内存消耗针对字符串（String 类）专门开辟的一块区域，主要目的是为了避免字符串的重复创建。
+特点
+常量池中的字符串仅是符号，只有在被用到时才会转化为对象
+利用字符串常量池的机制，来避免重复创建字符串对象
+字符串变量拼接的原理是StringBuilder
+字符串常量拼接的原理是编译器优化
+可以使用intern方法，主动将串池中还没有的字符串对象放入串池中
+
+存放位置
+
+
+JDK版本
+字符串常量池位置
+影响
+
+
+
+JDK ≤ 6
+运行时常量池（永久代）
+容易引发 PermGen OOM
+
+
+JDK 7+
+堆内存 中单独划分区域
+减少 OOM 风险，支持更大字符串池
+
+
+字符串创建流程：graph TD    A[&quot;new String &#x27;hello&#x27;&quot;] --&gt; B&#123;&quot;池中是否存在？&quot;&#125;    B --&gt;|否| C[&quot;在堆创建新对象&quot;]    B --&gt;|是| D[&quot;返回池中引用&quot;]    C --&gt; E&#123;&quot;调用 intern?&quot;&#125;    E --&gt;|是| F[&quot;将引用加入字符串池&quot;]    E --&gt;|否| G[&quot;直接使用堆对象&quot;]
+
+
+intern方法
+JDK1.8
+调用字符串对象的intern()方法，会将该字符串对象尝试放入到串池中。
+
+如果串池中没有该字符串对象，则放入成功，返回引用的对象
+如果有该字符串对象，则放入失败,返回字符串里有的该对象
+
+无论放入是否成功，都会返回串池中的字符串对象。
+注意：此时如果调用intern方法成功，堆内存与串池中的字符串对象是同一个对象；如果失败，则不是同一个对象
+
+JDK1.6
+调用字符串对象的intern方法，会将该字符串对象尝试放入到串池中
+
+如果串池中没有该字符串对象，会将该字符串对象复制一份，再放入到串池中，返回的是复制的对象
+如果有该字符串对象，则放入失败，返回串池原有的该字符串的对象
+
+注意：此时无论调用intern方法成功与否，串池中的字符串对象和堆内存中的字符串对象都不是同一个对象
+
+
+字符串常量池和运行时常量池有什么关系？早期设计时，字符串常量池是属于运行时常量池的一部分，他们存储的位置也是一致的。后续做出了调整，将字符串常量池和运行时常量池做了拆分。
+
+静态变量存储在哪里呢？
+JDK6及之前的版本中，静态变量是存放在方法区中的，也就是永久代。
+JDK7及之后的版本中，静态变量是存放在堆中的Class对象中，脱离了永久代。具体源码可参考虚拟机源码：BytecodeInterpreter针对putstatic指令的处理。
+
+
+直接内存直接内存指的就是Direct Memory，常见于Nio操作，区别于io，在读写操作时有着更高的效率。直接内存并不在《Java虚拟机规范》中存在，所以并不属于Java运行时的内存区域。
+特点：
+常见于 NIO 操作时，用于数据缓冲区
+分配回收成本较高，但读写性能高
+不受 JVM 内存回收管理
+
+
+
+
+]]></content>
+      <categories>
+        <category>JAVA</category>
+        <category>JVM</category>
+      </categories>
+      <tags>
+        <tag>Java基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JVM 基础 2 - Java 类字节码</title>
+    <url>/2025/05/22/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%202%20-%20Java%20%E7%B1%BB%E5%AD%97%E8%8A%82%E7%A0%81/</url>
+    <content><![CDATA[Java虚拟机的组成Java虚拟机主要分为以下几个组成部分：
+
+
+ClassLoader：类加载子系统，核心组件类加载器，负责将字节码文件中的内容加载到内存中。
+JVM内存结构：运行时数据区，JVM管理的内存，创建出来的对象、类的信息等等内容都会放在这块区域中。
+执行引擎：包含了即时编译器、解释器、垃圾回收器，执行引擎使用解释器将字节码指令解释成机器码，使用即时编译器优化性能，使用垃圾回收器回收不再使用的对象。
+本地接口：调用本地使用C&#x2F;C++编译好的方法，本地方法在Java中声明时，都会带上native关键字，如下图所示。
+
+字节码文件的组成
+字节码文件比较难读，更加详细的请去官网https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5阅读。
+
+字节码文件总共可以分为以下几个部分：
+
+基础信息：魔数、字节码文件对应的Java版本号、访问标识(public final等等)、父类和接口信息
+常量池：保存了字符串常量、类或接口名、字段名，主要在字节码指令中使用
+字段： 当前类或接口声明的字段信息
+方法： 当前类或接口声明的方法信息，核心内容为方法的字节码指令
+属性： 类的属性，比如源码的文件名、内部类的列表等
+
+通过 javac 类名.java 编译 java 文件后，会生成一个 .class 字节码文件！
+以下是字节码文件：
+0000000 ca fe ba be 00 00 00 34 00 23 0a 00 06 00 15 09 0000020 00 16 00 17 08 00 18 0a 00 19 00 1a 07 00 1b 07 0000040 00 1c 01 00 06 3c 69 6e 69 74 3e 01 00 03 28 29 0000060 56 01 00 04 43 6f 64 65 01 00 0f 4c 69 6e 65 4e 0000100 75 6d 62 65 72 54 61 62 6c 65 01 00 12 4c 6f 63 0000120 61 6c 56 61 72 69 61 62 6c 65 54 61 62 6c 65 01 0000140 00 04 74 68 69 73 01 00 1d 4c 63 6e 2f 69 74 63 0000160 61 73 74 2f 6a 76 6d 2f 74 35 2f 48 65 6c 6c 6f 0000200 57 6f 72 6c 64 3b 01 00 04 6d 61 69 6e 01 00 16 0000220 28 5b 4c 6a 61 76 61 2f 6c 61 6e 67 2f 53 74 72 0000240 69 6e 67 3b 29 56 01 00 04 61 72 67 73 01 00 13 0000260 5b 4c 6a 61 76 61 2f 6c 61 6e 67 2f 53 74 72 69 0000300 6e 67 3b 01 00 10 4d 65 74 68 6f 64 50 61 72 61 0000320 6d 65 74 65 72 73 01 00 0a 53 6f 75 72 63 65 46 0000340 69 6c 65 01 00 0f 48 65 6c 6c 6f 57 6f 72 6c 640000360 2e 6a 61 76 61 0c 00 07 00 08 07 00 1d 0c 00 1e 0000400 00 1f 01 00 0b 68 65 6c 6c 6f 20 77 6f 72 6c 64 0000420 07 00 20 0c 00 21 00 22 01 00 1b 63 6e 2f 69 74 0000440 63 61 73 74 2f 6a 76 6d 2f 74 35 2f 48 65 6c 6c 0000460 6f 57 6f 72 6c 64 01 00 10 6a 61 76 61 2f 6c 61 0000500 6e 67 2f 4f 62 6a 65 63 74 01 00 10 6a 61 76 61 0000520 2f 6c 61 6e 67 2f 53 79 73 74 65 6d 01 00 03 6f 0000540 75 74 01 00 15 4c 6a 61 76 61 2f 69 6f 2f 50 72 0000560 69 6e 74 53 74 72 65 61 6d 3b 01 00 13 6a 61 76 0000600 61 2f 69 6f 2f 50 72 69 6e 74 53 74 72 65 61 6d 0000620 01 00 07 70 72 69 6e 74 6c 6e 01 00 15 28 4c 6a 0000640 61 76 61 2f 6c 61 6e 67 2f 53 74 72 69 6e 67 3b 0000660 29 56 00 21 00 05 00 06 00 00 00 00 00 02 00 01 0000700 00 07 00 08 00 01 00 09 00 00 00 2f 00 01 00 01 0000720 00 00 00 05 2a b7 00 01 b1 00 00 00 02 00 0a 00 0000740 00 00 06 00 01 00 00 00 04 00 0b 00 00 00 0c 00 0000760 01 00 00 00 05 00 0c 00 0d 00 00 00 09 00 0e 00 0001000 0f 00 02 00 09 00 00 00 37 00 02 00 01 00 00 00 0001020 09 b2 00 02 12 03 b6 00 04 b1 00 00 00 02 00 0a 0001040 00 00 00 0a 00 02 00 00 00 06 00 08 00 07 00 0b 0001060 00 00 00 0c 00 01 00 00 00 09 00 10 00 11 00 00 0001100 00 12 00 00 00 05 01 00 10 00 00 00 01 00 13 00 0001120 00 00 02 00 14
+
+根据 JVM 规范，类文件结构如下：
+
+魔数第一行中有一串特殊的字符 cafebabe，它就是一个魔数，是 JVM 识别 class 文件的标志，JVM 会在验证阶段检查 class 文件是否以该魔数开头，如果不是则会抛出 ClassFormatError。
+上面截图中
+u4 magic对应字节码文件的 0~3 个字节0000000 ca fe ba be 00 00 00 34 00 23 0a 00 06 00 15 09ca fe ba be ：意思是 .class 文件，不同的东西有不同的魔数，比如 jpg、png 图片等！
+版本紧跟着魔数后面的四个字节 00 00 00 34 分别表示副版本号和主版本号。
+u2 minor_version;u2 major_version;0000000 ca fe ba be 00 00 00 34 00 23 0a 00 06 00 15 0900 00 00 34：34H（16进制） &#x3D; 52（10进制），代表JDK8对应的版本号，副版本号为 0。
+常量池参考地址：· The Java® Virtual Machine Specification (oracle.com) ·
+紧跟在版本号之后的是常量池，它包含了类、接口、字段和方法的符号引用，以及字符串字面量和数值常量。这些信息在编译时被创建，并在运行时被Java虚拟机（JVM）使用。
+
+]]></content>
+      <categories>
+        <category>JAVA</category>
+        <category>JVM</category>
+      </categories>
+      <tags>
+        <tag>Java进阶</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JVM 基础 5 - GC 垃圾回收</title>
+    <url>/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>JAVA</category>
+        <category>JVM</category>
+      </categories>
+      <tags>
+        <tag>Java基础</tag>
+      </tags>
+  </entry>
 </search>
