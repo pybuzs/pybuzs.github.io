@@ -606,7 +606,7 @@
 <blockquote>
 <p>在业务场景中，如果存在多个查询条件，考虑针对于查询字段建立索引时，建议建立联合索引， 而非单列索引。</p>
 </blockquote>
-<style>.uisrmyranngq{zoom:67%;}</style><img src="/2025/06/10/MySQL/MySql%E8%BF%9B%E9%98%B6/image-20250617000533014.png" class="uisrmyranngq" alt="image-20250617000533014">
+<style>.cnjunexevqdn{zoom:67%;}</style><img src="/2025/06/10/MySQL/MySql%E8%BF%9B%E9%98%B6/image-20250617000533014.png" class="cnjunexevqdn" alt="image-20250617000533014">
 
 <h4 id="前缀索引"><a href="#前缀索引" class="headerlink" title="前缀索引"></a>前缀索引</h4><p>当字段类型为字符串（varchar，text，longtext等）时，有时候需要索引很长的字符串，这会让 索引变得很大，查询时，浪费大量的磁盘IO， 影响查询效率。此时可以只将字符串的一部分前缀，建立索引，这样可以大大节约索引空间，从而提高索引效率。</p>
 <ul>
@@ -1195,8 +1195,8 @@
 <p><img src="/2025/06/10/MySQL/MySql%E8%BF%9B%E9%98%B6/image-20250619152505379.png" alt="image-20250619152505379"></p>
 <h4 id="意向锁（Intention-Lock）"><a href="#意向锁（Intention-Lock）" class="headerlink" title="意向锁（Intention Lock）"></a>意向锁（Intention Lock）</h4><p>为了避免DML在执行时，加的行锁与表锁的冲突，在InnoDB中引入了意向锁，使得表锁不用检查每行数据是否加锁，使用意向锁来减少表锁的检查。</p>
 <p><img src="/2025/06/10/MySQL/MySql%E8%BF%9B%E9%98%B6/image-20250619153516205.png" alt="image-20250619153516205"></p>
-<style>.ygjooxxppskw{zoom: 75%;}</style><img src="/2025/06/10/MySQL/MySql%E8%BF%9B%E9%98%B6/image-20250619153533331.png" class="ygjooxxppskw" alt="image-20250619153533331">
-<style>.rcjitichqgyk{zoom:102%;}</style><img src="/2025/06/10/MySQL/MySql%E8%BF%9B%E9%98%B6/image-20250619153742850.png" class="rcjitichqgyk" alt="image-20250619153742850">
+<style>.mopodhhyudfm{zoom: 75%;}</style><img src="/2025/06/10/MySQL/MySql%E8%BF%9B%E9%98%B6/image-20250619153533331.png" class="mopodhhyudfm" alt="image-20250619153533331">
+<style>.ujwtckhqzlyo{zoom:102%;}</style><img src="/2025/06/10/MySQL/MySql%E8%BF%9B%E9%98%B6/image-20250619153742850.png" class="ujwtckhqzlyo" alt="image-20250619153742850">
 
 <p>分类</p>
 <ul>
@@ -1448,7 +1448,7 @@
 </li>
 </ol>
 <h4 id="后台线程"><a href="#后台线程" class="headerlink" title="后台线程"></a>后台线程</h4><p>在Innodb存储引擎中，后台线程的主要作用是负责刷新内存池中的数据，保证缓冲池中的内存缓存的是最近的数据。此外它会将已经修改的数据文件刷新到磁盘文件中，保证在不发生异常的情况下，Innodb能够恢复到正常的运行状态。</p>
-<style>.rxgcvqkfckbe{zoom:80%;}</style><img src="/2025/06/10/MySQL/MySql%E8%BF%9B%E9%98%B6/image-20250620164920302.png" class="rxgcvqkfckbe" alt="image-20250620164920302">
+<style>.mmvmuykeitnf{zoom:80%;}</style><img src="/2025/06/10/MySQL/MySql%E8%BF%9B%E9%98%B6/image-20250620164920302.png" class="mmvmuykeitnf" alt="image-20250620164920302">
 
 <h5 id="Master-Thread"><a href="#Master-Thread" class="headerlink" title="Master Thread"></a>Master Thread</h5><p>核心后台线程，负责调度其他线程，还负责将缓冲池中的数据异步刷新到磁盘中, 保持数据的一致性， 还包括脏页的刷新、合并插入缓存、undo页的回收 。</p>
 <h5 id="IO-Thread"><a href="#IO-Thread" class="headerlink" title="IO Thread"></a>IO Thread</h5><p>在InnoDB存储引擎中大量使用了AIO来处理IO请求, 这样可以极大地提高数据库的性能，而IO Thread主要负责这些IO请求的回调。</p>

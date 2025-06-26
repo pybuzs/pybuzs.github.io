@@ -1,9 +1,9 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>JVM 基础 5 - GC 垃圾回收 | 片叶不沾身的花园</title><meta name="author" content="bbiao"><meta name="copyright" content="bbiao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="垃圾回收JVM 垃圾回收 (Garbage Collection, GC) 是 Java 虚拟机自动管理堆内存的核心机制。它负责识别并回收程序中不再使用的对象所占用的内存，防止内存泄漏，极大地简化了开发人员的内存管理工作。   垃圾回收器如果发现某个对象不再使用，就可以回收该对象。 .bzctibjzsbcq{zoom: 67%;}  .tzlpsmflvyrd{zoom:67%;}   自动垃圾">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>JVM 基础 5 - GC 垃圾回收 | 片叶不沾身的花园</title><meta name="author" content="bbiao"><meta name="copyright" content="bbiao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="垃圾回收JVM 垃圾回收 (Garbage Collection, GC) 是 Java 虚拟机自动管理堆内存的核心机制。它负责识别并回收程序中不再使用的对象所占用的内存，防止内存泄漏，极大地简化了开发人员的内存管理工作。   垃圾回收器如果发现某个对象不再使用，就可以回收该对象。 .cfafpsfmcguw{zoom: 67%;}  .uqmblncjoway{zoom:67%;}   自动垃圾">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM 基础 5 - GC 垃圾回收">
 <meta property="og:url" content="https://pybuzs.github.io/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/index.html">
 <meta property="og:site_name" content="片叶不沾身的花园">
-<meta property="og:description" content="垃圾回收JVM 垃圾回收 (Garbage Collection, GC) 是 Java 虚拟机自动管理堆内存的核心机制。它负责识别并回收程序中不再使用的对象所占用的内存，防止内存泄漏，极大地简化了开发人员的内存管理工作。   垃圾回收器如果发现某个对象不再使用，就可以回收该对象。 .bzctibjzsbcq{zoom: 67%;}  .tzlpsmflvyrd{zoom:67%;}   自动垃圾">
+<meta property="og:description" content="垃圾回收JVM 垃圾回收 (Garbage Collection, GC) 是 Java 虚拟机自动管理堆内存的核心机制。它负责识别并回收程序中不再使用的对象所占用的内存，防止内存泄漏，极大地简化了开发人员的内存管理工作。   垃圾回收器如果发现某个对象不再使用，就可以回收该对象。 .cfafpsfmcguw{zoom: 67%;}  .uqmblncjoway{zoom:67%;}   自动垃圾">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://pybuzs.github.io/image/touxiang.jpg">
 <meta property="article:published_time" content="2025-05-25T08:39:33.000Z">
@@ -161,9 +161,9 @@
   pageType: 'post'
 }</script><script src="/styles/jquery.min.js"></script><script src="/styles/raindrop.js"></script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/image/touxiang.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/image/beijing.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">片叶不沾身的花园</span></a><a class="nav-page-title" href="/"><span class="site-name">JVM 基础 5 - GC 垃圾回收</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">JVM 基础 5 - GC 垃圾回收</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-05-25T08:39:33.000Z" title="发表于 2025-05-25 16:39:33">2025-05-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-06-08T08:14:28.318Z" title="更新于 2025-06-08 16:14:28">2025-06-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/JAVA/">JAVA</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/JAVA/JVM/">JVM</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a><strong>垃圾回收</strong></h1><p>JVM 垃圾回收 (Garbage Collection, GC) 是 Java 虚拟机自动管理堆内存的核心机制。它负责识别并回收程序中不再使用的对象所占用的内存，防止内存泄漏，极大地简化了开发人员的内存管理工作。  </p>
 <p>垃圾回收器如果发现某个对象不再使用，就可以回收该对象。</p>
-<style>.bzctibjzsbcq{zoom: 67%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/b2af5602-f0d0-408c-a09a-7714c1b6f84a.png" class="bzctibjzsbcq" alt="b2af5602-f0d0-408c-a09a-7714c1b6f84a">
+<style>.cfafpsfmcguw{zoom: 67%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/b2af5602-f0d0-408c-a09a-7714c1b6f84a.png" class="cfafpsfmcguw" alt="b2af5602-f0d0-408c-a09a-7714c1b6f84a">
 
-<style>.tzlpsmflvyrd{zoom:67%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/e5157ef9-aa76-4ba7-9185-bc32389e5d5f.png" class="tzlpsmflvyrd" alt="e5157ef9-aa76-4ba7-9185-bc32389e5d5f">
+<style>.uqmblncjoway{zoom:67%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/e5157ef9-aa76-4ba7-9185-bc32389e5d5f.png" class="uqmblncjoway" alt="e5157ef9-aa76-4ba7-9185-bc32389e5d5f">
 
 <ul>
 <li><p>自动垃圾回收，自动根据对象是否使用由虚拟机来回收对象</p>
@@ -188,7 +188,7 @@
 <li>每次引用和取消引用都需要维护计数器，对系统性能会有一定的影响</li>
 <li>存在循环引用问题，所谓循环引用就是当A引用B，B同时引用A时会出现对象无法回收的问题。如下图：</li>
 </ol>
-<style>.wpsuencqwibg{zoom:80%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/9df039034d2d5bb0a25498826e744cd9.png" class="wpsuencqwibg" alt="9df039034d2d5bb0a25498826e744cd9">
+<style>.drrzjypiqcxd{zoom:80%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/9df039034d2d5bb0a25498826e744cd9.png" class="drrzjypiqcxd" alt="9df039034d2d5bb0a25498826e744cd9">
 
 <h3 id="可达性分析法"><a href="#可达性分析法" class="headerlink" title="可达性分析法"></a>可达性分析法</h3><p>通过 GC Roots 作为起始点进行搜索，能够到达到的对象都是存活的，不可达的对象可被回收。</p>
 <p><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/0635cbe8.png" alt="0635cbe8"></p>
@@ -201,7 +201,7 @@
 <li>方法区中常量引用的对象</li>
 <li>本地方法栈中 JNI（即一般说的Native方法）引用的对象</li>
 </ul>
-<h2 id="引用对象"><a href="#引用对象" class="headerlink" title="引用对象"></a>引用对象</h2><style>.hpvcntcdgaqn{zoom:80%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/39e05348c91a7142b1977434ff27c2a3.png" class="hpvcntcdgaqn" alt="39e05348c91a7142b1977434ff27c2a3">
+<h2 id="引用对象"><a href="#引用对象" class="headerlink" title="引用对象"></a>引用对象</h2><style>.rwtlfcxjtcvx{zoom:80%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/39e05348c91a7142b1977434ff27c2a3.png" class="rwtlfcxjtcvx" alt="39e05348c91a7142b1977434ff27c2a3">
 
 <h3 id="1-强引用（StrongReference）"><a href="#1-强引用（StrongReference）" class="headerlink" title="1. 强引用（StrongReference）"></a>1. 强引用（StrongReference）</h3><p>被强引用关联的对象不会被回收。只有GC Root<strong>都不引用</strong>该对象时，才会回收<strong>强引用</strong>对象</p>
 <h3 id="2-软引用（SoftReference）"><a href="#2-软引用（SoftReference）" class="headerlink" title="2. 软引用（SoftReference）"></a>2. 软引用（SoftReference）</h3><p>如果一个对象只有软引用引对象时，当程序内存不足时，就会将软引用中的数据进行回收。在JDK 1.2版之后提供了SoftReference类来实现软引用，软引用常用于缓存中。</p>
@@ -234,7 +234,7 @@
 <p>缺点：内存使用效率低，每次只能让一半的内存空间来为创建对象使用。</p>
 <h3 id="4-分代垃圾回收算法"><a href="#4-分代垃圾回收算法" class="headerlink" title="4. 分代垃圾回收算法"></a>4. 分代垃圾回收算法</h3><p>现代优秀的垃圾回收算法，会将上述描述的垃圾回收算法组合进行使用，其中应用最广的就是分代垃圾回收算法(Generational GC)。  </p>
 <p>分代垃圾回收将整个内存区域划分为年轻代（复制算法）和老年代（标记 - 清除 或者 标记 - 整理 算法）：</p>
-<style>.cknrklikmejt{zoom: 80%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/6ef8cd7b-e23a-4fab-b03c-05f350d71d82.png" class="cknrklikmejt" alt="6ef8cd7b-e23a-4fab-b03c-05f350d71d82">
+<style>.hmqqyblaooat{zoom: 80%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/6ef8cd7b-e23a-4fab-b03c-05f350d71d82.png" class="hmqqyblaooat" alt="6ef8cd7b-e23a-4fab-b03c-05f350d71d82">
 
 <ol>
 <li><p>分代回收时，创建出来的对象，首先会被放入Eden伊甸园区。</p>
@@ -318,7 +318,7 @@
 <p><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/5aa9617f-42a0-4ae5-866c-988448fca737.png" alt="5aa9617f-42a0-4ae5-866c-988448fca737"></p>
 <p><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/image.png" alt="image"></p>
 <h3 id="Serial-收集器"><a href="#Serial-收集器" class="headerlink" title="Serial 收集器"></a>Serial 收集器</h3><p>Serial 收集器是最基本的、发展历史最悠久的收集器。是一种单线程串行回收<strong>年轻代</strong>的垃圾回收器，只会使用一个线程进行垃圾收集工作，使用<strong>标记-复制算法</strong>。  </p>
-<style>.mthyhojuglgi{zoom:80%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/b0a87eb9-406f-4552-bf2b-f88b752f164a.png" class="mthyhojuglgi" alt="b0a87eb9-406f-4552-bf2b-f88b752f164a">
+<style>.pebrhsqvbgyh{zoom:80%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/b0a87eb9-406f-4552-bf2b-f88b752f164a.png" class="pebrhsqvbgyh" alt="b0a87eb9-406f-4552-bf2b-f88b752f164a">
 
 <p><strong>优点</strong>：</p>
 <ul>
@@ -336,7 +336,7 @@
 <p>-XX:+UseSerialGC&#x3D;serial + serialOld</p>
 </blockquote>
 <h3 id="SerialOld垃圾回收器"><a href="#SerialOld垃圾回收器" class="headerlink" title="SerialOld垃圾回收器"></a>SerialOld垃圾回收器</h3><p>SerialOld是Serial垃圾回收器的<strong>老年代</strong>版本，采用单线程串行回收。使用<strong>标记-整理算法</strong>。</p>
-<style>.lacgsrtcvitq{zoom:80%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/b0a87eb9-406f-4552-bf2b-f88b752f164a-1749135599396-9.png" class="lacgsrtcvitq" alt="b0a87eb9-406f-4552-bf2b-f88b752f164a">
+<style>.ssxvnkiayspt{zoom:80%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/b0a87eb9-406f-4552-bf2b-f88b752f164a-1749135599396-9.png" class="ssxvnkiayspt" alt="b0a87eb9-406f-4552-bf2b-f88b752f164a">
 
 <h3 id="ParNew-收集器"><a href="#ParNew-收集器" class="headerlink" title="ParNew 收集器"></a>ParNew 收集器</h3><p>ParNew 收集器其实就是 Serial 收集器在多CPU下的优化，使用多线程进行垃圾回收。<strong>新生代采用标记-复制算法，老年代采用标记-整理算法。</strong></p>
 <p>-XX:+UseParNewGC 新生代使用ParNew回收器， 老年代使用串行回收器</p>
@@ -400,7 +400,7 @@
 <li>后台任务，不需要与用户交互，并且容易产生大量的对象。比如：大数据的处理，大文件导出。</li>
 </ul>
 <h3 id="Parallel-Old垃圾回收器"><a href="#Parallel-Old垃圾回收器" class="headerlink" title="Parallel Old垃圾回收器"></a>Parallel Old垃圾回收器</h3><p><strong>Parallel Scavenge 收集器的老年代版本</strong>。使用多线程和<strong>标记-整理</strong>算法。在注重吞吐量以及 CPU 资源的场合，都可以优先考虑 Parallel Scavenge 收集器和 Parallel Old 收集器。</p>
-<style>.txtnbtqzohen{zoom:80%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/d6ecf303-9a1b-4df8-8fce-24f07e471ead.png" class="txtnbtqzohen" alt="d6ecf303-9a1b-4df8-8fce-24f07e471ead">
+<style>.wjyviewiwnpn{zoom:80%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/d6ecf303-9a1b-4df8-8fce-24f07e471ead.png" class="wjyviewiwnpn" alt="d6ecf303-9a1b-4df8-8fce-24f07e471ead">
 
 <p><strong>优点</strong>：</p>
 <ul>
@@ -420,10 +420,10 @@
 <p>2.支持多CPU并行垃圾回收。</p>
 <p>3.允许用户设置最大暂停时间。</p>
 <p>G1出现之前的垃圾回收器，年轻代和老年代一般是连续的，如下图：</p>
-<style>.qondhukiqbnd{zoom:80%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/1dee5f2a-4608-4a2c-9df4-42697b1b8c50.png" class="qondhukiqbnd" alt="1dee5f2a-4608-4a2c-9df4-42697b1b8c50">
+<style>.rlvcyajlvkem{zoom:80%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/1dee5f2a-4608-4a2c-9df4-42697b1b8c50.png" class="rlvcyajlvkem" alt="1dee5f2a-4608-4a2c-9df4-42697b1b8c50">
 
 <p>G1的整个堆会被划分成多个大小相等的区域，称之为区Region，区域不要求是连续的。每个 Region 逻辑上可属于 Eden、Survivor、Old或 Humongous（存储大于 Region 一半大小的对象）。Region的大小通过堆空间大小&#x2F;2048计算得到，也可以通过参数-XX:G1HeapRegionSize&#x3D;32m指定(其中32m指定region大小为32M)，Region size必须是2的指数幂，取值范围从1M到32M。</p>
-<style>.hguyfhrqebvf{zoom:80%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/69b18970-293e-462d-91d8-fe8100105b44.png" class="hguyfhrqebvf" alt="69b18970-293e-462d-91d8-fe8100105b44">
+<style>.ahsvfjnqsdol{zoom:80%;}</style><img src="/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/69b18970-293e-462d-91d8-fe8100105b44.png" class="ahsvfjnqsdol" alt="69b18970-293e-462d-91d8-fe8100105b44">
 
 <h4 id="G1-执行流程"><a href="#G1-执行流程" class="headerlink" title="G1 执行流程"></a>G1 执行流程</h4><h5 id="1-Young-GC（新生代回收）"><a href="#1-Young-GC（新生代回收）" class="headerlink" title="1. Young GC（新生代回收）"></a>1. Young GC（新生代回收）</h5><p>年轻代回收（Young GC），回收Eden区和Survivor区中不用的对象。会导致STW，G1中可以通过参数<br><code> -XX:MaxGCPauseMillis=n（默认200）</code>设置每次垃圾回收时的最大暂停时间毫秒数，G1垃圾回收器会尽可能地保证暂停时间。</p>
 <ul>
