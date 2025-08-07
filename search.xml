@@ -1,6 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>JVM面试题</title>
+    <url>/2025/08/06/Interview/JVM%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
+    <content><![CDATA[JVM 面试题Java 内存模型中堆(Heap)和栈(Stack)的区别?
+
+
+对比维度
+堆（Heap）
+栈（Stack，通常指虚拟机栈）
+
+
+
+存储内容
+所有对象实例（new创建的对象）、数组
+局部变量（方法内定义的变量）、方法调用信息（栈帧，包含操作数栈、局部变量表等）
+
+
+线程共享性
+所有线程共享，是线程不安全的（需同步机制保障）
+线程私有，每个线程有独立的栈，线程间不共享
+
+
+生命周期
+与 JVM 进程一致（随 JVM 启动而创建，退出而销毁）
+与线程 &#x2F; 方法调用绑定：线程启动时创建栈，方法调用时创建栈帧，方法结束时栈帧销毁
+
+
+内存管理
+由 JVM 自动管理，依赖垃圾回收器（GC）回收内存
+无需 GC，随方法调用 &#x2F; 线程结束自动释放内存（栈帧出栈）
+
+
+大小与调整
+内存空间较大（通常几 GB），可通过-Xms（初始）、-Xmx（最大）参数调整
+内存空间较小（通常几 MB），可通过-Xss参数调整单个线程的栈大小
+
+
+异常类型
+内存不足时触发OutOfMemoryError: Java heap space
+栈深度超限触发StackOverflowError；栈扩展失败触发OutOfMemoryError: Stack overflow（部分 JVM）
+
+
+什么情况下会触发OutOfMemoryError?OutOfMemoryError本质是 “内存区域无法分配新空间”，不同内存区域的 OOM 触发原因不同，具体如下：
+1. 堆内存溢出（Java heap space）
+触发原因：堆中创建的对象 &#x2F; 数组过多，且无法被垃圾回收（存在有效引用），导致堆空间耗尽。
+
+典型场景：
+
+内存泄漏：对象不再使用但仍被引用（如静态集合持有大量过期对象），例如：
+static List&lt;Object&gt; list = new ArrayList&lt;&gt;();while (true) &#123;    list.add(new Object()); // 对象被静态集合引用，无法GC，最终堆溢出&#125;
+
+对象创建速度超过 GC 回收速度：短时间内创建大量对象（如高并发下的大对象频繁实例化），堆空间无法及时释放。
+
+
+
+解决思路：通过-Xmx调大堆内存；排查内存泄漏（用 MAT 等工具分析堆快照）；优化对象创建逻辑（如复用对象、使用池化技术）
+
+
+2. 方法区 &#x2F; 元空间溢出（Metaspace OOM 或 PermGen space）
+触发原因：方法区（JDK8 + 为元空间，JDK7 及之前为永久代）存储类信息、常量、静态变量等，当加载的类过多或常量池过大时，空间耗尽。
+
+典型场景：
+
+动态生成大量类：如使用 CGLib、JDK 动态代理等频繁生成子类（每个类的信息都存于方法区），例如：
+while (true) &#123;    Enhancer enhancer = new Enhancer();    enhancer.setSuperclass(User.class);    enhancer.create(); // 每次创建都会生成新的代理类，类信息累积导致元空间溢出&#125;
+
+常量池过大：字符串常量池（JDK7 后移至堆，但部分实现仍可能关联方法区）存储过多字符串，且无法被回收（如String.intern()滥用）。
+
+
+
+
+3. 虚拟机栈 &#x2F; 本地方法栈溢出（StackOverflowError 与 Stack OOM）StackOverflowError（更常见）：线程栈深度超过最大限制（方法调用层级过深，如无限递归），例如：
+public void recursive() &#123;    recursive(); // 无限递归，栈帧不断入栈，最终栈深度超限&#125;
+
+OutOfMemoryError: Stack overflow（部分 JVM）：如果 JVM 允许栈动态扩展，当扩展时无法申请到足够内存（如创建大量线程，每个线程栈占用内存累积超过系统限制），例如：
+while (true) &#123;    new Thread(() -&gt; &#123;        while (true) &#123;&#125; // 线程不退出，持续占用栈内存，最终总栈内存耗尽    &#125;).start();&#125;
+
+
+解决思路：通过-Xss调大单个线程栈大小（但会减少最大线程数）；避免无限递归；控制线程创建数量（用线程池）。
+
+4. 直接内存溢出（Direct buffer memory）
+触发原因：直接内存（不受 JVM 堆管理，由操作系统直接分配）通常用于 NIO（DirectByteBuffer），当分配的直接内存超过限制（默认与堆最大值一致），会触发 OOM。
+
+典型场景：
+while (true) &#123;    ByteBuffer.allocateDirect(1024 * 1024); // 持续分配直接内存，超过限制后溢出&#125;
+
+解决思路：通过-XX:MaxDirectMemorySize调大直接内存限制；及时释放不再使用的DirectByteBuffer（避免长期引用）。
+
+
+]]></content>
+      <categories>
+        <category>面试题</category>
+        <category>JVM 面试题</category>
+      </categories>
+      <tags>
+        <tag>面试题</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MyBrtis面试题</title>
+    <url>/2025/08/05/Interview/MyBatis%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
+    <content><![CDATA[MyBrtis面试题]]></content>
+      <categories>
+        <category>面试题</category>
+        <category>MyBatis面试题</category>
+      </categories>
+      <tags>
+        <tag>面试题</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java并发面试题</title>
     <url>/2025/07/09/Interview/Java%E5%B9%B6%E5%8F%91%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
     <content><![CDATA[Java 并发面试题基础什么是 java 中的线程安全查看答案在 Java 中，线程安全是指一个类或对象在多线程环境下能够正确执行，不会出现数据不一致或其他异常。其核心在于处理共享可变状态的访问。
@@ -1297,116 +1407,6 @@ shutdownNow()
       </tags>
   </entry>
   <entry>
-    <title>JVM面试题</title>
-    <url>/2025/08/06/Interview/JVM%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
-    <content><![CDATA[JVM 面试题Java 内存模型中堆(Heap)和栈(Stack)的区别?
-
-
-对比维度
-堆（Heap）
-栈（Stack，通常指虚拟机栈）
-
-
-
-存储内容
-所有对象实例（new创建的对象）、数组
-局部变量（方法内定义的变量）、方法调用信息（栈帧，包含操作数栈、局部变量表等）
-
-
-线程共享性
-所有线程共享，是线程不安全的（需同步机制保障）
-线程私有，每个线程有独立的栈，线程间不共享
-
-
-生命周期
-与 JVM 进程一致（随 JVM 启动而创建，退出而销毁）
-与线程 &#x2F; 方法调用绑定：线程启动时创建栈，方法调用时创建栈帧，方法结束时栈帧销毁
-
-
-内存管理
-由 JVM 自动管理，依赖垃圾回收器（GC）回收内存
-无需 GC，随方法调用 &#x2F; 线程结束自动释放内存（栈帧出栈）
-
-
-大小与调整
-内存空间较大（通常几 GB），可通过-Xms（初始）、-Xmx（最大）参数调整
-内存空间较小（通常几 MB），可通过-Xss参数调整单个线程的栈大小
-
-
-异常类型
-内存不足时触发OutOfMemoryError: Java heap space
-栈深度超限触发StackOverflowError；栈扩展失败触发OutOfMemoryError: Stack overflow（部分 JVM）
-
-
-什么情况下会触发OutOfMemoryError?OutOfMemoryError本质是 “内存区域无法分配新空间”，不同内存区域的 OOM 触发原因不同，具体如下：
-1. 堆内存溢出（Java heap space）
-触发原因：堆中创建的对象 &#x2F; 数组过多，且无法被垃圾回收（存在有效引用），导致堆空间耗尽。
-
-典型场景：
-
-内存泄漏：对象不再使用但仍被引用（如静态集合持有大量过期对象），例如：
-static List&lt;Object&gt; list = new ArrayList&lt;&gt;();while (true) &#123;    list.add(new Object()); // 对象被静态集合引用，无法GC，最终堆溢出&#125;
-
-对象创建速度超过 GC 回收速度：短时间内创建大量对象（如高并发下的大对象频繁实例化），堆空间无法及时释放。
-
-
-
-解决思路：通过-Xmx调大堆内存；排查内存泄漏（用 MAT 等工具分析堆快照）；优化对象创建逻辑（如复用对象、使用池化技术）
-
-
-2. 方法区 &#x2F; 元空间溢出（Metaspace OOM 或 PermGen space）
-触发原因：方法区（JDK8 + 为元空间，JDK7 及之前为永久代）存储类信息、常量、静态变量等，当加载的类过多或常量池过大时，空间耗尽。
-
-典型场景：
-
-动态生成大量类：如使用 CGLib、JDK 动态代理等频繁生成子类（每个类的信息都存于方法区），例如：
-while (true) &#123;    Enhancer enhancer = new Enhancer();    enhancer.setSuperclass(User.class);    enhancer.create(); // 每次创建都会生成新的代理类，类信息累积导致元空间溢出&#125;
-
-常量池过大：字符串常量池（JDK7 后移至堆，但部分实现仍可能关联方法区）存储过多字符串，且无法被回收（如String.intern()滥用）。
-
-
-
-
-3. 虚拟机栈 &#x2F; 本地方法栈溢出（StackOverflowError 与 Stack OOM）StackOverflowError（更常见）：线程栈深度超过最大限制（方法调用层级过深，如无限递归），例如：
-public void recursive() &#123;    recursive(); // 无限递归，栈帧不断入栈，最终栈深度超限&#125;
-
-OutOfMemoryError: Stack overflow（部分 JVM）：如果 JVM 允许栈动态扩展，当扩展时无法申请到足够内存（如创建大量线程，每个线程栈占用内存累积超过系统限制），例如：
-while (true) &#123;    new Thread(() -&gt; &#123;        while (true) &#123;&#125; // 线程不退出，持续占用栈内存，最终总栈内存耗尽    &#125;).start();&#125;
-
-
-解决思路：通过-Xss调大单个线程栈大小（但会减少最大线程数）；避免无限递归；控制线程创建数量（用线程池）。
-
-4. 直接内存溢出（Direct buffer memory）
-触发原因：直接内存（不受 JVM 堆管理，由操作系统直接分配）通常用于 NIO（DirectByteBuffer），当分配的直接内存超过限制（默认与堆最大值一致），会触发 OOM。
-
-典型场景：
-while (true) &#123;    ByteBuffer.allocateDirect(1024 * 1024); // 持续分配直接内存，超过限制后溢出&#125;
-
-解决思路：通过-XX:MaxDirectMemorySize调大直接内存限制；及时释放不再使用的DirectByteBuffer（避免长期引用）。
-
-
-]]></content>
-      <categories>
-        <category>面试题</category>
-        <category>JVM 面试题</category>
-      </categories>
-      <tags>
-        <tag>面试题</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MyBrtis面试题</title>
-    <url>/2025/08/05/Interview/MyBatis%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
-    <content><![CDATA[MyBrtis面试题]]></content>
-      <categories>
-        <category>面试题</category>
-        <category>MyBatis面试题</category>
-      </categories>
-      <tags>
-        <tag>面试题</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java面试题</title>
     <url>/2025/07/03/Interview/Java%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
     <content><![CDATA[Java 面试题Java 语法基础练习题翻转整数给定一个 32 位有符号整数，将整数中的数字进行反转。如果反转后整数溢出那么就返回 0。
@@ -1788,10 +1788,10 @@ SPI
 
 
 API：你调用别人提供的功能（如使用HashMap）
-.bpegvbzchxul{zoom: 67%;}
+.dauxfofltvbq{zoom: 67%;}
 
 SPI：别人调用你实现的扩展（如为JDBC提供新驱动）
-.rkmllhghndms{zoom: 67%;}
+.izewnnthogvd{zoom: 67%;}
 
 
 
@@ -2203,285 +2203,6 @@ ConcurrentHashMap 为什么 key 和 value 不能为 null？查看答案
       <categories>
         <category>面试题</category>
         <category>Java 面试题</category>
-      </categories>
-      <tags>
-        <tag>面试题</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>SpringBoot面试题</title>
-    <url>/2025/07/02/Interview/SpringBoot%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
-    <content><![CDATA[SpringBoot面试题什么是Spring Boot？有哪些优点？Spring Boot 是基于 Spring 框架的快速开发脚手架，它的核心目标是 “简化 Spring 应用的开发、配置和部署流程”。它并非替代 Spring，而是通过 “约定大于配置” 的设计理念，整合 Spring 生态的底层能力（如 IOC、AOP），解决传统 Spring 开发中 “配置繁琐、依赖冲突、部署复杂” 等痛点，让开发者能更专注于业务逻辑，快速搭建可直接运行的生产级应用。
-
-自动配置，减少冗余配置
-传统 Spring 开发需要手动写大量 XML 或注解配置（比如配置数据源、MVC 映射等），而 Spring Boot 会根据引入的依赖（如引入spring-boot-starter-web）自动推断并配置相关组件（如 Tomcat、DispatcherServlet），无需手动干预，大幅减少配置工作量。
-
-起步依赖，解决依赖管理难题
-传统开发中，需要手动引入多个相关依赖（如 Web 开发需手动加spring-web、tomcat等），还可能因版本不兼容导致冲突。Spring Boot 将常用依赖打包成 “starter”（如starter-web、starter-jpa），引入一个 starter 即可自动获取所有相关依赖及适配版本，避免版本冲突。
-
-嵌入式服务器，简化部署流程
-默认集成 Tomcat、Jetty 等嵌入式服务器，无需单独安装和配置外部服务器，应用可直接打包成 Jar 包，通过java -jar命令启动，部署流程从 “部署 war 包到服务器” 简化为 “一行命令启动”，极大降低部署成本。
-
-开发效率高，支持快速迭代
-内置热部署（如spring-boot-devtools），修改代码后无需重启应用即可生效；同时提供自动配置的监控（如 Actuator）、日志等基础能力，开发者无需从零搭建，能快速聚焦业务开发。
-
-无缝兼容 Spring 生态，学习成本低
-完全继承 Spring 的核心功能（IOC、AOP 等），熟悉 Spring 的开发者能快速上手；同时兼容 Spring Cloud 等微服务组件，适合微服务架构开发，无需额外学习新框架。
-
-简化测试，支持开箱即用的测试工具
-集成spring-boot-starter-test，内置 JUnit、Mockito 等测试工具，无需手动配置测试环境，可直接编写单元测试、集成测试，降低测试门槛。
-
-
-说说Spring Boot的启动流程sequenceDiagram
-    participant Main as main()
-    participant SA as SpringApplication
-    participant AC as ApplicationContext
-    participant RS as Runner
-    
-    Main-&gt;&gt;SA: SpringApplication.run()
-    SA-&gt;&gt;SA: 初始化阶段
-    SA-&gt;&gt;AC: 创建应用上下文
-    AC-&gt;&gt;AC: 准备阶段
-    AC-&gt;&gt;AC: 刷新阶段（核心）
-    AC-&gt;&gt;RS: 执行Runner
-    AC--&gt;&gt;Main: 返回ApplicationContext
-
-
-启动入口：SpringApplication.run()
-一切从main方法调用SpringApplication.run()开始：
-@SpringBootApplicationpublic class MyApp &#123;    public static void main(String[] args) &#123;        SpringApplication.run(MyApp.class, args);    &#125;&#125;
-
-这个静态方法会：
-
-创建SpringApplication实例
-调用其run()方法开始启动流程
-
-
-SpringApplication实例化（初始化准备）
-SpringApplication.run()方法首先会创建SpringApplication实例，此过程主要完成基础配置初始化，具体包括：
-
-判断应用类型：根据类路径（classpath）是否存在Servlet、Reactive相关类，确定应用类型（如SERVLET、REACTIVE），后续将创建对应类型的ApplicationContext。
-加载初始化器（Initializer）：从META-INF/spring.factories中加载所有ApplicationContextInitializer（上下文初始化器），用于在上下文刷新前对其进行自定义配置（如设置环境变量、注册 Bean 等）。
-加载监听器（Listener）：同样从META-INF/spring.factories中加载所有ApplicationListener（应用监听器），用于监听启动过程中的各种事件（如环境准备完成、上下文刷新完成等），实现扩展逻辑。
-确定主应用类：通过main方法所在的类，定位主应用类（即标注@SpringBootApplication的类）。
-
-
-run()方法执行（容器启动核心流程）
-SpringApplication实例创建后，调用其run(args)方法，开始容器启动，核心步骤如下：
-
-步骤 1：启动计时器与发布启动事件
-
-启动计时器（StopWatch），用于记录启动耗时。
-发布ApplicationStartingEvent事件（启动开始），所有监听器可响应此事件（如初始化日志系统）。
-
-
-步骤 2：准备环境（Environment）
-
-创建并配置 Environment（环境对象），包含：
-
-整合命令行参数（args）、系统变量、环境变量、配置文件（application.yml/properties）等配置源。
-激活指定的配置文件（如spring.profiles.active=dev）。
-
-
-发布ApplicationEnvironmentPreparedEvent事件（环境准备完成），监听器可在此阶段修改环境配置（如动态添加配置）。
-
-
-
-步骤 3：打印 Banner（可选）
-
-读取banner.txt（默认在classpath下），打印启动图案（可通过spring.banner.location自定义，或关闭spring.main.banner-mode=off）。
-
-
-步骤 4：创建 ApplicationContext（应用上下文）
-
-根据之前判断的应用类型，创建对应的ApplicationContext（如 Servlet 应用对应AnnotationConfigServletWebServerApplicationContext）。
-为上下文设置环境（Environment）、注册主应用类为配置类。
-
-
-步骤 5：准备 ApplicationContext（上下文预处理）
-
-应用初始化器（ApplicationContextInitializer）：调用所有初始化器的initialize(context)方法，对上下文进行预处理（如注册 BeanDefinition、设置上下文属性）。
-发布ApplicationContextInitializedEvent事件（上下文初始化完成）。
-注册特殊 Bean：如将命令行参数args封装为CommandLineArgs对象并注册到容器。
-
-
-步骤 6：刷新 ApplicationContext（核心中的核心）
-此步骤复用了 Spring Framework 的AbstractApplicationContext.refresh()逻辑，是容器初始化的核心，主要包括：
-
-BeanFactory 初始化：创建DefaultListableBeanFactory作为 Bean 容器。
-加载 Bean 定义：扫描主类所在包及子包（基于@ComponentScan），解析@Component、@Service等注解的类，将其注册为BeanDefinition（Bean 定义）。
-执行自动配置：通过@EnableAutoConfiguration触发，从META-INF/spring.factories加载AutoConfiguration类，根据条件（@Conditional）注册符合条件的 Bean（如数据源、Web 服务器等）。
-初始化非懒加载单例 Bean：实例化并初始化所有非懒加载的单例 Bean（依赖注入在此阶段完成）。
-启动嵌入式服务器：对于 Web 应用，会触发ServletWebServerFactory（如TomcatServletWebServerFactory）的 Bean，创建并启动嵌入式服务器（Tomcat&#x2F;Netty 等）。
-发布ContextRefreshedEvent事件（上下文刷新完成）。
-
-
-步骤 7：刷新后处理
-
-执行 ApplicationRunner 和 CommandLineRunner ：容器刷新完成后，自动调用所有实现这两个接口的 Bean 的run()方法，用于执行启动后的初始化逻辑（如数据加载、缓存预热）。
-
-区别：ApplicationRunner接收ApplicationArguments（包装后的参数），CommandLineRunner接收原始String[] args。
-
-
-
-
-步骤 8：启动完成
-
-发布ApplicationStartedEvent（容器启动完成）和ApplicationReadyEvent（应用可接收请求）事件。
-停止计时器，打印启动耗时。
-返回创建好的ApplicationContext，应用正式启动完成。
-
-
-
-
-
-讲述一下 SpringBoot 自动装配原理自动装配可以简单理解为：通过注解或者一些简单的配置就能在 Spring Boot 的帮助下实现某块功能。
-SpringBoot 自动装配的核心是： 
-
-基于 SPI 机制：通过spring.factories发现候选配置类。 
-条件化加载：使用@Conditional系列注解动态决定配置类是否生效。 
-可覆盖设计：默认配置可被用户自定义配置轻松替换。
-
-一、核心设计思想传统 Spring 开发需要手动配置大量 Bean（如数据源、WebMvc 配置），而 SpringBoot 通过自动装配实现：
-
-无配置启动：只需添加 starter 依赖（如spring-boot-starter-web），无需 XML 或 JavaConfig，应用即可自动配置并启动。
-条件化装配：根据类路径（Classpath）中存在的类、配置属性等条件，动态决定是否加载某个配置。
-可定制化：自动配置并非强制，用户可通过自定义 Bean 或配置文件覆盖默认配置。
-
-二、实现机制：基于 SPI 的自动发现SpringBoot 的自动装配基于 Java 的服务发现机制（SPI, Service Provider Interface），核心流程如下：
-1. 启动入口：@SpringBootApplication注解主类上的@SpringBootApplication是自动装配的起点，它是一个组合注解：
-@SpringBootApplicationpublic class DemoApplication &#123; ... &#125;// 等价于以下三个注解@SpringBootConfiguration  // 等价于@Configuration@EnableAutoConfiguration  // 开启自动装配核心@ComponentScan            // 扫描@Component及其子注解（@Service、@Repository等）
-
-2. 核心注解：@EnableAutoConfiguration这个注解导入了AutoConfigurationImportSelector类，负责加载自动配置类：
-@Import(AutoConfigurationImportSelector.class)public @interface EnableAutoConfiguration &#123; ... &#125;
-
-3. 自动配置类加载：spring.factoriesAutoConfigurationImportSelector会从META-INF/spring.factories（Spring Boot 2.7+ 以后从 META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports）文件中读取所有自动配置类：
-# spring-boot-autoconfigure-*.jar/META-INF/spring.factoriesorg.springframework.boot.autoconfigure.EnableAutoConfiguration=\org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration,\org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,\org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration,\...
-
-每个自动配置类（如WebMvcAutoConfiguration）都是一个完整的 JavaConfig，包含多个 Bean 定义。
-三、条件化装配：@Conditional注解自动配置类并非一定会生效，而是通过@Conditional及其衍生注解进行条件判断：
-
-
-
-注解
-作用场景
-
-
-
-@ConditionalOnClass
-当类路径中存在指定类时生效
-
-
-@ConditionalOnMissingClass
-当类路径中不存在指定类时生效
-
-
-@ConditionalOnBean
-当容器中存在指定 Bean 时生效
-
-
-@ConditionalOnMissingBean
-当容器中不存在指定 Bean 时生效
-
-
-@ConditionalOnProperty
-当配置文件中存在指定属性且值符合条件时生效
-
-
-@ConditionalOnWebApplication
-当应用是 Web 应用时生效
-
-
-示例：DataSourceAutoConfiguration中的条件装配
-@Configuration(proxyBeanMethods = false)@ConditionalOnClass(&#123; DataSource.class, EmbeddedDatabaseType.class &#125;)@ConditionalOnMissingBean(DataSource.class)@ConditionalOnProperty(prefix = &quot;spring.datasource&quot;, name = &quot;url&quot;, matchIfMissing = false)public class DataSourceAutoConfiguration &#123;    // 仅当类路径存在DataSource和EmbeddedDatabaseType    // 且容器中没有手动配置DataSource Bean    // 且配置文件中存在spring.datasource.url属性时，此配置才生效&#125;
-
-四、自定义与覆盖机制自动配置提供默认实现，但用户可通过以下方式覆盖：
-1. 自定义 Bean在@Configuration类中手动定义 Bean，会优先于自动配置中的 Bean：
-@Configurationpublic class MyConfig &#123;    @Bean    public DataSource dataSource() &#123;        // 自定义数据源，覆盖自动配置的数据源        return new MyDataSource();    &#125;&#125;
-
-2. 配置文件属性通过application.properties或application.yml修改默认配置：
-spring:  datasource:    url: jdbc:mysql://localhost:3306/mydb  # 覆盖自动配置的数据库连接URL    username: root    password: secret
-
-3. 排除特定自动配置类在@SpringBootApplication中排除不需要的自动配置：
-@SpringBootApplication(exclude = &#123;DataSourceAutoConfiguration.class&#125;)public class DemoApplication &#123; ... &#125;
-
-五、自动配置执行流程
-启动入口：SpringApplication.run()触发自动装配流程。
-加载自动配置类：AutoConfigurationImportSelector从spring.factories读取候选配置类。
-筛选有效配置类：通过@Conditional注解过滤不符合条件的配置类。
-加载有效配置类：将符合条件的配置类注册到 Spring 容器，完成 Bean 的自动装配。
-
-如何自定义一个 SpringBoot Srarter?一、Starter 的核心组成一个完整的 Starter 通常包含 3 部分：
-
-自动配置模块：包含@Configuration配置类，负责自动装配 Bean。
-配置属性类：通过@ConfigurationProperties绑定用户配置（如application.properties中的属性）。
-META-INF&#x2F;spring.factories：注册自动配置类，让 SpringBoot 启动时能扫描到。
-
-二、自定义 Starter 的步骤（以 “demo-starter” 为例）步骤 1：创建 Starter 项目（Maven&#x2F;Gradle）推荐使用 Maven，项目结构如下：
-demo-spring-boot-starter/├── src/│   ├── main/│   │   ├── java/│   │   │   └── com/│   │   │       └── demo/│   │   │           ├── config/          // 自动配置类│   │   │           └── properties/     // 配置属性类│   │   └── resources/│   │       └── META-INF/│   │           ├── spring.factories    // 注册自动配置│   │           └── spring-configuration-metadata.json  // 配置元数据（可选，用于IDE提示）│   └── test/└── pom.xml
-
-步骤 2：配置 pom.xml 依赖核心依赖包括：
-
-spring-boot-autoconfigure：提供自动配置基础能力。
-spring-boot-configuration-processor：可选，用于生成配置元数据（IDE 会提示配置项）。
-
-&lt;dependencies&gt;    &lt;!-- 自动配置核心依赖 --&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;        &lt;artifactId&gt;spring-boot-autoconfigure&lt;/artifactId&gt;        &lt;version&gt;2.7.0&lt;/version&gt; &lt;!-- 与目标SpringBoot版本一致 --&gt;    &lt;/dependency&gt;    &lt;!-- 配置元数据生成器（可选，提升用户体验） --&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;        &lt;artifactId&gt;spring-boot-configuration-processor&lt;/artifactId&gt;        &lt;version&gt;2.7.0&lt;/version&gt;        &lt;optional&gt;true&lt;/optional&gt; &lt;!-- 避免传递依赖 --&gt;    &lt;/dependency&gt;    &lt;!-- starter需要的核心功能依赖（例如，假设我们的starter提供一个简单的服务） --&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;        &lt;artifactId&gt;lombok&lt;/artifactId&gt;        &lt;version&gt;1.18.24&lt;/version&gt;        &lt;optional&gt;true&lt;/optional&gt; &lt;!-- 若用户可能已引入，标记为可选 --&gt;    &lt;/dependency&gt;&lt;/dependencies&gt;
-
-注意：
-
-避免引入不必要的依赖，防止版本冲突（使用optional=true控制传递）。
-Starter 命名规范：官方建议第三方 Starter 命名为xxx-spring-boot-starter（区分官方的spring-boot-starter-xxx）。
-
-步骤 3：定义配置属性类（绑定用户配置）通过@ConfigurationProperties将用户在application.properties中的配置（如demo.prefix）绑定到 Java 类，供自动配置类使用。
-// com.demo.properties.DemoProperties.java@Data@ConfigurationProperties(prefix = &quot;demo&quot;) // 配置前缀public class DemoProperties &#123;    // 默认值：若用户未配置，使用该值    private String prefix = &quot;defaultPrefix&quot;;    private boolean enabled = true; // 是否启用功能&#125;
-
-用户使用时可在配置文件中自定义：
-# application.propertiesdemo.prefix=myPrefixdemo.enabled=true
-
-步骤 4：编写自动配置类（核心逻辑）自动配置类负责根据条件（如@Conditional）装配 Bean，依赖步骤 3 的配置属性。
-// com.demo.config.DemoAutoConfiguration.java@Configuration@EnableConfigurationProperties(DemoProperties.class) // 启用配置属性类@ConditionalOnProperty(prefix = &quot;demo&quot;, name = &quot;enabled&quot;, havingValue = &quot;true&quot;, matchIfMissing = true)// 条件：当demo.enabled=true时生效（默认生效）public class DemoAutoConfiguration &#123;    private final DemoProperties properties;    // 注入配置属性    public DemoAutoConfiguration(DemoProperties properties) &#123;        this.properties = properties;    &#125;    // 自动装配核心Bean：仅当容器中没有该Bean时才自动配置（允许用户自定义覆盖）    @Bean    @ConditionalOnMissingBean    public DemoService demoService() &#123;        return new DemoService(properties.getPrefix());    &#125;&#125;// 核心功能类public class DemoService &#123;    private final String prefix;    public DemoService(String prefix) &#123;        this.prefix = prefix;    &#125;    public String doSomething(String input) &#123;        return prefix + &quot;:&quot; + input;    &#125;&#125;
-
-
-关键注解说明：
-
-@Configuration：标记为配置类。
-@EnableConfigurationProperties：使DemoProperties生效，可被注入。
-@ConditionalOnProperty：根据配置属性决定是否启用配置。
-@ConditionalOnMissingBean：若用户手动定义了DemoService，则不使用自动配置的 Bean（允许覆盖）。
-
-
-步骤 5：注册自动配置类（spring.factories）SpringBoot 启动时会通过 SPI 机制扫描META-INF/spring.factories，因此需要在此文件中注册自动配置类。
-创建src/main/resources/META-INF/spring.factories：
-# 格式：key为EnableAutoConfiguration的全路径，value为自动配置类的全路径（多个用逗号分隔）org.springframework.boot.autoconfigure.EnableAutoConfiguration=\com.demo.config.DemoAutoConfiguration
-
-步骤 6：生成配置元数据（提升用户体验）若引入了spring-boot-configuration-processor，编译时会自动生成META-INF/spring-configuration-metadata.json，IDE（如 IDEA）会根据该文件提示配置项（如demo.prefix的说明）。
-如需自定义元数据（如描述），可创建src/main/resources/META-INF/additional-spring-configuration-metadata.json：
-&#123;  &quot;properties&quot;: [    &#123;      &quot;name&quot;: &quot;demo.prefix&quot;,      &quot;type&quot;: &quot;java.lang.String&quot;,      &quot;description&quot;: &quot;功能前缀，用于拼接输出内容。&quot;,      &quot;defaultValue&quot;: &quot;defaultPrefix&quot;    &#125;,    &#123;      &quot;name&quot;: &quot;demo.enabled&quot;,      &quot;type&quot;: &quot;java.lang.Boolean&quot;,      &quot;description&quot;: &quot;是否启用demo功能。&quot;,      &quot;defaultValue&quot;: true    &#125;  ]&#125;
-
-步骤 7：打包发布执行mvn clean install，将 Starter 安装到本地仓库（或发布到私服），供其他项目引入。
-三、测试自定义 Starter创建一个测试项目， pom.xml 文件中引入自定义 Starter 依赖，验证自动配置是否生效。
-1.  pom.xml 文件中引入依赖&lt;dependency&gt;    &lt;groupId&gt;com.demo&lt;/groupId&gt;    &lt;artifactId&gt;demo-spring-boot-starter&lt;/artifactId&gt;    &lt;version&gt;1.0.0&lt;/version&gt;&lt;/dependency&gt;
-
-2. 编写测试代码在application.properties 配置文件中配置：
-demo.prefix=myPrefixdemo.enabled=true
-
-测试类中：
-@SpringBootTestpublic class DemoStarterTest &#123;    @Autowired    private DemoService demoService; // 自动注入Starter中的Bean    @Test    public void testDoSomething() &#123;        String result = demoService.doSomething(&quot;test&quot;);        //用户在 中配置了demo.prefix=myPrefix，结果应为&quot;myPrefix:test&quot;        //未配置 则输出 &quot;defaultPrefix:test&quot;        System.out.println(result);     &#125;&#125;
-
-3. 验证覆盖机制手动定义DemoService，验证是否覆盖自动配置：
-@Configurationpublic class TestConfig &#123;     // 若用户手动定义了`DemoService`，则不使用自动配置的 Bean（允许覆盖）。    @Bean    public DemoService customDemoService() &#123;        return new DemoService(&quot;customPrefix&quot;); // 自定义Bean    &#125;&#125;
-
-测试结果应为customPrefix:test，说明覆盖生效。
-四、总结自定义 Starter 的核心流程是：
-
-定义配置属性：通过@ConfigurationProperties绑定用户配置。
-编写自动配置类：用@Conditional控制 Bean 的装配条件，支持用户覆盖。
-注册配置类：通过spring.factories让 SpringBoot 扫描到。
-
-]]></content>
-      <categories>
-        <category>面试题</category>
-        <category>Spring Boot面试题</category>
       </categories>
       <tags>
         <tag>面试题</tag>
@@ -3326,181 +3047,282 @@ Extra 字段（额外执行信息）：
       </tags>
   </entry>
   <entry>
-    <title>MySQL运维</title>
-    <url>/2025/06/27/MySQL/MySQL%E8%BF%90%E7%BB%B4/</url>
-    <content><![CDATA[MySQL运维日志文件错误日志错误日志是 MySQL 中最重要的日志之一，它记录了当 mysqld 启动和停止时，以及服务器在运行过程中发生任何严重错误时的相关信息。当数据库出现任何故障导致无法正常使用时，建议首先查看此日志。
-该日志是默认开启的，默认存放目录 &#x2F;var&#x2F;log&#x2F;，默认的日志文件名为 mysqld.log 。查看日志位置：
-show variables like &#x27;%log_error%&#x27;;
+    <title>SpringBoot面试题</title>
+    <url>/2025/07/02/Interview/SpringBoot%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
+    <content><![CDATA[SpringBoot面试题什么是Spring Boot？有哪些优点？Spring Boot 是基于 Spring 框架的快速开发脚手架，它的核心目标是 “简化 Spring 应用的开发、配置和部署流程”。它并非替代 Spring，而是通过 “约定大于配置” 的设计理念，整合 Spring 生态的底层能力（如 IOC、AOP），解决传统 Spring 开发中 “配置繁琐、依赖冲突、部署复杂” 等痛点，让开发者能更专注于业务逻辑，快速搭建可直接运行的生产级应用。
 
+自动配置，减少冗余配置
+传统 Spring 开发需要手动写大量 XML 或注解配置（比如配置数据源、MVC 映射等），而 Spring Boot 会根据引入的依赖（如引入spring-boot-starter-web）自动推断并配置相关组件（如 Tomcat、DispatcherServlet），无需手动干预，大幅减少配置工作量。
 
-二进制日志（BIN LOG）概述二进制日志（BINLOG）记录了所有的 DDL（数据定义语言）语句和 DML（数据操纵语言）语句，但不包括数据查询（SELECT、SHOW）语句。
-作用：
-​	①. 灾难时的数据恢复。
-​	②. MySQL的主从复制。
-在MySQL8版本中，默认二进制日志是开启着的，涉及到的参数如下：
-show variables like &#x27;%log_bin%&#x27;;
+起步依赖，解决依赖管理难题
+传统开发中，需要手动引入多个相关依赖（如 Web 开发需手动加spring-web、tomcat等），还可能因版本不兼容导致冲突。Spring Boot 将常用依赖打包成 “starter”（如starter-web、starter-jpa），引入一个 starter 即可自动获取所有相关依赖及适配版本，避免版本冲突。
 
+嵌入式服务器，简化部署流程
+默认集成 Tomcat、Jetty 等嵌入式服务器，无需单独安装和配置外部服务器，应用可直接打包成 Jar 包，通过java -jar命令启动，部署流程从 “部署 war 包到服务器” 简化为 “一行命令启动”，极大降低部署成本。
 
-参数说明： 
+开发效率高，支持快速迭代
+内置热部署（如spring-boot-devtools），修改代码后无需重启应用即可生效；同时提供自动配置的监控（如 Actuator）、日志等基础能力，开发者无需从零搭建，能快速聚焦业务开发。
 
-log_bin_basename：当前数据库服务器的binlog日志的基础名称(前缀)，具体的binlog文件名需要再该basename的基础上加上编号(编号从000001开始)。
-log_bin_index：binlog的索引文件，里面记录了当前服务器关联的binlog文件有哪些。
+无缝兼容 Spring 生态，学习成本低
+完全继承 Spring 的核心功能（IOC、AOP 等），熟悉 Spring 的开发者能快速上手；同时兼容 Spring Cloud 等微服务组件，适合微服务架构开发，无需额外学习新框架。
 
-格式MySQL服务器中提供了多种格式来记录二进制日志，具体格式及特点如下：
+简化测试，支持开箱即用的测试工具
+集成spring-boot-starter-test，内置 JUnit、Mockito 等测试工具，无需手动配置测试环境，可直接编写单元测试、集成测试，降低测试门槛。
 
 
+说说Spring Boot的启动流程sequenceDiagram
+    participant Main as main()
+    participant SA as SpringApplication
+    participant AC as ApplicationContext
+    participant RS as Runner
+    
+    Main-&gt;&gt;SA: SpringApplication.run()
+    SA-&gt;&gt;SA: 初始化阶段
+    SA-&gt;&gt;AC: 创建应用上下文
+    AC-&gt;&gt;AC: 准备阶段
+    AC-&gt;&gt;AC: 刷新阶段（核心）
+    AC-&gt;&gt;RS: 执行Runner
+    AC--&gt;&gt;Main: 返回ApplicationContext
 
-日志格式
-含义
 
+启动入口：SpringApplication.run()
+一切从main方法调用SpringApplication.run()开始：
+@SpringBootApplicationpublic class MyApp &#123;    public static void main(String[] args) &#123;        SpringApplication.run(MyApp.class, args);    &#125;&#125;
 
+这个静态方法会：
 
-STATEMENT
-基于SQL语句的日志记录，记录的是SQL语句，对数据进行修改的SQL都会记录在 日志文件中。
+创建SpringApplication实例
+调用其run()方法开始启动流程
 
 
-ROW
-基于行的日志记录，记录的是每一行的数据变更。（默认）
+SpringApplication实例化（初始化准备）
+SpringApplication.run()方法首先会创建SpringApplication实例，此过程主要完成基础配置初始化，具体包括：
 
+判断应用类型：根据类路径（classpath）是否存在Servlet、Reactive相关类，确定应用类型（如SERVLET、REACTIVE），后续将创建对应类型的ApplicationContext。
+加载初始化器（Initializer）：从META-INF/spring.factories中加载所有ApplicationContextInitializer（上下文初始化器），用于在上下文刷新前对其进行自定义配置（如设置环境变量、注册 Bean 等）。
+加载监听器（Listener）：同样从META-INF/spring.factories中加载所有ApplicationListener（应用监听器），用于监听启动过程中的各种事件（如环境准备完成、上下文刷新完成等），实现扩展逻辑。
+确定主应用类：通过main方法所在的类，定位主应用类（即标注@SpringBootApplication的类）。
 
-MIXED
-混合了STATEMENT和ROW两种格式，默认采用STATEMENT，在某些特殊情况下会 自动切换为ROW进行记录。
 
+run()方法执行（容器启动核心流程）
+SpringApplication实例创建后，调用其run(args)方法，开始容器启动，核心步骤如下：
 
-show variables like &#x27;%binlog_format%&#x27;;
+步骤 1：启动计时器与发布启动事件
 
+启动计时器（StopWatch），用于记录启动耗时。
+发布ApplicationStartingEvent事件（启动开始），所有监听器可响应此事件（如初始化日志系统）。
 
-如果我们需要配置二进制日志的格式，只需要在 &#x2F;etc&#x2F;my.cnf 中配置 binlog_format 参数即可。
-查看由于日志是以二进制方式存储的，不能直接读取，需要通过二进制日志查询工具 mysqlbinlog 来查看，具体语法：
-mysqlbinlog [ 参数选项 ] logfilename参数选项：-d 指定数据库名称，只列出指定的数据库相关操作。-o 忽略掉日志中的前n行命令。-v 将行事件(数据变更)重构为SQL语句-vv 将行事件(数据变更)重构为SQL语句，并输出注释信息
 
-删除对于比较繁忙的业务系统，每天生成的binlog数据巨大，如果长时间不清除，将会占用大量磁盘空 间。可以通过以下几种方式清理日志：
+步骤 2：准备环境（Environment）
 
+创建并配置 Environment（环境对象），包含：
 
+整合命令行参数（args）、系统变量、环境变量、配置文件（application.yml/properties）等配置源。
+激活指定的配置文件（如spring.profiles.active=dev）。
 
-指令
-含义
 
+发布ApplicationEnvironmentPreparedEvent事件（环境准备完成），监听器可在此阶段修改环境配置（如动态添加配置）。
 
 
-reset master
-删除全部 binlog 日志，删除之后，日志编号，将 从 binlog.000001重新开始
 
+步骤 3：打印 Banner（可选）
 
-purge master logs to ‘binlog.*’
-删除 * 编号之前的所有日志
+读取banner.txt（默认在classpath下），打印启动图案（可通过spring.banner.location自定义，或关闭spring.main.banner-mode=off）。
 
 
-purge master logs before ‘yyyy-mm-dd hh24:mi:ss’
-删除日志为 “yyyy-mm-dd hh24:mi:ss” 之前 产生的所有日志
+步骤 4：创建 ApplicationContext（应用上下文）
 
+根据之前判断的应用类型，创建对应的ApplicationContext（如 Servlet 应用对应AnnotationConfigServletWebServerApplicationContext）。
+为上下文设置环境（Environment）、注册主应用类为配置类。
 
-也可以在mysql的配置文件中配置二进制日志的过期时间，设置了之后，二进制日志过期会自动删除。
-show variables like &#x27;%binlog_expire_logs_seconds%&#x27;;
 
-慢查询日志慢查询日志记录了所有执行时间超过参数long_query_time设置值并且扫描记录数不小于 min_examined_row_limit 的所有的SQL语句的日志，默认未开启。long_query_time 默认为 10 秒，最小为 0， 精度可以到微秒。
- 如果需要开启慢查询日志，需要在MySQL的配置文件 &#x2F;etc&#x2F;my.cnf 中配置如下参数：
-#慢查询日志slow_query_log=1#执行时间参数long_query_time=2
+步骤 5：准备 ApplicationContext（上下文预处理）
 
-默认情况下，不会记录管理语句，也不会记录不使用索引进行查找的查询。可以使用 log_slow_admin_statements和 更改此行为 log_queries_not_using_indexes，如下所述。
-#记录执行较慢的管理语句log_slow_admin_statements =1#记录执行较慢的未使用索引的语句log_queries_not_using_indexes = 1
+应用初始化器（ApplicationContextInitializer）：调用所有初始化器的initialize(context)方法，对上下文进行预处理（如注册 BeanDefinition、设置上下文属性）。
+发布ApplicationContextInitializedEvent事件（上下文初始化完成）。
+注册特殊 Bean：如将命令行参数args封装为CommandLineArgs对象并注册到容器。
 
 
-上述所有的参数配置完成之后，都需要重新启动MySQL服务器才可以生效。
+步骤 6：刷新 ApplicationContext（核心中的核心）
+此步骤复用了 Spring Framework 的AbstractApplicationContext.refresh()逻辑，是容器初始化的核心，主要包括：
 
-主从复制概述主从复制是指将主数据库的 DDL 和 DML 操作通过二进制日志传到从库服务器中，然后在从库上对这些日志重新执行（也叫重做），从而使得从库和主库的数据保持同步。
-MySQL支持一台主库同时向多台从库进行复制， 从库同时也可以作为其他从服务器的主库，实现链状复制。
+BeanFactory 初始化：创建DefaultListableBeanFactory作为 Bean 容器。
+加载 Bean 定义：扫描主类所在包及子包（基于@ComponentScan），解析@Component、@Service等注解的类，将其注册为BeanDefinition（Bean 定义）。
+执行自动配置：通过@EnableAutoConfiguration触发，从META-INF/spring.factories加载AutoConfiguration类，根据条件（@Conditional）注册符合条件的 Bean（如数据源、Web 服务器等）。
+初始化非懒加载单例 Bean：实例化并初始化所有非懒加载的单例 Bean（依赖注入在此阶段完成）。
+启动嵌入式服务器：对于 Web 应用，会触发ServletWebServerFactory（如TomcatServletWebServerFactory）的 Bean，创建并启动嵌入式服务器（Tomcat&#x2F;Netty 等）。
+发布ContextRefreshedEvent事件（上下文刷新完成）。
 
-MySQL 复制的优点主要包含以下三个方面：
 
-主库出现问题，可以快速切换到从库提供服务。 
-实现读写分离，降低主库的访问压力。 
-可以在从库中执行备份，以避免备份期间影响主库服务。
+步骤 7：刷新后处理
 
-原理MySQL主从复制的核心就是二进制日志，具体的过程如下：
+执行 ApplicationRunner 和 CommandLineRunner ：容器刷新完成后，自动调用所有实现这两个接口的 Bean 的run()方法，用于执行启动后的初始化逻辑（如数据加载、缓存预热）。
 
-复制分成三步： 
+区别：ApplicationRunner接收ApplicationArguments（包装后的参数），CommandLineRunner接收原始String[] args。
 
-Master 主库在事务提交时，会把数据变更记录在二进制日志文件 Binlog 中。 
-从库读取主库的二进制日志文件 Binlog ，写入到从库的中继日志 Relay Log 。 
-slave重做中继日志中的事件，将改变反映它自己的数据。
 
-分库分表概述问题分析
 
-随着互联网及移动互联网的发展，应用系统的数据量也是成指数式增长，若采用单数据库进行数据存储，存在以下性能瓶颈：
 
-IO瓶颈：热点数据太多、数据库缓存不足、产生大量磁盘IO、效率较低。 请求数据太多、带宽不够、网络IO瓶颈。
-CPU瓶颈：排序、分组、连接查询、聚合统计等SQL会耗费大量的CPU资源，请求数太多，CPU出现瓶颈。
+步骤 8：启动完成
 
-为了解决上述问题，我们需要对数据库进行分库分表处理。
+发布ApplicationStartedEvent（容器启动完成）和ApplicationReadyEvent（应用可接收请求）事件。
+停止计时器，打印启动耗时。
+返回创建好的ApplicationContext，应用正式启动完成。
 
-分库分表的中心思想就是将数据分散存储，使得单一数据库&#x2F;表的数据量变小来缓解单一数据库的性能问题，从而达到提升数据库性能的目的。
-拆分策略分库分表的形式，主要是两种：垂直拆分和水平拆分。而拆分的粒度，一般又分为分库和分表，所以组成的拆分策略最终如下：
 
-垂直拆分
-垂直分库：以表为依据，根据业务将不同表拆分到不同库中。
 
-特点： 
 
-每个库的表结构都不一样。 
-每个库的数据也不一样。
-所有库的并集是全量数据。
 
+讲述一下 SpringBoot 自动装配原理自动装配可以简单理解为：通过注解或者一些简单的配置就能在 Spring Boot 的帮助下实现某块功能。
+SpringBoot 自动装配的核心是： 
 
-垂直分表：以字段为依据，根据字段属性将不同字段拆分到不同表中。
+基于 SPI 机制：通过spring.factories发现候选配置类。 
+条件化加载：使用@Conditional系列注解动态决定配置类是否生效。 
+可覆盖设计：默认配置可被用户自定义配置轻松替换。
 
-特点：
+一、核心设计思想传统 Spring 开发需要手动配置大量 Bean（如数据源、WebMvc 配置），而 SpringBoot 通过自动装配实现：
 
-每个表的结构都不一样。 
-每个表的数据也不一样，一般通过一列（主键&#x2F;外键）关联。 
-所有表的并集是全量数据。
+无配置启动：只需添加 starter 依赖（如spring-boot-starter-web），无需 XML 或 JavaConfig，应用即可自动配置并启动。
+条件化装配：根据类路径（Classpath）中存在的类、配置属性等条件，动态决定是否加载某个配置。
+可定制化：自动配置并非强制，用户可通过自定义 Bean 或配置文件覆盖默认配置。
 
+二、实现机制：基于 SPI 的自动发现SpringBoot 的自动装配基于 Java 的服务发现机制（SPI, Service Provider Interface），核心流程如下：
+1. 启动入口：@SpringBootApplication注解主类上的@SpringBootApplication是自动装配的起点，它是一个组合注解：
+@SpringBootApplicationpublic class DemoApplication &#123; ... &#125;// 等价于以下三个注解@SpringBootConfiguration  // 等价于@Configuration@EnableAutoConfiguration  // 开启自动装配核心@ComponentScan            // 扫描@Component及其子注解（@Service、@Repository等）
 
+2. 核心注解：@EnableAutoConfiguration这个注解导入了AutoConfigurationImportSelector类，负责加载自动配置类：
+@Import(AutoConfigurationImportSelector.class)public @interface EnableAutoConfiguration &#123; ... &#125;
 
-水平拆分
-水平分库：以字段为依据，按照一定策略，将一个库的数据拆分到多个库中。
+3. 自动配置类加载：spring.factoriesAutoConfigurationImportSelector会从META-INF/spring.factories（Spring Boot 2.7+ 以后从 META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports）文件中读取所有自动配置类：
+# spring-boot-autoconfigure-*.jar/META-INF/spring.factoriesorg.springframework.boot.autoconfigure.EnableAutoConfiguration=\org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration,\org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,\org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration,\...
 
-特点：
+每个自动配置类（如WebMvcAutoConfiguration）都是一个完整的 JavaConfig，包含多个 Bean 定义。
+三、条件化装配：@Conditional注解自动配置类并非一定会生效，而是通过@Conditional及其衍生注解进行条件判断：
 
-每个库的表结构都一样。 
-每个库的数据都不一样。 
-所有库的并集是全量数据。
 
 
-水平分表：以字段为依据，按照一定策略，将一个表的数据拆分到多个表中。
+注解
+作用场景
 
-特点： 
 
-每个表的表结构都一样。
-每个表的数据都不一样。 
-所有表的并集是全量数据。
 
+@ConditionalOnClass
+当类路径中存在指定类时生效
 
 
+@ConditionalOnMissingClass
+当类路径中不存在指定类时生效
 
-在业务系统中，为了缓解磁盘IO及CPU的性能瓶颈，到底是垂直拆分，还是水平拆分；具体是分 库，还是分表，都需要根据具体的业务需求具体分析。
 
-实现技术
-shardingJDBC：基于AOP原理，在应用程序中对本地执行的SQL进行拦截，解析、改写、路由处 理。需要自行编码配置实现，只支持java语言，性能较高。
-MyCat：数据库分库分表中间件，不用调整代码即可实现分库分表，支持多种语言，性能不及前者。
+@ConditionalOnBean
+当容器中存在指定 Bean 时生效
 
 
-本次课程，我们选择了是MyCat数据库中间件，通过MyCat中间件来完成分库分表操作。
-MyCattodo :后面在学习，现在准备面试了解基本概念。
-读写分离概述读写分离,简单地说是把对数据库的读和写操作分开,以对应不同的数据库服务器。主数据库提供写操作，从数据库提供读操作，这样能有效地减轻单台数据库的压力。
-通过MyCat即可轻易实现上述功能，不仅可以支持MySQL，也可以支持Oracle和SQL Server。
+@ConditionalOnMissingBean
+当容器中不存在指定 Bean 时生效
 
-一主一从原理：MySQL的主从复制，是基于二进制日志（binlog）实现的。
-一主一从读写分离MyCat控制后台数据库的读写分离和负载均衡由schema.xml文件datahost标签的balance属性控制。
-双主双从一个主机 Master1 用于处理所有写请求，它的从机 Slave1 和另一台主机 Master2 还有它的从 机 Slave2 负责所有读请求。当 Master1 主机宕机后，Master2 主机负责写请求，Master1 、 Master2 互为备机。架构图如下:
+
+@ConditionalOnProperty
+当配置文件中存在指定属性且值符合条件时生效
+
+
+@ConditionalOnWebApplication
+当应用是 Web 应用时生效
+
+
+示例：DataSourceAutoConfiguration中的条件装配
+@Configuration(proxyBeanMethods = false)@ConditionalOnClass(&#123; DataSource.class, EmbeddedDatabaseType.class &#125;)@ConditionalOnMissingBean(DataSource.class)@ConditionalOnProperty(prefix = &quot;spring.datasource&quot;, name = &quot;url&quot;, matchIfMissing = false)public class DataSourceAutoConfiguration &#123;    // 仅当类路径存在DataSource和EmbeddedDatabaseType    // 且容器中没有手动配置DataSource Bean    // 且配置文件中存在spring.datasource.url属性时，此配置才生效&#125;
+
+四、自定义与覆盖机制自动配置提供默认实现，但用户可通过以下方式覆盖：
+1. 自定义 Bean在@Configuration类中手动定义 Bean，会优先于自动配置中的 Bean：
+@Configurationpublic class MyConfig &#123;    @Bean    public DataSource dataSource() &#123;        // 自定义数据源，覆盖自动配置的数据源        return new MyDataSource();    &#125;&#125;
+
+2. 配置文件属性通过application.properties或application.yml修改默认配置：
+spring:  datasource:    url: jdbc:mysql://localhost:3306/mydb  # 覆盖自动配置的数据库连接URL    username: root    password: secret
+
+3. 排除特定自动配置类在@SpringBootApplication中排除不需要的自动配置：
+@SpringBootApplication(exclude = &#123;DataSourceAutoConfiguration.class&#125;)public class DemoApplication &#123; ... &#125;
+
+五、自动配置执行流程
+启动入口：SpringApplication.run()触发自动装配流程。
+加载自动配置类：AutoConfigurationImportSelector从spring.factories读取候选配置类。
+筛选有效配置类：通过@Conditional注解过滤不符合条件的配置类。
+加载有效配置类：将符合条件的配置类注册到 Spring 容器，完成 Bean 的自动装配。
+
+如何自定义一个 SpringBoot Srarter?一、Starter 的核心组成一个完整的 Starter 通常包含 3 部分：
+
+自动配置模块：包含@Configuration配置类，负责自动装配 Bean。
+配置属性类：通过@ConfigurationProperties绑定用户配置（如application.properties中的属性）。
+META-INF&#x2F;spring.factories：注册自动配置类，让 SpringBoot 启动时能扫描到。
+
+二、自定义 Starter 的步骤（以 “demo-starter” 为例）步骤 1：创建 Starter 项目（Maven&#x2F;Gradle）推荐使用 Maven，项目结构如下：
+demo-spring-boot-starter/├── src/│   ├── main/│   │   ├── java/│   │   │   └── com/│   │   │       └── demo/│   │   │           ├── config/          // 自动配置类│   │   │           └── properties/     // 配置属性类│   │   └── resources/│   │       └── META-INF/│   │           ├── spring.factories    // 注册自动配置│   │           └── spring-configuration-metadata.json  // 配置元数据（可选，用于IDE提示）│   └── test/└── pom.xml
+
+步骤 2：配置 pom.xml 依赖核心依赖包括：
+
+spring-boot-autoconfigure：提供自动配置基础能力。
+spring-boot-configuration-processor：可选，用于生成配置元数据（IDE 会提示配置项）。
+
+&lt;dependencies&gt;    &lt;!-- 自动配置核心依赖 --&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;        &lt;artifactId&gt;spring-boot-autoconfigure&lt;/artifactId&gt;        &lt;version&gt;2.7.0&lt;/version&gt; &lt;!-- 与目标SpringBoot版本一致 --&gt;    &lt;/dependency&gt;    &lt;!-- 配置元数据生成器（可选，提升用户体验） --&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;        &lt;artifactId&gt;spring-boot-configuration-processor&lt;/artifactId&gt;        &lt;version&gt;2.7.0&lt;/version&gt;        &lt;optional&gt;true&lt;/optional&gt; &lt;!-- 避免传递依赖 --&gt;    &lt;/dependency&gt;    &lt;!-- starter需要的核心功能依赖（例如，假设我们的starter提供一个简单的服务） --&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;        &lt;artifactId&gt;lombok&lt;/artifactId&gt;        &lt;version&gt;1.18.24&lt;/version&gt;        &lt;optional&gt;true&lt;/optional&gt; &lt;!-- 若用户可能已引入，标记为可选 --&gt;    &lt;/dependency&gt;&lt;/dependencies&gt;
+
+注意：
+
+避免引入不必要的依赖，防止版本冲突（使用optional=true控制传递）。
+Starter 命名规范：官方建议第三方 Starter 命名为xxx-spring-boot-starter（区分官方的spring-boot-starter-xxx）。
+
+步骤 3：定义配置属性类（绑定用户配置）通过@ConfigurationProperties将用户在application.properties中的配置（如demo.prefix）绑定到 Java 类，供自动配置类使用。
+// com.demo.properties.DemoProperties.java@Data@ConfigurationProperties(prefix = &quot;demo&quot;) // 配置前缀public class DemoProperties &#123;    // 默认值：若用户未配置，使用该值    private String prefix = &quot;defaultPrefix&quot;;    private boolean enabled = true; // 是否启用功能&#125;
+
+用户使用时可在配置文件中自定义：
+# application.propertiesdemo.prefix=myPrefixdemo.enabled=true
+
+步骤 4：编写自动配置类（核心逻辑）自动配置类负责根据条件（如@Conditional）装配 Bean，依赖步骤 3 的配置属性。
+// com.demo.config.DemoAutoConfiguration.java@Configuration@EnableConfigurationProperties(DemoProperties.class) // 启用配置属性类@ConditionalOnProperty(prefix = &quot;demo&quot;, name = &quot;enabled&quot;, havingValue = &quot;true&quot;, matchIfMissing = true)// 条件：当demo.enabled=true时生效（默认生效）public class DemoAutoConfiguration &#123;    private final DemoProperties properties;    // 注入配置属性    public DemoAutoConfiguration(DemoProperties properties) &#123;        this.properties = properties;    &#125;    // 自动装配核心Bean：仅当容器中没有该Bean时才自动配置（允许用户自定义覆盖）    @Bean    @ConditionalOnMissingBean    public DemoService demoService() &#123;        return new DemoService(properties.getPrefix());    &#125;&#125;// 核心功能类public class DemoService &#123;    private final String prefix;    public DemoService(String prefix) &#123;        this.prefix = prefix;    &#125;    public String doSomething(String input) &#123;        return prefix + &quot;:&quot; + input;    &#125;&#125;
+
+
+关键注解说明：
+
+@Configuration：标记为配置类。
+@EnableConfigurationProperties：使DemoProperties生效，可被注入。
+@ConditionalOnProperty：根据配置属性决定是否启用配置。
+@ConditionalOnMissingBean：若用户手动定义了DemoService，则不使用自动配置的 Bean（允许覆盖）。
+
+
+步骤 5：注册自动配置类（spring.factories）SpringBoot 启动时会通过 SPI 机制扫描META-INF/spring.factories，因此需要在此文件中注册自动配置类。
+创建src/main/resources/META-INF/spring.factories：
+# 格式：key为EnableAutoConfiguration的全路径，value为自动配置类的全路径（多个用逗号分隔）org.springframework.boot.autoconfigure.EnableAutoConfiguration=\com.demo.config.DemoAutoConfiguration
+
+步骤 6：生成配置元数据（提升用户体验）若引入了spring-boot-configuration-processor，编译时会自动生成META-INF/spring-configuration-metadata.json，IDE（如 IDEA）会根据该文件提示配置项（如demo.prefix的说明）。
+如需自定义元数据（如描述），可创建src/main/resources/META-INF/additional-spring-configuration-metadata.json：
+&#123;  &quot;properties&quot;: [    &#123;      &quot;name&quot;: &quot;demo.prefix&quot;,      &quot;type&quot;: &quot;java.lang.String&quot;,      &quot;description&quot;: &quot;功能前缀，用于拼接输出内容。&quot;,      &quot;defaultValue&quot;: &quot;defaultPrefix&quot;    &#125;,    &#123;      &quot;name&quot;: &quot;demo.enabled&quot;,      &quot;type&quot;: &quot;java.lang.Boolean&quot;,      &quot;description&quot;: &quot;是否启用demo功能。&quot;,      &quot;defaultValue&quot;: true    &#125;  ]&#125;
+
+步骤 7：打包发布执行mvn clean install，将 Starter 安装到本地仓库（或发布到私服），供其他项目引入。
+三、测试自定义 Starter创建一个测试项目， pom.xml 文件中引入自定义 Starter 依赖，验证自动配置是否生效。
+1.  pom.xml 文件中引入依赖&lt;dependency&gt;    &lt;groupId&gt;com.demo&lt;/groupId&gt;    &lt;artifactId&gt;demo-spring-boot-starter&lt;/artifactId&gt;    &lt;version&gt;1.0.0&lt;/version&gt;&lt;/dependency&gt;
+
+2. 编写测试代码在application.properties 配置文件中配置：
+demo.prefix=myPrefixdemo.enabled=true
+
+测试类中：
+@SpringBootTestpublic class DemoStarterTest &#123;    @Autowired    private DemoService demoService; // 自动注入Starter中的Bean    @Test    public void testDoSomething() &#123;        String result = demoService.doSomething(&quot;test&quot;);        //用户在 中配置了demo.prefix=myPrefix，结果应为&quot;myPrefix:test&quot;        //未配置 则输出 &quot;defaultPrefix:test&quot;        System.out.println(result);     &#125;&#125;
+
+3. 验证覆盖机制手动定义DemoService，验证是否覆盖自动配置：
+@Configurationpublic class TestConfig &#123;     // 若用户手动定义了`DemoService`，则不使用自动配置的 Bean（允许覆盖）。    @Bean    public DemoService customDemoService() &#123;        return new DemoService(&quot;customPrefix&quot;); // 自定义Bean    &#125;&#125;
+
+测试结果应为customPrefix:test，说明覆盖生效。
+四、总结自定义 Starter 的核心流程是：
+
+定义配置属性：通过@ConfigurationProperties绑定用户配置。
+编写自动配置类：用@Conditional控制 Bean 的装配条件，支持用户覆盖。
+注册配置类：通过spring.factories让 SpringBoot 扫描到。
 
 ]]></content>
       <categories>
-        <category>MySQL</category>
-        <category>MySQL进阶</category>
+        <category>面试题</category>
+        <category>Spring Boot面试题</category>
       </categories>
       <tags>
-        <tag>MySQL进阶 学习笔记</tag>
+        <tag>面试题</tag>
       </tags>
   </entry>
   <entry>
@@ -3600,7 +3422,7 @@ Spring Boot 已弃用 spring-boot-starter-log4j：  Spring Boot 从 1.2.x 版本
 配置文件
 
    以前需要在application-context.xml 文件中配置
-   .chwmthociykd{zoom:80%;}
+   .jmkfofuyimns{zoom:80%;}
 
    现在只需要在application.yaml 文件中配置即可。
    
@@ -3630,30 +3452,6 @@ mvc:   view:     prefix: /WEB-INF/jsp/ #配置视图解析器     suffix: .jsp w
       </categories>
       <tags>
         <tag>随笔</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>JVM 基础 1 - JVM介绍</title>
-    <url>/2025/05/21/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%201%20-%20JVM%E4%BB%8B%E7%BB%8D/</url>
-    <content><![CDATA[JVM什么是JVMJVM 全称是 Java Virtual Machine，中文译名 Java虚拟机，是 Java 生态的核心，它负责执行字节码，提供内存管理、垃圾回收、线程管理等功能，使 Java 程序能够实现 “一次编写，到处运行” 的跨平台特性。
-JVM的三大核心功能是什么？JVM 包含内存管理、解释执行虚拟机指令、即时编译三大功能。
-常见的JVM虚拟机有哪些？
-JVM知识体系
-学习文献
-
-https://blog.csdn.net/weixin_50280576/article/details/113775575
-https://lisxpq12rl7.feishu.cn/wiki/F2AFw0doOiW89Fkr8kGcCTyVnLh
-https://pdai.tech/md/java/jvm/java-jvm-x-overview.html
-https://javaguide.cn/java/jvm/jvm-garbage-collection.html
-https://javabetter.cn/jvm/jit.html
-
-]]></content>
-      <categories>
-        <category>JAVA</category>
-        <category>JVM</category>
-      </categories>
-      <tags>
-        <tag>Java进阶 学习笔记</tag>
       </tags>
   </entry>
   <entry>
@@ -4210,7 +4008,7 @@ ExceptionHandler（异常处理器）：统一处理控制器抛出的异常。
 MultipartResolver（文件上传解析器）：处理文件上传请求。
 
 
-Spring MVC 的工作原理.bzkxgkgelboo{zoom: 67%;}
+Spring MVC 的工作原理.xceyimnhieqh{zoom: 67%;}
 
 
 请求到达：用户发送 HTTP 请求到 Web 服务器。
@@ -4593,6 +4391,208 @@ catch (Exception e) &#123;    TransactionAspectSupport.currentTransactionStatus(
       </categories>
       <tags>
         <tag>面试题</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL运维</title>
+    <url>/2025/06/27/MySQL/MySQL%E8%BF%90%E7%BB%B4/</url>
+    <content><![CDATA[MySQL运维日志文件错误日志错误日志是 MySQL 中最重要的日志之一，它记录了当 mysqld 启动和停止时，以及服务器在运行过程中发生任何严重错误时的相关信息。当数据库出现任何故障导致无法正常使用时，建议首先查看此日志。
+该日志是默认开启的，默认存放目录 &#x2F;var&#x2F;log&#x2F;，默认的日志文件名为 mysqld.log 。查看日志位置：
+show variables like &#x27;%log_error%&#x27;;
+
+
+二进制日志（BIN LOG）概述二进制日志（BINLOG）记录了所有的 DDL（数据定义语言）语句和 DML（数据操纵语言）语句，但不包括数据查询（SELECT、SHOW）语句。
+作用：
+​	①. 灾难时的数据恢复。
+​	②. MySQL的主从复制。
+在MySQL8版本中，默认二进制日志是开启着的，涉及到的参数如下：
+show variables like &#x27;%log_bin%&#x27;;
+
+
+参数说明： 
+
+log_bin_basename：当前数据库服务器的binlog日志的基础名称(前缀)，具体的binlog文件名需要再该basename的基础上加上编号(编号从000001开始)。
+log_bin_index：binlog的索引文件，里面记录了当前服务器关联的binlog文件有哪些。
+
+格式MySQL服务器中提供了多种格式来记录二进制日志，具体格式及特点如下：
+
+
+
+日志格式
+含义
+
+
+
+STATEMENT
+基于SQL语句的日志记录，记录的是SQL语句，对数据进行修改的SQL都会记录在 日志文件中。
+
+
+ROW
+基于行的日志记录，记录的是每一行的数据变更。（默认）
+
+
+MIXED
+混合了STATEMENT和ROW两种格式，默认采用STATEMENT，在某些特殊情况下会 自动切换为ROW进行记录。
+
+
+show variables like &#x27;%binlog_format%&#x27;;
+
+
+如果我们需要配置二进制日志的格式，只需要在 &#x2F;etc&#x2F;my.cnf 中配置 binlog_format 参数即可。
+查看由于日志是以二进制方式存储的，不能直接读取，需要通过二进制日志查询工具 mysqlbinlog 来查看，具体语法：
+mysqlbinlog [ 参数选项 ] logfilename参数选项：-d 指定数据库名称，只列出指定的数据库相关操作。-o 忽略掉日志中的前n行命令。-v 将行事件(数据变更)重构为SQL语句-vv 将行事件(数据变更)重构为SQL语句，并输出注释信息
+
+删除对于比较繁忙的业务系统，每天生成的binlog数据巨大，如果长时间不清除，将会占用大量磁盘空 间。可以通过以下几种方式清理日志：
+
+
+
+指令
+含义
+
+
+
+reset master
+删除全部 binlog 日志，删除之后，日志编号，将 从 binlog.000001重新开始
+
+
+purge master logs to ‘binlog.*’
+删除 * 编号之前的所有日志
+
+
+purge master logs before ‘yyyy-mm-dd hh24:mi:ss’
+删除日志为 “yyyy-mm-dd hh24:mi:ss” 之前 产生的所有日志
+
+
+也可以在mysql的配置文件中配置二进制日志的过期时间，设置了之后，二进制日志过期会自动删除。
+show variables like &#x27;%binlog_expire_logs_seconds%&#x27;;
+
+慢查询日志慢查询日志记录了所有执行时间超过参数long_query_time设置值并且扫描记录数不小于 min_examined_row_limit 的所有的SQL语句的日志，默认未开启。long_query_time 默认为 10 秒，最小为 0， 精度可以到微秒。
+ 如果需要开启慢查询日志，需要在MySQL的配置文件 &#x2F;etc&#x2F;my.cnf 中配置如下参数：
+#慢查询日志slow_query_log=1#执行时间参数long_query_time=2
+
+默认情况下，不会记录管理语句，也不会记录不使用索引进行查找的查询。可以使用 log_slow_admin_statements和 更改此行为 log_queries_not_using_indexes，如下所述。
+#记录执行较慢的管理语句log_slow_admin_statements =1#记录执行较慢的未使用索引的语句log_queries_not_using_indexes = 1
+
+
+上述所有的参数配置完成之后，都需要重新启动MySQL服务器才可以生效。
+
+主从复制概述主从复制是指将主数据库的 DDL 和 DML 操作通过二进制日志传到从库服务器中，然后在从库上对这些日志重新执行（也叫重做），从而使得从库和主库的数据保持同步。
+MySQL支持一台主库同时向多台从库进行复制， 从库同时也可以作为其他从服务器的主库，实现链状复制。
+
+MySQL 复制的优点主要包含以下三个方面：
+
+主库出现问题，可以快速切换到从库提供服务。 
+实现读写分离，降低主库的访问压力。 
+可以在从库中执行备份，以避免备份期间影响主库服务。
+
+原理MySQL主从复制的核心就是二进制日志，具体的过程如下：
+
+复制分成三步： 
+
+Master 主库在事务提交时，会把数据变更记录在二进制日志文件 Binlog 中。 
+从库读取主库的二进制日志文件 Binlog ，写入到从库的中继日志 Relay Log 。 
+slave重做中继日志中的事件，将改变反映它自己的数据。
+
+分库分表概述问题分析
+
+随着互联网及移动互联网的发展，应用系统的数据量也是成指数式增长，若采用单数据库进行数据存储，存在以下性能瓶颈：
+
+IO瓶颈：热点数据太多、数据库缓存不足、产生大量磁盘IO、效率较低。 请求数据太多、带宽不够、网络IO瓶颈。
+CPU瓶颈：排序、分组、连接查询、聚合统计等SQL会耗费大量的CPU资源，请求数太多，CPU出现瓶颈。
+
+为了解决上述问题，我们需要对数据库进行分库分表处理。
+
+分库分表的中心思想就是将数据分散存储，使得单一数据库&#x2F;表的数据量变小来缓解单一数据库的性能问题，从而达到提升数据库性能的目的。
+拆分策略分库分表的形式，主要是两种：垂直拆分和水平拆分。而拆分的粒度，一般又分为分库和分表，所以组成的拆分策略最终如下：
+
+垂直拆分
+垂直分库：以表为依据，根据业务将不同表拆分到不同库中。
+
+特点： 
+
+每个库的表结构都不一样。 
+每个库的数据也不一样。
+所有库的并集是全量数据。
+
+
+垂直分表：以字段为依据，根据字段属性将不同字段拆分到不同表中。
+
+特点：
+
+每个表的结构都不一样。 
+每个表的数据也不一样，一般通过一列（主键&#x2F;外键）关联。 
+所有表的并集是全量数据。
+
+
+
+水平拆分
+水平分库：以字段为依据，按照一定策略，将一个库的数据拆分到多个库中。
+
+特点：
+
+每个库的表结构都一样。 
+每个库的数据都不一样。 
+所有库的并集是全量数据。
+
+
+水平分表：以字段为依据，按照一定策略，将一个表的数据拆分到多个表中。
+
+特点： 
+
+每个表的表结构都一样。
+每个表的数据都不一样。 
+所有表的并集是全量数据。
+
+
+
+
+在业务系统中，为了缓解磁盘IO及CPU的性能瓶颈，到底是垂直拆分，还是水平拆分；具体是分 库，还是分表，都需要根据具体的业务需求具体分析。
+
+实现技术
+shardingJDBC：基于AOP原理，在应用程序中对本地执行的SQL进行拦截，解析、改写、路由处 理。需要自行编码配置实现，只支持java语言，性能较高。
+MyCat：数据库分库分表中间件，不用调整代码即可实现分库分表，支持多种语言，性能不及前者。
+
+
+本次课程，我们选择了是MyCat数据库中间件，通过MyCat中间件来完成分库分表操作。
+MyCattodo :后面在学习，现在准备面试了解基本概念。
+读写分离概述读写分离,简单地说是把对数据库的读和写操作分开,以对应不同的数据库服务器。主数据库提供写操作，从数据库提供读操作，这样能有效地减轻单台数据库的压力。
+通过MyCat即可轻易实现上述功能，不仅可以支持MySQL，也可以支持Oracle和SQL Server。
+
+一主一从原理：MySQL的主从复制，是基于二进制日志（binlog）实现的。
+一主一从读写分离MyCat控制后台数据库的读写分离和负载均衡由schema.xml文件datahost标签的balance属性控制。
+双主双从一个主机 Master1 用于处理所有写请求，它的从机 Slave1 和另一台主机 Master2 还有它的从 机 Slave2 负责所有读请求。当 Master1 主机宕机后，Master2 主机负责写请求，Master1 、 Master2 互为备机。架构图如下:
+
+]]></content>
+      <categories>
+        <category>MySQL</category>
+        <category>MySQL进阶</category>
+      </categories>
+      <tags>
+        <tag>MySQL进阶 学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JVM 基础 1 - JVM介绍</title>
+    <url>/2025/05/21/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%201%20-%20JVM%E4%BB%8B%E7%BB%8D/</url>
+    <content><![CDATA[JVM什么是JVMJVM 全称是 Java Virtual Machine，中文译名 Java虚拟机，是 Java 生态的核心，它负责执行字节码，提供内存管理、垃圾回收、线程管理等功能，使 Java 程序能够实现 “一次编写，到处运行” 的跨平台特性。
+JVM的三大核心功能是什么？JVM 包含内存管理、解释执行虚拟机指令、即时编译三大功能。
+常见的JVM虚拟机有哪些？
+JVM知识体系
+学习文献
+
+https://blog.csdn.net/weixin_50280576/article/details/113775575
+https://lisxpq12rl7.feishu.cn/wiki/F2AFw0doOiW89Fkr8kGcCTyVnLh
+https://pdai.tech/md/java/jvm/java-jvm-x-overview.html
+https://javaguide.cn/java/jvm/jvm-garbage-collection.html
+https://javabetter.cn/jvm/jit.html
+
+]]></content>
+      <categories>
+        <category>JAVA</category>
+        <category>JVM</category>
+      </categories>
+      <tags>
+        <tag>Java进阶 学习笔记</tag>
       </tags>
   </entry>
   <entry>
@@ -5295,7 +5295,7 @@ create unique index idx_user_phone_name on tb_user(phone,name);
 
 在业务场景中，如果存在多个查询条件，考虑针对于查询字段建立索引时，建议建立联合索引， 而非单列索引。
 
-.ijvgqrhgqssf{zoom:67%;}
+.bnvafifnbcjy{zoom:67%;}
 
 前缀索引当字段类型为字符串（varchar，text，longtext等）时，有时候需要索引很长的字符串，这会让 索引变得很大，查询时，浪费大量的磁盘IO， 影响查询效率。此时可以只将字符串的一部分前缀，建立索引，这样可以大大节约索引空间，从而提高索引效率。
 
@@ -6307,6 +6307,350 @@ RR隔离级别下，仅在事务中第一次执行快照读时生成ReadView，�
       </tags>
   </entry>
   <entry>
+    <title>JVM 基础 5 - GC 垃圾回收</title>
+    <url>/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</url>
+    <content><![CDATA[垃圾回收JVM 垃圾回收 (Garbage Collection, GC) 是 Java 虚拟机自动管理堆内存的核心机制。它负责识别并回收程序中不再使用的对象所占用的内存，防止内存泄漏，极大地简化了开发人员的内存管理工作。  
+垃圾回收器如果发现某个对象不再使用，就可以回收该对象。
+.hjuidxdcjpxh{zoom: 67%;}
+
+.lhcioorxtqyn{zoom:67%;}
+
+
+自动垃圾回收，自动根据对象是否使用由虚拟机来回收对象
+
+优点：降低程序员实现难度、降低对象回收bug的可能性
+缺点：程序员无法控制内存回收的及时性
+
+
+手动垃圾回收，由程序员编程实现对象的删除
+
+优点：回收及时性高，由程序员把控回收的时机
+缺点：编写不当容易出现悬空指针、重复释放、内存泄漏等问题
+
+
+
+
+如果需要手动触发垃圾回收，可以调用System.gc()方法。语法： System.gc()注意事项：   调用System.gc()方法并不一定会立即回收垃圾，仅仅是向Java虚拟机发送一个垃圾回收的请求，具体是否需要执行垃圾回收Java虚拟机会自行判断。
+
+如何判断对象可以回收引用计数法引用计数法会为每个对象维护一个引用计数器，当对象被引用时加1，取消引用时减1。当值为 0 时，就表示该对象不被引用，可以被垃圾收集器回收。
+缺点：  
+
+每次引用和取消引用都需要维护计数器，对系统性能会有一定的影响
+存在循环引用问题，所谓循环引用就是当A引用B，B同时引用A时会出现对象无法回收的问题。如下图：
+
+.dljlmcxuruub{zoom:80%;}
+
+可达性分析法通过 GC Roots 作为起始点进行搜索，能够到达到的对象都是存活的，不可达的对象可被回收。
+
+
+JVM 中的垃圾回收器通过可达性分析来探索所有存活的对象
+扫描堆中的对象，看能否沿着 GC Root 对象为起点的引用链找到该对象，如果找不到，则表示可以回收
+Java 中可以作为 GC Root 的对象：
+虚拟机栈（栈帧中的本地变量表）中引用的对象。
+方法区中类静态属性引用的对象
+方法区中常量引用的对象
+本地方法栈中 JNI（即一般说的Native方法）引用的对象
+
+引用对象.qradgfticbek{zoom:80%;}
+
+1. 强引用（StrongReference）被强引用关联的对象不会被回收。只有GC Root都不引用该对象时，才会回收强引用对象
+2. 软引用（SoftReference）如果一个对象只有软引用引对象时，当程序内存不足时，就会将软引用中的数据进行回收。在JDK 1.2版之后提供了SoftReference类来实现软引用，软引用常用于缓存中。
+3. 弱引用（WeakReference）如果一个对象只有弱引用该对象时，在垃圾回收时，无论内存是否充足，就会将弱引用中的数据进行回收。在JDK 1.2版之后提供了WeakReference类来实现弱引用，弱引用主要在ThreadLocal中使用。
+4. 虚引用（PhantomReference）（不常见）虚引用也叫幽灵引用&#x2F;幻影引用，不能通过虚引用对象获取到包含的对象。虚引用唯一的用途是当对象被垃圾回收器回收时可以接收到对应的通知。Java中使用PhantomReference实现了虚引用，直接内存中为了及时知道直接内存对象不再使用，从而回收内存，使用了虚引用来实现。
+5. 终结器引用（FinalReference）（不常见）终结器引用指的是在对象需要被回收时，终结器引用会关联对象并放置在Finalizer类中的引用队列中，在稍后由一条由FinalizerThread线程从队列中获取对象，然后执行对象的finalize方法，在对象第二次被回收时，该对象才真正的被回收。在这个过程中可以在finalize方法中再将自身对象使用强引用关联上，但是不建议这样做。
+垃圾回收算法1. 标记-清除算法
+虚拟机执行垃圾回收的过程中，使用可达性分析算法，从GC Root开始通过引用链遍历出所有存活对象。将所有存活的对象进行标记。
+然后垃圾收集器根据标识清除没有被标记也就是非存活对象，给堆内存腾出相应的空间
+
+
+优点：实现简单，只需要在第一阶段给每个对象维护标志位，第二阶段删除对象即可。
+缺点：
+
+会产生大量不连续的内存碎片，导致无法给大对象分配内存。由于内存是连续的，所以在对象被删除之后，内存中会出现很多细小的可用内存单元。如果我们需要的是一个比较大的空间，很有可能这些内存单元的大小过小无法进行分配。
+分配速度慢。由于内存碎片的存在，需要维护一个空闲链表，极有可能发生每次需要遍历到链表的最后才能获得合适的内存空间。
+标记和清除过程效率都不高。
+
+2. 标记-整理算法标记整理算法也叫标记压缩算法，是对标记清理算法中容易产生内存碎片问题的一种解决方案。
+
+标记阶段，将所有存活的对象进行标记。Java中使用可达性分析算法，从GC Root开始通过引用链遍历出所有存活对象。
+整理阶段，将存活对象移动到堆的一端。清理掉存活对象的内存空间。
+
+
+优点：不会产生内存碎片。
+缺点：内存变动更频繁，需要整理所有存活对象的引用地址，效率不高。
+3. 复制算法将内存划分为大小相等的两块，每次只使用其中一块，当这一块内存用完了就将还存活的对象复制到另一块上面，然后再把使用过的内存空间进行一次清理，最后会把位置互换。
+
+优点：不会产生内存碎片；吞吐量高，复制算法只需要遍历一次存活对象复制到To空间即可，比标记-整理算法少了一次遍历的过程，因而性能较好，但是不如标记-清除算法，因为标记清除算法不需要进行对象的移动
+缺点：内存使用效率低，每次只能让一半的内存空间来为创建对象使用。
+4. 分代垃圾回收算法现代优秀的垃圾回收算法，会将上述描述的垃圾回收算法组合进行使用，其中应用最广的就是分代垃圾回收算法(Generational GC)。  
+分代垃圾回收将整个内存区域划分为年轻代（复制算法）和老年代（标记 - 清除 或者 标记 - 整理 算法）：
+.xnwnjrjistnw{zoom: 80%;}
+
+
+分代回收时，创建出来的对象，首先会被放入Eden伊甸园区。
+
+随着对象在Eden区越来越多，如果Eden区满，新创建的对象已经无法放入，就会触发年轻代的GC，称为Minor GC或者Young GC。  
+Minor GC会把需要eden中和From需要回收的对象回收，把没有回收的对象放入To区。
+
+接下来，S0会变成To区，S1变成From区。当eden区满时再往里放入对象，依然会发生Minor GC。  
+此时会回收eden区和S1(from)中的对象，并把eden和from区中剩余的对象放入S0。注意：每次Minor GC中都会为对象记录他的年龄，初始值为0，每次GC完加1。
+
+如果Minor GC后对象的年龄达到阈值（最大15，默认值和垃圾回收器有关），对象就会被晋升至老年代。
+
+当老年代中空间不足，无法放入新的对象时，先尝试minor gc如果还是不足，就会触发Full GC，Full GC会对整个堆进行垃圾回收。
+如果Full GC依然无法回收掉老年代的对象，那么当对象继续放入老年代时，就会抛出Out Of Memory异常。
+
+特殊情况：当遇到一个较大的对象时，就算新生代的伊甸园为空，也无法容纳该对象时，会将该对象直接晋升为老年代。
+
+
+相关 JVM 参数
+
+
+含义
+参数
+
+
+
+堆初始大小必须是1024倍数且大于1MB
+-Xms
+
+
+堆最大大小必须是1024倍数且大于1MB
+-Xmx 或 -XX:MaxHeapSize&#x3D;size
+
+
+新生代大小
+-Xmn 或 (-XX:NewSize&#x3D;size + -XX:MaxNewSize&#x3D;size )
+
+
+幸存区比例（动态）
+-XX:InitialSurvivorRatio&#x3D;ratio 和 -XX:+UseAdaptiveSizePolicy
+
+
+伊甸园区和幸存区的比例，默认8，新生代1G，伊甸园区800MB,S0和S1各100MB
+-XX:SurvivorRatio&#x3D;ratio
+
+
+晋升阈值
+-XX:MaxTenuringThreshold&#x3D;threshold
+
+
+晋升详情
+-XX:+PrintTenuringDistribution
+
+
+打印GC日志
+-XX:+PrintGCDetails -verbose:gc
+
+
+FullGC 前 MinorGC
+-XX:+ScavengeBeforeFullGC
+
+
+垃圾回收器为什么分代GC算法要把堆分成年轻代和老年代？首先我们要知道堆内存中对象的特性：
+
+系统中的大部分对象，都是创建出来之后很快就不再使用可以被回收，比如用户获取订单数据，订单数据返回给用户之后就可以释放了。
+老年代中会存放长期存活的对象，比如Spring的大部分bean对象，在程序启动之后就不会被回收了。
+在虚拟机的默认设置中，新生代大小要远小于老年代的大小。
+
+分代GC算法将堆分成年轻代和老年代主要原因有：
+
+可以通过调整年轻代和老年代的比例来适应不同类型的应用程序，提高内存的利用率和性能。
+
+新生代和老年代使用不同的垃圾回收算法，新生代一般选择复制算法，老年代可以选择标记-清除和标记-整理算法，由程序员来选择灵活度较高。
+
+分代的设计中允许只回收新生代（minor gc），如果能满足对象分配的要求就不需要对整个堆进行回收(full gc),STW时间就会减少。
+
+
+垃圾回收器是垃圾回收算法的具体实现。
+由于垃圾回收器分为年轻代和老年代，除了G1之外其他垃圾回收器必须成对组合进行使用。
+具体的关系图如下：
+
+
+Serial 收集器Serial 收集器是最基本的、发展历史最悠久的收集器。是一种单线程串行回收年轻代的垃圾回收器，只会使用一个线程进行垃圾收集工作，使用标记-复制算法。  
+.qqwqdoxhvkcv{zoom:80%;}
+
+优点：
+
+单线程、简单高效（与其他收集器的单线程相比）。对于限定单个CPU的环境来说，Serial收集器由于没有线程交互的开销，专心做垃圾收集自然可以获得最高的单线程手机效率。收集器进行垃圾回收时，必须暂停其他所有的工作线程（ “Stop The World” ），直到它结束。
+
+ 缺点：
+
+多CPU下吞吐量不如其他垃圾回收器，堆如果偏大会让用户线程处于长时间的等待。
+
+适用场景： 
+
+Java编写的客户端程序或者硬件配置有限的场景。
+
+
+-XX:+UseSerialGC&#x3D;serial + serialOld
+
+SerialOld垃圾回收器SerialOld是Serial垃圾回收器的老年代版本，采用单线程串行回收。使用标记-整理算法。
+.eywouportlvu{zoom:80%;}
+
+ParNew 收集器ParNew 收集器其实就是 Serial 收集器在多CPU下的优化，使用多线程进行垃圾回收。新生代采用标记-复制算法，老年代采用标记-整理算法。
+-XX:+UseParNewGC 新生代使用ParNew回收器， 老年代使用串行回收器
+
+优点：
+
+多线程、ParNew 收集器默认开启的收集线程数与CPU的数量相同，在 CPU 非常多的环境中，可以使用 -XX:ParallelGCThreads 参数来限制垃圾收集的线程数。和 Serial 收集器一样存在 Stop The World 问题。
+
+缺点：
+
+吞吐量和停顿时间不如G1，所以在JDK9之后不建议使用。
+
+适用场景：
+
+JDK8及之前的版本中，与CMS老年代垃圾回收器搭配使用
+
+CMS 收集器CMS(Concurrent Mark Sweep)，从名字中的Mark Sweep这两个词可以看出，CMS 收集器是一种 标记-清除算法实现的。 老年代收集器。参数：XX:+UseConcMarkSweepGC。
+CMS垃圾回收器关注的是系统的暂停时间，允许用户线程和垃圾回收线程在某些步骤中同时执行，减少了用户线程的等待时间。
+
+CMS执行步骤：
+1.初始标记，用极短的时间标记出GC Roots能直接关联到的对象。速度很快但是仍存在Stop The World问题。
+2.并发标记,   标记所有的对象，用户线程不需要暂停。
+3.重新标记，由于并发标记阶段有些对象会发生了变化，存在错标、漏标等情况，需要重新标记。存在Stop The World问题。
+4.并发清理，清理死亡的对象，用户线程不需要暂停。但是清除的过程中，可能任然会有新的垃圾产生，这些垃圾就叫浮动垃圾，如果当用户需要存入一个很大的对象时，新生代放不下去，老年代由于浮动垃圾过多，就会退化为 serial Old 收集器，将老年代垃圾进行标记-整理，当然这也是很耗费时间的！
+
+在整个过程中耗时最长的并发标记和并发清除过程中，收集器线程都可以与用户线程一起工作，不需要进行停顿。
+CMS 垃圾回收器在 Java 9 中已经被标记为过时(deprecated)，并在 Java 14 中被移除。
+
+优点：
+
+系统由于垃圾回收出现的停顿时间较短，用户体验好。
+
+缺点：
+
+吞吐量低: 低停顿时间是以牺牲吞吐量为代价的，导致 CPU 利用率不够高。
+
+无法处理在并发清理过程中产生的“浮动垃圾”，不能做到完全的垃圾回收。如果预留的内存不够存放浮动垃圾，就会出现 Concurrent Mode Failure，这时虚拟机将临时启用 Serial Old 来替代 CMS。
+
+标记 - 清除算法导致的空间碎片，往往出现老年代空间剩余，但无法找到足够大连续空间来分配当前对象，不得不提前触发一次 Full GC。
+
+
+适用场景:
+
+大型的互联网系统中用户请求数据量大、频率高的场景，比如订单接口、商品接口等
+
+Parallel Scavenge垃圾回收器Parallel Scavenge是JDK8默认的年轻代垃圾回收器，多线程并行回收，关注的是系统的吞吐量（指 CPU 用于运行用户代码的时间占总时间的比值）。具备自动调整堆内存大小的特点。使用 标记-复制算法。
+优点：
+
+吞吐量高，可以通过一个开关参数打开 GC 自适应的调节策略(GC Ergonomics)。为了提高吞吐量，虚拟机会动态调整堆的参数。
+
+GC自适应调节策略：Parallel Scavenge收集器可设置-XX:+UseAdptiveSizePolicy参数。当开关打开时不需要手动指定新生代的大小（-Xmn）、Eden与Survivor区的比例（-XX:SurvivorRation）、晋升老年代的对象年龄（-XX:PretenureSizeThreshold）等，虚拟机会根据系统的运行状况收集性能监控信息，动态设置这些参数以提供最优的停顿时间和最高的吞吐量，这种调节方式称为GC的自适应调节策略。
+
+
+
+缺点：
+
+不能保证单次的停顿时间。
+
+适用场景：
+
+后台任务，不需要与用户交互，并且容易产生大量的对象。比如：大数据的处理，大文件导出。
+
+Parallel Old垃圾回收器Parallel Scavenge 收集器的老年代版本。使用多线程和标记-整理算法。在注重吞吐量以及 CPU 资源的场合，都可以优先考虑 Parallel Scavenge 收集器和 Parallel Old 收集器。
+.gxqhfikmppuj{zoom:80%;}
+
+优点：
+
+并发收集，在多核CPU下效率较高
+
+缺点：
+
+暂停时间会比较长
+
+适用场景：
+
+与Parallel Scavenge配套使用
+
+G1垃圾回收器JDK9之后默认的垃圾回收器是G1（Garbage First）垃圾回收器。Parallel Scavenge关注吞吐量，允许用户设置最大暂停时间 ，但是会减少年轻代可用空间的大小。CMS关注暂停时间，但是吞吐量方面会下降。
+而G1设计目标就是将上述两种垃圾回收器的优点融合：
+1.支持巨大的堆空间回收，并有较高的吞吐量。
+2.支持多CPU并行垃圾回收。
+3.允许用户设置最大暂停时间。
+G1出现之前的垃圾回收器，年轻代和老年代一般是连续的，如下图：
+.cdejpqvqnhyo{zoom:80%;}
+
+G1的整个堆会被划分成多个大小相等的区域，称之为区Region，区域不要求是连续的。每个 Region 逻辑上可属于 Eden、Survivor、Old或 Humongous（存储大于 Region 一半大小的对象）。Region的大小通过堆空间大小&#x2F;2048计算得到，也可以通过参数-XX:G1HeapRegionSize&#x3D;32m指定(其中32m指定region大小为32M)，Region size必须是2的指数幂，取值范围从1M到32M。
+.tfzvtfdukvwq{zoom:80%;}
+
+G1 执行流程1. Young GC（新生代回收）年轻代回收（Young GC），回收Eden区和Survivor区中不用的对象。会导致STW，G1中可以通过参数 -XX:MaxGCPauseMillis=n（默认200）设置每次垃圾回收时的最大暂停时间毫秒数，G1垃圾回收器会尽可能地保证暂停时间。
+
+触发条件：
+Eden 区占满，或 G1 预测回收时间接近目标停顿时间。
+
+步骤：
+
+新创建的对象会存放在Eden区。当G1判断年轻代区不足（max默认60%），无法分配对象时需要回收时会执行Young GC。
+
+标记出Eden和Survivor区域中的存活对象。
+
+根据配置的最大暂停时间选择某些区域将存活对象复制到一个新的Survivor区中（年龄+1），清空这些区域。
+
+G1在进行Young GC的过程中会去记录每次垃圾回收时每个Eden区和Survivor区的平均耗时，以作为下次回收时的参考依据。这样就可以根据配置的最大暂停时间计算出本次回收时最多能回收多少个Region区域了。比如 -XX:MaxGCPauseMillis&#x3D;n（默认200），每个Region回收耗时40ms，那么这次回收最多只能回收4个Region。
+
+
+后续Young GC时与之前相同，只不过Survivor区中存活对象会被搬运到另一个Survivor区。
+
+当某个在Survivor区存活对象的年龄到达阈值（默认15），将被放入老年代。
+
+部分对象如果大小超过Region的一半，会直接放入老年代，这类老年代被称为Humongous区。比如堆内存是4G，每个Region是2M，只要一个大对象超过了1M就被放入Humongous区，如果对象过大会横跨多个Region。
+
+多次回收之后，会出现很多Old老年代区，此时总堆占有率达到阈值时（-XX:InitiatingHeapOccupancyPercent默认45%）会触发混合回收MixedGC。回收所有年轻代和部分老年代的对象以及大对象区。采用复制算法来完成。
+
+
+
+
+2. Mixed GC（混合回收，核心流程）
+触发条件：
+老年代占用达 45%（默认）或手动触发。G1对老年代的清理会选择存活度最低的区域来进行回收，这样可以保证回收效率最高，这也是G1（Garbage first）名称的由来。最后清理阶段使用复制算法，不会产生内存碎片。
+
+步骤：
+
+初始标记（STW）：采用三色标记法标记从GC Root可直达的对象。 STW时间极短。
+并发标记（并行）：递归标记所有存活对象，使用 SATB（快照）记录引用变化，避免漏标。
+最终标记（STW）：处理并发标记期间的引用变更，修复漏标。
+筛选回收（STW）：
+按 “回收收益” 排序 Region，选择回收集合（CSet）。
+复制存活对象到新 Region，清空原 Region。
+
+
+
+
+
+
+注意：如果清理过程中发现没有足够的空Region存放转移的对象，会出现Full GC。单线程执行标记-整理算法，此时会导致用户线程的暂停。所以尽量保证应该用的堆内存有一定多余的空间。
+3. Full GC
+触发条件：
+
+G1 在老年代内存不足时（老年代所占内存超过阈值）。
+如果垃圾产生速度慢于垃圾回收速度，不会触发 Full GC，还是并发地进行清理
+如果垃圾产生速度快于垃圾回收速度，便会触发 Full GC，然后退化成 serial Old 收集器串行的收集，就会导致停顿的时候长。
+
+
+特点：
+
+
+单线程全堆扫描，停顿时间极长，需通过调优避免
+学习文献
+
+https://blog.csdn.net/weixin_50280576/article/details/113775575
+https://lisxpq12rl7.feishu.cn/wiki/F2AFw0doOiW89Fkr8kGcCTyVnLh
+https://pdai.tech/md/java/jvm/java-jvm-x-overview.html
+https://javaguide.cn/java/jvm/jvm-garbage-collection.html
+https://javabetter.cn/jvm/jit.html
+
+]]></content>
+      <categories>
+        <category>JAVA</category>
+        <category>JVM</category>
+      </categories>
+      <tags>
+        <tag>Java进阶 学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>JVM 基础 4 - JVM 内存结构&#39;</title>
     <url>/2025/05/24/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%204%20-%20JVM%20%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/</url>
     <content><![CDATA[运行时数据区Java虚拟机在运行Java程序过程中管理的内存区域，称之为运行时数据区。《Java虚拟机规范》中规定了每一部分的作用。
@@ -6591,350 +6935,6 @@ JDK7及之后的版本中，静态变量是存放在堆中的Class对象中，�
 
 
 
-学习文献
-
-https://blog.csdn.net/weixin_50280576/article/details/113775575
-https://lisxpq12rl7.feishu.cn/wiki/F2AFw0doOiW89Fkr8kGcCTyVnLh
-https://pdai.tech/md/java/jvm/java-jvm-x-overview.html
-https://javaguide.cn/java/jvm/jvm-garbage-collection.html
-https://javabetter.cn/jvm/jit.html
-
-]]></content>
-      <categories>
-        <category>JAVA</category>
-        <category>JVM</category>
-      </categories>
-      <tags>
-        <tag>Java进阶 学习笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>JVM 基础 5 - GC 垃圾回收</title>
-    <url>/2025/05/25/Java/JVM/JVM%20%E5%9F%BA%E7%A1%80%205%20-%20%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</url>
-    <content><![CDATA[垃圾回收JVM 垃圾回收 (Garbage Collection, GC) 是 Java 虚拟机自动管理堆内存的核心机制。它负责识别并回收程序中不再使用的对象所占用的内存，防止内存泄漏，极大地简化了开发人员的内存管理工作。  
-垃圾回收器如果发现某个对象不再使用，就可以回收该对象。
-.pidbxjspqrxr{zoom: 67%;}
-
-.xgkyoxwyqyop{zoom:67%;}
-
-
-自动垃圾回收，自动根据对象是否使用由虚拟机来回收对象
-
-优点：降低程序员实现难度、降低对象回收bug的可能性
-缺点：程序员无法控制内存回收的及时性
-
-
-手动垃圾回收，由程序员编程实现对象的删除
-
-优点：回收及时性高，由程序员把控回收的时机
-缺点：编写不当容易出现悬空指针、重复释放、内存泄漏等问题
-
-
-
-
-如果需要手动触发垃圾回收，可以调用System.gc()方法。语法： System.gc()注意事项：   调用System.gc()方法并不一定会立即回收垃圾，仅仅是向Java虚拟机发送一个垃圾回收的请求，具体是否需要执行垃圾回收Java虚拟机会自行判断。
-
-如何判断对象可以回收引用计数法引用计数法会为每个对象维护一个引用计数器，当对象被引用时加1，取消引用时减1。当值为 0 时，就表示该对象不被引用，可以被垃圾收集器回收。
-缺点：  
-
-每次引用和取消引用都需要维护计数器，对系统性能会有一定的影响
-存在循环引用问题，所谓循环引用就是当A引用B，B同时引用A时会出现对象无法回收的问题。如下图：
-
-.hnstjkurfzoy{zoom:80%;}
-
-可达性分析法通过 GC Roots 作为起始点进行搜索，能够到达到的对象都是存活的，不可达的对象可被回收。
-
-
-JVM 中的垃圾回收器通过可达性分析来探索所有存活的对象
-扫描堆中的对象，看能否沿着 GC Root 对象为起点的引用链找到该对象，如果找不到，则表示可以回收
-Java 中可以作为 GC Root 的对象：
-虚拟机栈（栈帧中的本地变量表）中引用的对象。
-方法区中类静态属性引用的对象
-方法区中常量引用的对象
-本地方法栈中 JNI（即一般说的Native方法）引用的对象
-
-引用对象.hemehivszvtd{zoom:80%;}
-
-1. 强引用（StrongReference）被强引用关联的对象不会被回收。只有GC Root都不引用该对象时，才会回收强引用对象
-2. 软引用（SoftReference）如果一个对象只有软引用引对象时，当程序内存不足时，就会将软引用中的数据进行回收。在JDK 1.2版之后提供了SoftReference类来实现软引用，软引用常用于缓存中。
-3. 弱引用（WeakReference）如果一个对象只有弱引用该对象时，在垃圾回收时，无论内存是否充足，就会将弱引用中的数据进行回收。在JDK 1.2版之后提供了WeakReference类来实现弱引用，弱引用主要在ThreadLocal中使用。
-4. 虚引用（PhantomReference）（不常见）虚引用也叫幽灵引用&#x2F;幻影引用，不能通过虚引用对象获取到包含的对象。虚引用唯一的用途是当对象被垃圾回收器回收时可以接收到对应的通知。Java中使用PhantomReference实现了虚引用，直接内存中为了及时知道直接内存对象不再使用，从而回收内存，使用了虚引用来实现。
-5. 终结器引用（FinalReference）（不常见）终结器引用指的是在对象需要被回收时，终结器引用会关联对象并放置在Finalizer类中的引用队列中，在稍后由一条由FinalizerThread线程从队列中获取对象，然后执行对象的finalize方法，在对象第二次被回收时，该对象才真正的被回收。在这个过程中可以在finalize方法中再将自身对象使用强引用关联上，但是不建议这样做。
-垃圾回收算法1. 标记-清除算法
-虚拟机执行垃圾回收的过程中，使用可达性分析算法，从GC Root开始通过引用链遍历出所有存活对象。将所有存活的对象进行标记。
-然后垃圾收集器根据标识清除没有被标记也就是非存活对象，给堆内存腾出相应的空间
-
-
-优点：实现简单，只需要在第一阶段给每个对象维护标志位，第二阶段删除对象即可。
-缺点：
-
-会产生大量不连续的内存碎片，导致无法给大对象分配内存。由于内存是连续的，所以在对象被删除之后，内存中会出现很多细小的可用内存单元。如果我们需要的是一个比较大的空间，很有可能这些内存单元的大小过小无法进行分配。
-分配速度慢。由于内存碎片的存在，需要维护一个空闲链表，极有可能发生每次需要遍历到链表的最后才能获得合适的内存空间。
-标记和清除过程效率都不高。
-
-2. 标记-整理算法标记整理算法也叫标记压缩算法，是对标记清理算法中容易产生内存碎片问题的一种解决方案。
-
-标记阶段，将所有存活的对象进行标记。Java中使用可达性分析算法，从GC Root开始通过引用链遍历出所有存活对象。
-整理阶段，将存活对象移动到堆的一端。清理掉存活对象的内存空间。
-
-
-优点：不会产生内存碎片。
-缺点：内存变动更频繁，需要整理所有存活对象的引用地址，效率不高。
-3. 复制算法将内存划分为大小相等的两块，每次只使用其中一块，当这一块内存用完了就将还存活的对象复制到另一块上面，然后再把使用过的内存空间进行一次清理，最后会把位置互换。
-
-优点：不会产生内存碎片；吞吐量高，复制算法只需要遍历一次存活对象复制到To空间即可，比标记-整理算法少了一次遍历的过程，因而性能较好，但是不如标记-清除算法，因为标记清除算法不需要进行对象的移动
-缺点：内存使用效率低，每次只能让一半的内存空间来为创建对象使用。
-4. 分代垃圾回收算法现代优秀的垃圾回收算法，会将上述描述的垃圾回收算法组合进行使用，其中应用最广的就是分代垃圾回收算法(Generational GC)。  
-分代垃圾回收将整个内存区域划分为年轻代（复制算法）和老年代（标记 - 清除 或者 标记 - 整理 算法）：
-.cvvoluolfpxi{zoom: 80%;}
-
-
-分代回收时，创建出来的对象，首先会被放入Eden伊甸园区。
-
-随着对象在Eden区越来越多，如果Eden区满，新创建的对象已经无法放入，就会触发年轻代的GC，称为Minor GC或者Young GC。  
-Minor GC会把需要eden中和From需要回收的对象回收，把没有回收的对象放入To区。
-
-接下来，S0会变成To区，S1变成From区。当eden区满时再往里放入对象，依然会发生Minor GC。  
-此时会回收eden区和S1(from)中的对象，并把eden和from区中剩余的对象放入S0。注意：每次Minor GC中都会为对象记录他的年龄，初始值为0，每次GC完加1。
-
-如果Minor GC后对象的年龄达到阈值（最大15，默认值和垃圾回收器有关），对象就会被晋升至老年代。
-
-当老年代中空间不足，无法放入新的对象时，先尝试minor gc如果还是不足，就会触发Full GC，Full GC会对整个堆进行垃圾回收。
-如果Full GC依然无法回收掉老年代的对象，那么当对象继续放入老年代时，就会抛出Out Of Memory异常。
-
-特殊情况：当遇到一个较大的对象时，就算新生代的伊甸园为空，也无法容纳该对象时，会将该对象直接晋升为老年代。
-
-
-相关 JVM 参数
-
-
-含义
-参数
-
-
-
-堆初始大小必须是1024倍数且大于1MB
--Xms
-
-
-堆最大大小必须是1024倍数且大于1MB
--Xmx 或 -XX:MaxHeapSize&#x3D;size
-
-
-新生代大小
--Xmn 或 (-XX:NewSize&#x3D;size + -XX:MaxNewSize&#x3D;size )
-
-
-幸存区比例（动态）
--XX:InitialSurvivorRatio&#x3D;ratio 和 -XX:+UseAdaptiveSizePolicy
-
-
-伊甸园区和幸存区的比例，默认8，新生代1G，伊甸园区800MB,S0和S1各100MB
--XX:SurvivorRatio&#x3D;ratio
-
-
-晋升阈值
--XX:MaxTenuringThreshold&#x3D;threshold
-
-
-晋升详情
--XX:+PrintTenuringDistribution
-
-
-打印GC日志
--XX:+PrintGCDetails -verbose:gc
-
-
-FullGC 前 MinorGC
--XX:+ScavengeBeforeFullGC
-
-
-垃圾回收器为什么分代GC算法要把堆分成年轻代和老年代？首先我们要知道堆内存中对象的特性：
-
-系统中的大部分对象，都是创建出来之后很快就不再使用可以被回收，比如用户获取订单数据，订单数据返回给用户之后就可以释放了。
-老年代中会存放长期存活的对象，比如Spring的大部分bean对象，在程序启动之后就不会被回收了。
-在虚拟机的默认设置中，新生代大小要远小于老年代的大小。
-
-分代GC算法将堆分成年轻代和老年代主要原因有：
-
-可以通过调整年轻代和老年代的比例来适应不同类型的应用程序，提高内存的利用率和性能。
-
-新生代和老年代使用不同的垃圾回收算法，新生代一般选择复制算法，老年代可以选择标记-清除和标记-整理算法，由程序员来选择灵活度较高。
-
-分代的设计中允许只回收新生代（minor gc），如果能满足对象分配的要求就不需要对整个堆进行回收(full gc),STW时间就会减少。
-
-
-垃圾回收器是垃圾回收算法的具体实现。
-由于垃圾回收器分为年轻代和老年代，除了G1之外其他垃圾回收器必须成对组合进行使用。
-具体的关系图如下：
-
-
-Serial 收集器Serial 收集器是最基本的、发展历史最悠久的收集器。是一种单线程串行回收年轻代的垃圾回收器，只会使用一个线程进行垃圾收集工作，使用标记-复制算法。  
-.wolacykoarom{zoom:80%;}
-
-优点：
-
-单线程、简单高效（与其他收集器的单线程相比）。对于限定单个CPU的环境来说，Serial收集器由于没有线程交互的开销，专心做垃圾收集自然可以获得最高的单线程手机效率。收集器进行垃圾回收时，必须暂停其他所有的工作线程（ “Stop The World” ），直到它结束。
-
- 缺点：
-
-多CPU下吞吐量不如其他垃圾回收器，堆如果偏大会让用户线程处于长时间的等待。
-
-适用场景： 
-
-Java编写的客户端程序或者硬件配置有限的场景。
-
-
--XX:+UseSerialGC&#x3D;serial + serialOld
-
-SerialOld垃圾回收器SerialOld是Serial垃圾回收器的老年代版本，采用单线程串行回收。使用标记-整理算法。
-.lxrfdeybwbkq{zoom:80%;}
-
-ParNew 收集器ParNew 收集器其实就是 Serial 收集器在多CPU下的优化，使用多线程进行垃圾回收。新生代采用标记-复制算法，老年代采用标记-整理算法。
--XX:+UseParNewGC 新生代使用ParNew回收器， 老年代使用串行回收器
-
-优点：
-
-多线程、ParNew 收集器默认开启的收集线程数与CPU的数量相同，在 CPU 非常多的环境中，可以使用 -XX:ParallelGCThreads 参数来限制垃圾收集的线程数。和 Serial 收集器一样存在 Stop The World 问题。
-
-缺点：
-
-吞吐量和停顿时间不如G1，所以在JDK9之后不建议使用。
-
-适用场景：
-
-JDK8及之前的版本中，与CMS老年代垃圾回收器搭配使用
-
-CMS 收集器CMS(Concurrent Mark Sweep)，从名字中的Mark Sweep这两个词可以看出，CMS 收集器是一种 标记-清除算法实现的。 老年代收集器。参数：XX:+UseConcMarkSweepGC。
-CMS垃圾回收器关注的是系统的暂停时间，允许用户线程和垃圾回收线程在某些步骤中同时执行，减少了用户线程的等待时间。
-
-CMS执行步骤：
-1.初始标记，用极短的时间标记出GC Roots能直接关联到的对象。速度很快但是仍存在Stop The World问题。
-2.并发标记,   标记所有的对象，用户线程不需要暂停。
-3.重新标记，由于并发标记阶段有些对象会发生了变化，存在错标、漏标等情况，需要重新标记。存在Stop The World问题。
-4.并发清理，清理死亡的对象，用户线程不需要暂停。但是清除的过程中，可能任然会有新的垃圾产生，这些垃圾就叫浮动垃圾，如果当用户需要存入一个很大的对象时，新生代放不下去，老年代由于浮动垃圾过多，就会退化为 serial Old 收集器，将老年代垃圾进行标记-整理，当然这也是很耗费时间的！
-
-在整个过程中耗时最长的并发标记和并发清除过程中，收集器线程都可以与用户线程一起工作，不需要进行停顿。
-CMS 垃圾回收器在 Java 9 中已经被标记为过时(deprecated)，并在 Java 14 中被移除。
-
-优点：
-
-系统由于垃圾回收出现的停顿时间较短，用户体验好。
-
-缺点：
-
-吞吐量低: 低停顿时间是以牺牲吞吐量为代价的，导致 CPU 利用率不够高。
-
-无法处理在并发清理过程中产生的“浮动垃圾”，不能做到完全的垃圾回收。如果预留的内存不够存放浮动垃圾，就会出现 Concurrent Mode Failure，这时虚拟机将临时启用 Serial Old 来替代 CMS。
-
-标记 - 清除算法导致的空间碎片，往往出现老年代空间剩余，但无法找到足够大连续空间来分配当前对象，不得不提前触发一次 Full GC。
-
-
-适用场景:
-
-大型的互联网系统中用户请求数据量大、频率高的场景，比如订单接口、商品接口等
-
-Parallel Scavenge垃圾回收器Parallel Scavenge是JDK8默认的年轻代垃圾回收器，多线程并行回收，关注的是系统的吞吐量（指 CPU 用于运行用户代码的时间占总时间的比值）。具备自动调整堆内存大小的特点。使用 标记-复制算法。
-优点：
-
-吞吐量高，可以通过一个开关参数打开 GC 自适应的调节策略(GC Ergonomics)。为了提高吞吐量，虚拟机会动态调整堆的参数。
-
-GC自适应调节策略：Parallel Scavenge收集器可设置-XX:+UseAdptiveSizePolicy参数。当开关打开时不需要手动指定新生代的大小（-Xmn）、Eden与Survivor区的比例（-XX:SurvivorRation）、晋升老年代的对象年龄（-XX:PretenureSizeThreshold）等，虚拟机会根据系统的运行状况收集性能监控信息，动态设置这些参数以提供最优的停顿时间和最高的吞吐量，这种调节方式称为GC的自适应调节策略。
-
-
-
-缺点：
-
-不能保证单次的停顿时间。
-
-适用场景：
-
-后台任务，不需要与用户交互，并且容易产生大量的对象。比如：大数据的处理，大文件导出。
-
-Parallel Old垃圾回收器Parallel Scavenge 收集器的老年代版本。使用多线程和标记-整理算法。在注重吞吐量以及 CPU 资源的场合，都可以优先考虑 Parallel Scavenge 收集器和 Parallel Old 收集器。
-.jrafvcnnntoi{zoom:80%;}
-
-优点：
-
-并发收集，在多核CPU下效率较高
-
-缺点：
-
-暂停时间会比较长
-
-适用场景：
-
-与Parallel Scavenge配套使用
-
-G1垃圾回收器JDK9之后默认的垃圾回收器是G1（Garbage First）垃圾回收器。Parallel Scavenge关注吞吐量，允许用户设置最大暂停时间 ，但是会减少年轻代可用空间的大小。CMS关注暂停时间，但是吞吐量方面会下降。
-而G1设计目标就是将上述两种垃圾回收器的优点融合：
-1.支持巨大的堆空间回收，并有较高的吞吐量。
-2.支持多CPU并行垃圾回收。
-3.允许用户设置最大暂停时间。
-G1出现之前的垃圾回收器，年轻代和老年代一般是连续的，如下图：
-.bbrhfotcweee{zoom:80%;}
-
-G1的整个堆会被划分成多个大小相等的区域，称之为区Region，区域不要求是连续的。每个 Region 逻辑上可属于 Eden、Survivor、Old或 Humongous（存储大于 Region 一半大小的对象）。Region的大小通过堆空间大小&#x2F;2048计算得到，也可以通过参数-XX:G1HeapRegionSize&#x3D;32m指定(其中32m指定region大小为32M)，Region size必须是2的指数幂，取值范围从1M到32M。
-.jycolouqcffd{zoom:80%;}
-
-G1 执行流程1. Young GC（新生代回收）年轻代回收（Young GC），回收Eden区和Survivor区中不用的对象。会导致STW，G1中可以通过参数 -XX:MaxGCPauseMillis=n（默认200）设置每次垃圾回收时的最大暂停时间毫秒数，G1垃圾回收器会尽可能地保证暂停时间。
-
-触发条件：
-Eden 区占满，或 G1 预测回收时间接近目标停顿时间。
-
-步骤：
-
-新创建的对象会存放在Eden区。当G1判断年轻代区不足（max默认60%），无法分配对象时需要回收时会执行Young GC。
-
-标记出Eden和Survivor区域中的存活对象。
-
-根据配置的最大暂停时间选择某些区域将存活对象复制到一个新的Survivor区中（年龄+1），清空这些区域。
-
-G1在进行Young GC的过程中会去记录每次垃圾回收时每个Eden区和Survivor区的平均耗时，以作为下次回收时的参考依据。这样就可以根据配置的最大暂停时间计算出本次回收时最多能回收多少个Region区域了。比如 -XX:MaxGCPauseMillis&#x3D;n（默认200），每个Region回收耗时40ms，那么这次回收最多只能回收4个Region。
-
-
-后续Young GC时与之前相同，只不过Survivor区中存活对象会被搬运到另一个Survivor区。
-
-当某个在Survivor区存活对象的年龄到达阈值（默认15），将被放入老年代。
-
-部分对象如果大小超过Region的一半，会直接放入老年代，这类老年代被称为Humongous区。比如堆内存是4G，每个Region是2M，只要一个大对象超过了1M就被放入Humongous区，如果对象过大会横跨多个Region。
-
-多次回收之后，会出现很多Old老年代区，此时总堆占有率达到阈值时（-XX:InitiatingHeapOccupancyPercent默认45%）会触发混合回收MixedGC。回收所有年轻代和部分老年代的对象以及大对象区。采用复制算法来完成。
-
-
-
-
-2. Mixed GC（混合回收，核心流程）
-触发条件：
-老年代占用达 45%（默认）或手动触发。G1对老年代的清理会选择存活度最低的区域来进行回收，这样可以保证回收效率最高，这也是G1（Garbage first）名称的由来。最后清理阶段使用复制算法，不会产生内存碎片。
-
-步骤：
-
-初始标记（STW）：采用三色标记法标记从GC Root可直达的对象。 STW时间极短。
-并发标记（并行）：递归标记所有存活对象，使用 SATB（快照）记录引用变化，避免漏标。
-最终标记（STW）：处理并发标记期间的引用变更，修复漏标。
-筛选回收（STW）：
-按 “回收收益” 排序 Region，选择回收集合（CSet）。
-复制存活对象到新 Region，清空原 Region。
-
-
-
-
-
-
-注意：如果清理过程中发现没有足够的空Region存放转移的对象，会出现Full GC。单线程执行标记-整理算法，此时会导致用户线程的暂停。所以尽量保证应该用的堆内存有一定多余的空间。
-3. Full GC
-触发条件：
-
-G1 在老年代内存不足时（老年代所占内存超过阈值）。
-如果垃圾产生速度慢于垃圾回收速度，不会触发 Full GC，还是并发地进行清理
-如果垃圾产生速度快于垃圾回收速度，便会触发 Full GC，然后退化成 serial Old 收集器串行的收集，就会导致停顿的时候长。
-
-
-特点：
-
-
-单线程全堆扫描，停顿时间极长，需通过调优避免
 学习文献
 
 https://blog.csdn.net/weixin_50280576/article/details/113775575
