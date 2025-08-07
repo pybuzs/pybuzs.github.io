@@ -1,0 +1,1071 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Java面试题 | 片叶不沾身的花园</title><meta name="author" content="bbiao"><meta name="copyright" content="bbiao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Java 面试题Java 语法基础练习题翻转整数给定一个 32 位有符号整数，将整数中的数字进行反转。如果反转后整数溢出那么就返回 0。 示例 1: 12输入: 123输出: 321  示例 2: 12输入: -123输出: -321  查看答案12345678910111213141516171819private static int reverse(int num) &#123;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java面试题">
+<meta property="og:url" content="https://pybuzs.github.io/2025/07/03/Interview/Java%E9%9D%A2%E8%AF%95%E9%A2%98/index.html">
+<meta property="og:site_name" content="片叶不沾身的花园">
+<meta property="og:description" content="Java 面试题Java 语法基础练习题翻转整数给定一个 32 位有符号整数，将整数中的数字进行反转。如果反转后整数溢出那么就返回 0。 示例 1: 12输入: 123输出: 321  示例 2: 12输入: -123输出: -321  查看答案12345678910111213141516171819private static int reverse(int num) &#123;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pybuzs.github.io/image/default_cover2.jpg">
+<meta property="article:published_time" content="2025-07-03T04:35:57.000Z">
+<meta property="article:modified_time" content="2025-08-06T01:38:47.966Z">
+<meta property="article:author" content="bbiao">
+<meta property="article:tag" content="面试题">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pybuzs.github.io/image/default_cover2.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Java面试题",
+  "url": "https://pybuzs.github.io/2025/07/03/Interview/Java%E9%9D%A2%E8%AF%95%E9%A2%98/",
+  "image": "https://pybuzs.github.io/image/default_cover2.jpg",
+  "datePublished": "2025-07-03T04:35:57.000Z",
+  "dateModified": "2025-08-06T01:38:47.966Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "bbiao",
+      "url": "https://pybuzs.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/image/%E5%8D%A1%E9%80%9A%E8%80%81%E8%99%8E.png"><link rel="canonical" href="https://pybuzs.github.io/2025/07/03/Interview/Java%E9%9D%A2%E8%AF%95%E9%A2%98/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":150,"languages":{"author":"作者: bbiao","link":"链接: ","source":"来源: 片叶不沾身的花园","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Java面试题',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><script src="/styles/jquery.min.js"></script><script src="/styles/raindrop.js"></script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/image/touxiang.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-heartbeat"></i><span> 其他</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/image/default_cover2.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">片叶不沾身的花园</span></a><a class="nav-page-title" href="/"><span class="site-name">Java面试题</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-heartbeat"></i><span> 其他</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Java面试题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-03T04:35:57.000Z" title="发表于 2025-07-03 12:35:57">2025-07-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-08-06T01:38:47.966Z" title="更新于 2025-08-06 09:38:47">2025-08-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%9D%A2%E8%AF%95%E9%A2%98/">面试题</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%9D%A2%E8%AF%95%E9%A2%98/Java-%E9%9D%A2%E8%AF%95%E9%A2%98/">Java 面试题</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">8.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>29分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Java-面试题"><a href="#Java-面试题" class="headerlink" title="Java 面试题"></a>Java 面试题</h1><h2 id="Java-语法基础练习题"><a href="#Java-语法基础练习题" class="headerlink" title="Java 语法基础练习题"></a><strong>Java 语法基础练习题</strong></h2><h3 id="翻转整数"><a href="#翻转整数" class="headerlink" title="翻转整数"></a>翻转整数</h3><p>给定一个 32 位有符号整数，将整数中的数字进行反转。如果反转后整数溢出那么就返回 0。</p>
+<p>示例 1:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: 123</span><br><span class="line">输出: 321</span><br></pre></td></tr></table></figure>
+
+<p>示例 2:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: -123</span><br><span class="line">输出: -321</span><br></pre></td></tr></table></figure>
+
+<div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">reverse</span><span class="params">(<span class="type">int</span> num)</span> &#123;</span><br><span class="line">       <span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">       <span class="keyword">while</span> (num != <span class="number">0</span>)&#123;</span><br><span class="line">           <span class="comment">// 获取末尾数字</span></span><br><span class="line">           <span class="type">int</span> <span class="variable">pop</span> <span class="operator">=</span> num % <span class="number">10</span>;<span class="comment">//123 % 10 = 3; 12 % 10 = 2; 1 % 10 = 1; 0 % 10 = 0</span></span><br><span class="line">           <span class="comment">// 获取数字</span></span><br><span class="line">           num /= <span class="number">10</span>;<span class="comment">// 123 / 10 = 12; 12 / 10 = 1; 1 / 10 = 0;</span></span><br><span class="line">           <span class="comment">// 判断是否越界</span></span><br><span class="line">           <span class="keyword">if</span> (result &gt; Integer.MAX_VALUE / <span class="number">10</span> || (result == Integer.MAX_VALUE / <span class="number">10</span> &amp;&amp; pop &gt; <span class="number">7</span>))&#123;</span><br><span class="line">               <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">if</span> (result &lt; Integer.MIN_VALUE / <span class="number">10</span> || (result == Integer.MIN_VALUE / <span class="number">10</span> &amp;&amp; pop &lt; -<span class="number">8</span>))&#123;</span><br><span class="line">               <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="comment">// 拼接数字</span></span><br><span class="line">           result = result * <span class="number">10</span> + pop;<span class="comment">// 0 * 10 + 3 = 3; 3 * 10 + 2 = 32; 32 * 10 + 1 = 321;</span></span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> result;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</div></div>
+
+<h3 id="字符串转换整数"><a href="#字符串转换整数" class="headerlink" title="字符串转换整数"></a>字符串转换整数</h3><p>请你来实现一个 <code>myAtoi(string s)</code> 函数，使其能将字符串转换成一个 32 位有符号整数。</p>
+<p>函数 <code>myAtoi(string s)</code> 的算法如下：</p>
+<ol>
+<li><strong>空格：</strong>读入字符串并丢弃无用的前导空格（<code>&quot; &quot;</code>）</li>
+<li><strong>符号：</strong>检查下一个字符（假设还未到字符末尾）为 <code>&#39;-&#39;</code> 还是 <code>&#39;+&#39;</code>。如果两者都不存在，则假定结果为正。</li>
+<li><strong>转换：</strong>通过跳过前置零来读取该整数，直到遇到非数字字符或到达字符串的结尾。如果没有读取数字，则结果为0。</li>
+<li><strong>舍入：</strong>如果整数数超过 32 位有符号整数范围 <code>[−231, 231 − 1]</code> ，需要截断这个整数，使其保持在这个范围内。具体来说，小于 <code>−231</code> 的整数应该被舍入为 <code>−231</code> ，大于 <code>231 − 1</code> 的整数应该被舍入为 <code>231 − 1</code> 。</li>
+</ol>
+<p>返回整数作为最终结果。</p>
+<p><strong>示例 1：</strong></p>
+<p><strong>输入：</strong>s &#x3D; “42”</p>
+<p><strong>输出：</strong>42</p>
+<p><strong>解释：</strong>加粗的字符串为已经读入的字符，插入符号是当前读取的字符。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">带下划线线的字符是所读的内容，插入符号是当前读入位置。</span><br><span class="line">第 1 步：&quot;42&quot;（当前没有读入字符，因为没有前导空格）</span><br><span class="line">         ^</span><br><span class="line">第 2 步：&quot;42&quot;（当前没有读入字符，因为这里不存在 &#x27;-&#x27; 或者 &#x27;+&#x27;）</span><br><span class="line">         ^</span><br><span class="line">第 3 步：&quot;42&quot;（读入 &quot;42&quot;）</span><br><span class="line">           ^</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<p><strong>输入：</strong>s &#x3D; “ -042”</p>
+<p><strong>输出：</strong>-42</p>
+<p><strong>解释：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">第 1 步：&quot;   -042&quot;（读入前导空格，但忽视掉）</span><br><span class="line">            ^</span><br><span class="line">第 2 步：&quot;   -042&quot;（读入 &#x27;-&#x27; 字符，所以结果应该是负数）</span><br><span class="line">             ^</span><br><span class="line">第 3 步：&quot;   -042&quot;（读入 &quot;042&quot;，在结果中忽略前导零）</span><br><span class="line">               ^</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 3：</strong></p>
+<p><strong>输入：</strong>s &#x3D; “1337c0d3”</p>
+<p><strong>输出：</strong>1337</p>
+<p><strong>解释：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">第 1 步：&quot;1337c0d3&quot;（当前没有读入字符，因为没有前导空格）</span><br><span class="line">         ^</span><br><span class="line">第 2 步：&quot;1337c0d3&quot;（当前没有读入字符，因为这里不存在 &#x27;-&#x27; 或者 &#x27;+&#x27;）</span><br><span class="line">         ^</span><br><span class="line">第 3 步：&quot;1337c0d3&quot;（读入 &quot;1337&quot;；由于下一个字符不是一个数字，所以读入停止）</span><br><span class="line">             ^</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 4：</strong></p>
+<p><strong>输入：</strong>s &#x3D; “0-1”</p>
+<p><strong>输出：</strong>0</p>
+<p><strong>解释：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">第 1 步：&quot;0-1&quot; (当前没有读入字符，因为没有前导空格)</span><br><span class="line">         ^</span><br><span class="line">第 2 步：&quot;0-1&quot; (当前没有读入字符，因为这里不存在 &#x27;-&#x27; 或者 &#x27;+&#x27;)</span><br><span class="line">         ^</span><br><span class="line">第 3 步：&quot;0-1&quot; (读入 &quot;0&quot;；由于下一个字符不是一个数字，所以读入停止)</span><br><span class="line">          ^</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 5：</strong></p>
+<p><strong>输入：</strong>s &#x3D; “words and 987”</p>
+<p><strong>输出：</strong>0</p>
+<p><strong>解释：</strong></p>
+<p>读取在第一个非数字字符“w”处停止。</p>
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>0 &lt;= s.length &lt;= 200</code></li>
+<li><code>s</code> 由英文字母（大写和小写）、数字（<code>0-9</code>）、<code>&#39; &#39;</code>、<code>&#39;+&#39;</code>、<code>&#39;-&#39;</code> 和 <code>&#39;.&#39;</code> 组成</li>
+</ul>
+<div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">parseInt</span><span class="params">(String str)</span> &#123;</span><br><span class="line">    <span class="comment">// 去除空格</span></span><br><span class="line">    str = str.trim();</span><br><span class="line">    <span class="keyword">if</span>(str.isEmpty())&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 检查符号位</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">sign</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (str.charAt(<span class="number">0</span>) == <span class="string">&#x27;+&#x27;</span> || str.charAt(<span class="number">0</span>) == <span class="string">&#x27;-&#x27;</span>) &#123;</span><br><span class="line">        sign = str.charAt(<span class="number">0</span>) == <span class="string">&#x27;+&#x27;</span> ? <span class="number">1</span> : -<span class="number">1</span>;</span><br><span class="line">        index++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 转换数字并处理溢出</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (index &lt; str.length()) &#123;</span><br><span class="line">        <span class="comment">// 判断是否为数字</span></span><br><span class="line">        <span class="type">char</span> <span class="variable">c</span> <span class="operator">=</span> str.charAt(index);</span><br><span class="line">        <span class="comment">// 判断是否为数字</span></span><br><span class="line">        <span class="keyword">if</span> (!Character.isDigit(c)) <span class="keyword">break</span>;</span><br><span class="line">        <span class="comment">// 将字符转换为数字</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">digit</span> <span class="operator">=</span> c - <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">        <span class="comment">// 检查溢出：result * 10 + digit &gt; Integer.MAX_VALUE</span></span><br><span class="line">        <span class="keyword">if</span> (result &gt; (Integer.MAX_VALUE - digit) / <span class="number">10</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> sign == <span class="number">1</span> ? Integer.MAX_VALUE : Integer.MIN_VALUE;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 计算结果</span></span><br><span class="line">        result = result * <span class="number">10</span> + digit;</span><br><span class="line">        <span class="comment">// 移动到下一个字符</span></span><br><span class="line">        index++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sign * result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>int digit = c - &#39;0&#39;;</code> 这行代码的作用是将字符 <code>c</code> 转换为对应的数字值。</p>
+<p>字符与 ASCII 码的关系</p>
+<p>在计算机中，字符通常以 ASCII 码的形式存储。例如：</p>
+<ul>
+<li>字符 <code>&#39;0&#39;</code> 的 ASCII 值是 <strong>48</strong></li>
+<li>字符 <code>&#39;1&#39;</code> 的 ASCII 值是 <strong>49</strong></li>
+<li>字符 <code>&#39;2&#39;</code> 的 ASCII 值是 <strong>50</strong></li>
+<li>…</li>
+<li>字符 <code>&#39;9&#39;</code> 的 ASCII 值是 <strong>57</strong></li>
+</ul>
+<p>因此，<strong>字符 <code>&#39;0&#39;</code> 到 <code>&#39;9&#39;</code> 的 ASCII 值是连续递增的</strong>，差值恰好对应数字值。</p>
+<p>代码解析</p>
+<p>当你有一个字符变量 <code>c</code>（例如 <code>&#39;3&#39;</code>），执行 <code>c - &#39;0&#39;</code> 时：</p>
+<ol>
+<li><code>c</code> 被隐式转换为对应的 ASCII 值（例如 <code>&#39;3&#39;</code> 的值是 <strong>51</strong>）。</li>
+<li><code>&#39;0&#39;</code> 的 ASCII 值是 <strong>48</strong>。</li>
+<li>计算差值：<code>51 - 48 = 3</code>，得到的结果就是字符 <code>&#39;3&#39;</code> 对应的数字 <strong>3</strong>。</li>
+</ol>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> <span class="variable">c</span> <span class="operator">=</span> <span class="string">&#x27;3&#x27;</span>;</span><br><span class="line"><span class="type">int</span> <span class="variable">digit</span> <span class="operator">=</span> c - <span class="string">&#x27;0&#x27;</span>;  <span class="comment">// 等价于 51 - 48 = 3</span></span><br><span class="line">System.out.println(digit);  <span class="comment">// 输出: 3</span></span><br></pre></td></tr></table></figure>
+</div></div>
+
+<h2 id="数组和字符串"><a href="#数组和字符串" class="headerlink" title="数组和字符串"></a><strong>数组和字符串</strong></h2><h3 id="Java中String、StringBuffer和StringBuilder的区别是什么？"><a href="#Java中String、StringBuffer和StringBuilder的区别是什么？" class="headerlink" title="Java中String、StringBuffer和StringBuilder的区别是什么？"></a>Java中String、StringBuffer和StringBuilder的区别是什么？</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><ul>
+<li>String：不可变字符，每次拼接会创建新的对象。</li>
+<li>StringBuffer：可变字符，线程安全，多线程环境下性能高。</li>
+<li>StringBuilder：可变字符，线程不安全，单线程的环境下性能高。</li>
+</ul>
+</div></div>
+
+<h3 id="String-str-new-String-“abc”-创建了几个对象？"><a href="#String-str-new-String-“abc”-创建了几个对象？" class="headerlink" title="String str &#x3D; new String(“abc”) 创建了几个对象？"></a>String str &#x3D; new String(“abc”) 创建了几个对象？</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><ul>
+<li>判断字符串常量池中是否存在字面量 <code>&quot;abc&quot;</code>。<ul>
+<li><strong>若不存在</strong>：JVM 会在常量池中创建一个 <code>String</code> 对象，值为 <code>&quot;abc&quot;</code>。</li>
+<li><strong>若已存在</strong>：跳过此步骤，不创建新对象。</li>
+</ul>
+</li>
+<li>无论常量池中是否已有 <code>&quot;abc&quot;</code>，<code>new String(&quot;abc&quot;)</code> 都会在<strong>堆内存</strong>中创建一个新的 <code>String</code> 对象，该对象的值复制自常量池中的 <code>&quot;abc&quot;</code>。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">str1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(<span class="string">&quot;abc&quot;</span>);  <span class="comment">// 最多创建 2 个对象（常量池 + 堆）</span></span><br><span class="line"><span class="type">String</span> <span class="variable">str2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(<span class="string">&quot;abc&quot;</span>);  <span class="comment">// 最多创建 1 个对象（仅堆，常量池已存在 &quot;abc&quot;）</span></span><br><span class="line"></span><br><span class="line">System.out.println(str1 == str2); <span class="comment">// false，堆中对象地址不同</span></span><br><span class="line">System.out.println(str1.equals(str2)); <span class="comment">// true，内容相同</span></span><br></pre></td></tr></table></figure>
+</div></div>
+
+<h3 id="String-str1-new-String-“abc”-和-String-str2-“abc”-的区别？"><a href="#String-str1-new-String-“abc”-和-String-str2-“abc”-的区别？" class="headerlink" title="String str1 &#x3D; new String(“abc”) 和 String str2 &#x3D; “abc” 的区别？"></a>String str1 &#x3D; new String(“abc”) 和 String str2 &#x3D; “abc” 的区别？</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><ul>
+<li><code>new String(&quot;abc&quot;)</code>：<ul>
+<li>无论如何都会在堆中创建新对象，且可能在常量池中创建对象（若字面量不存在）。</li>
+<li><strong>内存占用</strong>：至少 1 个对象（堆），最多 2 个对象（堆 + 常量池）。</li>
+</ul>
+</li>
+<li><code>String str2 = &quot;abc&quot;;</code>：<ul>
+<li>仅在常量池中创建对象（若不存在），否则直接引用常量池中的对象。</li>
+<li><strong>内存占用</strong>：0 或 1 个对象（仅当常量池不存在 <code>&quot;abc&quot;</code> 时创建）。</li>
+</ul>
+</li>
+</ul>
+</div></div>
+
+<h3 id="intern方法有什么作用？"><a href="#intern方法有什么作用？" class="headerlink" title="intern方法有什么作用？"></a>intern方法有什么作用？</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><p><code>intern()</code> 是 <code>String</code> 类的一个 native 方法，用于手动将字符串对象添加到 <strong>字符串常量池</strong> 中，并返回常量池中的引用。其核心作用是 <strong>复用字符串对象，节省内存</strong>。以下是详细解析：</p>
+<p><strong>1. 基本原理</strong></p>
+<p>检查常量池：调用<code>str.intern()</code>时，JVM 会先检查字符串常量池中是否已存在与<code>str</code><strong>内容相同</strong>（<code>equals()</code> 为 true）的字符串。</p>
+<ul>
+<li><strong>若存在</strong>：直接返回常量池中的引用，即使 <code>str</code> 本身在堆中。</li>
+<li><strong>若不存在</strong>：将 <code>str</code> 的内容添加到常量池（JDK 7+ 后直接复制引用，而非创建新对象），并返回该引用。</li>
+</ul>
+<p><strong>2. 关键区别（JDK 6 vs JDK 7+）</strong></p>
+<ul>
+<li><strong>JDK 6 及以前</strong>：常量池存放在永久代（方法区），<code>intern()</code> 会在常量池 <strong>复制字符串对象</strong>（创建新对象）。</li>
+<li>**JDK 7+**：常量池移至堆内存，<code>intern()</code> 会 <strong>直接引用堆中的对象</strong>，而非复制。</li>
+</ul>
+</div></div>
+
+<h2 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a><strong>面向对象</strong></h2><h3 id="抽象类和接口有什么区别"><a href="#抽象类和接口有什么区别" class="headerlink" title="抽象类和接口有什么区别"></a>抽象类和接口有什么区别</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><table>
+<thead>
+<tr>
+<th align="left"><strong>抽象类</strong></th>
+<th><strong>接口</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>定义与语法</strong></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">使用 <code>abstract class</code> 声明</td>
+<td>使用 <code>interface</code> 声明</td>
+</tr>
+<tr>
+<td align="left">可以包含普通方法和抽象方法</td>
+<td>只能包含抽象方法（Java 8+ 允许默认方法和静态方法）</td>
+</tr>
+<tr>
+<td align="left">抽象方法使用 <code>abstract</code> 关键字声明</td>
+<td>方法默认是 <code>public abstract</code>，无需显式声明</td>
+</tr>
+<tr>
+<td align="left">可以有构造器</td>
+<td>不能有构造器</td>
+</tr>
+<tr>
+<td align="left"><strong>继承与实现</strong></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">子类使用 <code>extends</code> 关键字继承</td>
+<td>类使用 <code>implements</code> 关键字实现接口</td>
+</tr>
+<tr>
+<td align="left">一个类只能继承一个抽象类</td>
+<td>一个类可以实现多个接口</td>
+</tr>
+<tr>
+<td align="left">子类必须实现所有抽象方法</td>
+<td>实现类必须实现所有抽象方法（除非类是抽象类）</td>
+</tr>
+<tr>
+<td align="left"><strong>成员变量</strong></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">可以有各种访问修饰符的成员变量</td>
+<td>只能有 <code>public static final</code> 常量</td>
+</tr>
+<tr>
+<td align="left">示例：<code>protected int age;</code></td>
+<td>示例：<code>int MAX_SPEED = 100;</code>（隐式为 public static final）</td>
+</tr>
+<tr>
+<td align="left"><strong>设计目的</strong></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">表示 “is-a” 关系，定义类的基本特征和行为</td>
+<td>表示 “can-do” 关系，定义类的额外能力</td>
+</tr>
+<tr>
+<td align="left">用于代码复用和共享公共状态</td>
+<td>用于实现多态和松耦合</td>
+</tr>
+<tr>
+<td align="left">适合作为相关类的基类</td>
+<td>适合为不相关类提供通用功能</td>
+</tr>
+<tr>
+<td align="left"><strong>应用场景</strong></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">当需要共享代码和状态时</td>
+<td>当需要定义行为规范但不关心实现时</td>
+</tr>
+<tr>
+<td align="left">当类之间有共同的属性和行为时</td>
+<td>当多个不相关的类需要实现同一功能时</td>
+</tr>
+<tr>
+<td align="left">例如：<code>java.io.InputStream</code></td>
+<td>例如：<code>java.util.Comparator</code></td>
+</tr>
+<tr>
+<td align="left"></td>
+<td></td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>使用抽象类</strong>：当需要定义类的基本行为，且有共享代码或状态时。</li>
+<li><strong>使用接口</strong>：当需要定义行为规范，且希望被多个不相关的类实现时。</li>
+</ul>
+</div></div>
+
+<h3 id="Java中的参数传递是按值，还是按引用？"><a href="#Java中的参数传递是按值，还是按引用？" class="headerlink" title="Java中的参数传递是按值，还是按引用？"></a>Java中的参数传递是按值，还是按引用？</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><p>在Java中，参数传递只有按值传递，无论是基本类型还是引用类型。</p>
+</div></div>
+
+<h3 id="什么是反射？"><a href="#什么是反射？" class="headerlink" title="什么是反射？"></a>什么是反射？</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><p>反射是 Java 在运行时动态获取类的信息（如方法、字段、构造器等），并可以动态调用对象的方法或操作字段的能力。核心类位于<code>java.lang.reflect</code>包中。</p>
+<ul>
+<li><p>反射原理：</p>
+<p>Java 程序的执行分为编译和运行两步，编译之后会生成字节码(.class)文件，JVM 进行类加载的时候，会加载字节码文件，将类型相关的所有信息加载进方法区，反射就是去获取这些信息，然后进行各种操作。</p>
+</li>
+<li><p>基本用法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取Class对象的三种方式</span></span><br><span class="line">Class&lt;?&gt; clazz = MyClass.class;           <span class="comment">// 方式1：类名.class</span></span><br><span class="line">Class&lt;?&gt; clazz = obj.getClass();          <span class="comment">// 方式2：对象实例.getClass()</span></span><br><span class="line">Class&lt;?&gt; clazz = Class.forName(<span class="string">&quot;com.MyClass&quot;</span>); <span class="comment">// 方式3：全限定名</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过反射创建对象</span></span><br><span class="line">Constructor&lt;?&gt; constructor = clazz.getConstructor();</span><br><span class="line"><span class="type">MyClass</span> <span class="variable">obj</span> <span class="operator">=</span> (MyClass) constructor.newInstance();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过反射调用方法</span></span><br><span class="line"><span class="type">Method</span> <span class="variable">method</span> <span class="operator">=</span> clazz.getMethod(<span class="string">&quot;methodName&quot;</span>, paramTypes);</span><br><span class="line">method.invoke(obj, args);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过反射访问字段</span></span><br><span class="line"><span class="type">Field</span> <span class="variable">field</span> <span class="operator">=</span> clazz.getDeclaredField(<span class="string">&quot;fieldName&quot;</span>);</span><br><span class="line">field.setAccessible(<span class="literal">true</span>); <span class="comment">// 打破私有访问限制</span></span><br><span class="line">field.set(obj, value);</span><br></pre></td></tr></table></figure></li>
+</ul>
+</div></div>
+
+<h3 id="反射在你平时写代码或者框架中的应用场景有哪些"><a href="#反射在你平时写代码或者框架中的应用场景有哪些" class="headerlink" title="反射在你平时写代码或者框架中的应用场景有哪些?"></a>反射在你平时写代码或者框架中的应用场景有哪些?</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><table>
+<thead>
+<tr>
+<th align="left"><strong>框架</strong></th>
+<th align="left"><strong>反射应用场景</strong></th>
+<th align="left"><strong>具体实现</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Spring</strong></td>
+<td align="left">依赖注入(IoC)</td>
+<td align="left">通过反射创建Bean实例并注入依赖</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">AOP动态代理</td>
+<td align="left">动态生成代理类并拦截方法调用</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">注解处理(@Autowired等)</td>
+<td align="left">扫描并解析类&#x2F;方法&#x2F;字段上的注解</td>
+</tr>
+<tr>
+<td align="left"><strong>Hibernate&#x2F;MyBatis</strong></td>
+<td align="left">ORM映射</td>
+<td align="left">通过反射将数据库结果集映射到Java对象</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">懒加载机制</td>
+<td align="left">动态生成实体类的代理对象</td>
+</tr>
+<tr>
+<td align="left"><strong>JUnit</strong></td>
+<td align="left">测试用例发现和执行</td>
+<td align="left">通过反射查找带@Test注解的方法并执行</td>
+</tr>
+</tbody></table>
+</div></div>
+
+<h3 id="什么是Java中的动态代理？"><a href="#什么是Java中的动态代理？" class="headerlink" title="什么是Java中的动态代理？"></a>什么是Java中的动态代理？</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><p>动态代理是 Java 在运行时动态创建代理类和对象的机制，它允许在不修改原始类代码的情况下，通过代理对象控制对原始对象的访问。代理对象可以拦截对目标对象的方法调用，在方法执行前后插入自定义逻辑，增强功能（如日志、事务），实现 AOP（面向切面编程）。</p>
+<p>核心机制</p>
+<ol>
+<li><strong>JDK 动态代理</strong>：基于接口实现，要求目标类必须实现至少一个接口。</li>
+<li><strong>CGLIB 动态代理</strong>：基于继承实现，通过生成目标类的子类拦截方法调用。</li>
+<li>核心类<ul>
+<li><code>java.lang.reflect.Proxy</code>：生成代理实例。</li>
+<li><code>java.lang.reflect.InvocationHandler</code>：处理方法调用的拦截逻辑。</li>
+</ul>
+</li>
+</ol>
+</div></div>
+
+<h3 id="JDK的动态代理和CGLIB的动态代理有什么区别？"><a href="#JDK的动态代理和CGLIB的动态代理有什么区别？" class="headerlink" title="JDK的动态代理和CGLIB的动态代理有什么区别？"></a>JDK的动态代理和CGLIB的动态代理有什么区别？</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><table>
+<thead>
+<tr>
+<th><strong>特性</strong></th>
+<th><strong>JDK 动态代理</strong></th>
+<th><strong>CGLIB 动态代理</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>依赖接口</strong></td>
+<td>必须实现接口</td>
+<td>无需接口，基于继承</td>
+</tr>
+<tr>
+<td><strong>代理方式</strong></td>
+<td>生成实现接口的代理类</td>
+<td>生成继承目标类的子类</td>
+</tr>
+<tr>
+<td><strong>性能</strong></td>
+<td>创建快，调用慢（反射）</td>
+<td>创建慢，调用快（字节码）</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>接口导向的框架（如 Spring AOP）</td>
+<td>无接口的类（如 Spring 的 @Service)</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>JDK 动态代理示例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 定义接口</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">UserService</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">saveUser</span><span class="params">(String username)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 实现接口</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">UserService</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">saveUser</span><span class="params">(String username)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Saving user: &quot;</span> + username);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 实现InvocationHandler</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LoggingHandler</span> <span class="keyword">implements</span> <span class="title class_">InvocationHandler</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Object target;  <span class="comment">// 目标对象</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">LoggingHandler</span><span class="params">(Object target)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.target = target;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">        <span class="comment">// 前置增强</span></span><br><span class="line">        System.out.println(<span class="string">&quot;Before method: &quot;</span> + method.getName());</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 调用目标方法</span></span><br><span class="line">        <span class="type">Object</span> <span class="variable">result</span> <span class="operator">=</span> method.invoke(target, args);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 后置增强</span></span><br><span class="line">        System.out.println(<span class="string">&quot;After method: &quot;</span> + method.getName());</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4. 创建代理对象并使用</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">UserService</span> <span class="variable">target</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UserServiceImpl</span>();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 创建代理对象</span></span><br><span class="line">        <span class="type">UserService</span> <span class="variable">proxy</span> <span class="operator">=</span> (UserService) Proxy.newProxyInstance(</span><br><span class="line">            UserService.class.getClassLoader(),</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Class</span>&lt;?&gt;[]&#123;UserService.class&#125;,</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">LoggingHandler</span>(target)</span><br><span class="line">        );</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 调用代理方法</span></span><br><span class="line">        proxy.saveUser(<span class="string">&quot;Alice&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>CGLIB 动态代理示例</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 定义目标类（无需实现接口）</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">UserService</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">saveUser</span><span class="params">(String username)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Saving user: &quot;</span> + username);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 实现MethodInterceptor</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LoggingInterceptor</span> <span class="keyword">implements</span> <span class="title class_">MethodInterceptor</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">intercept</span><span class="params">(Object obj, Method method, Object[] args, MethodProxy proxy)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Before method: &quot;</span> + method.getName());</span><br><span class="line">        <span class="type">Object</span> <span class="variable">result</span> <span class="operator">=</span> proxy.invokeSuper(obj, args);  <span class="comment">// 调用父类（目标类）方法</span></span><br><span class="line">        System.out.println(<span class="string">&quot;After method: &quot;</span> + method.getName());</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 创建代理对象</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Enhancer</span> <span class="variable">enhancer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Enhancer</span>();</span><br><span class="line">        enhancer.setSuperclass(UserService.class);  <span class="comment">// 设置父类（目标类）</span></span><br><span class="line">        enhancer.setCallback(<span class="keyword">new</span> <span class="title class_">LoggingInterceptor</span>());</span><br><span class="line">        </span><br><span class="line">        <span class="type">UserService</span> <span class="variable">proxy</span> <span class="operator">=</span> (UserService) enhancer.create();</span><br><span class="line">        proxy.saveUser(<span class="string">&quot;Bob&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</div></div>
+
+<h3 id="什么是Java-的SPI-机制？"><a href="#什么是Java-的SPI-机制？" class="headerlink" title="什么是Java 的SPI 机制？"></a>什么是Java 的SPI 机制？</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><p><strong>SPI（Service Provider Interface）</strong> 是 Java 提供的一种<strong>服务发现机制</strong>，允许第三方实现接口并通过配置文件动态加载，它通过在运行时动态加载接口实现类，实现<strong>模块解耦</strong>和<strong>可插拔架构</strong>。SPI 的核心思想是”<strong>面向接口编程 + 约定优于配置</strong>“。</p>
+<ul>
+<li><p>工作流程</p>
+<pre><code class="highlight mermaid">graph TD
+    A[定义服务接口] --&gt; B[创建实现类]
+    B --&gt; C[配置META-INF/services文件]
+    C --&gt; D[ServiceLoader加载]
+    D --&gt; E[获取实现实例]</code></pre>
+
+<p>示例代码：</p>
+<ol>
+<li><p>定义服务接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 服务接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">DataSource</span> &#123;</span><br><span class="line">    Connection <span class="title function_">getConnection</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>实现服务接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MySQL实现</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MySQLDataSource</span> <span class="keyword">implements</span> <span class="title class_">DataSource</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Connection <span class="title function_">getConnection</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">MySQLConnection</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// PostgreSQL实现</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PostgreSQLDataSource</span> <span class="keyword">implements</span> <span class="title class_">DataSource</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Connection <span class="title function_">getConnection</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">PostgreSQLConnection</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置实现类</p>
+<p>在<code>META-INF/services/com.example.DataSource</code>文件中写入：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">com.example.MySQLDataSource</span></span><br><span class="line"><span class="attr">com.example.PostgreSQLDataSource</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ServiceLoader加载并使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ServiceLoader&lt;DataSource&gt; loader = ServiceLoader.load(DataSource.class);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 遍历所有实现</span></span><br><span class="line"><span class="keyword">for</span> (DataSource ds : loader) &#123;</span><br><span class="line">    <span class="type">Connection</span> <span class="variable">conn</span> <span class="operator">=</span> ds.getConnection();</span><br><span class="line">    <span class="comment">// 使用连接...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取指定实现（需自行判断）</span></span><br><span class="line">Optional&lt;DataSource&gt; mysqlDs = loader.stream()</span><br><span class="line">    .filter(p -&gt; p.type().getName().contains(<span class="string">&quot;MySQL&quot;</span>))</span><br><span class="line">    .map(ServiceLoader.Provider::get)</span><br><span class="line">    .findFirst();</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ul>
+</div></div>
+
+<h3 id="SPI-与-API-的区别"><a href="#SPI-与-API-的区别" class="headerlink" title="SPI 与 API 的区别"></a>SPI 与 API 的区别</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><table>
+<thead>
+<tr>
+<th><strong>API</strong></th>
+<th><strong>SPI</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>应用程序编程接口</strong>：框架或库提供的功能调用接口，用于被应用程序调用。</td>
+<td><strong>服务提供者接口</strong>：框架定义的标准接口，允许第三方提供实现，用于框架扩展。</td>
+</tr>
+<tr>
+<td><strong>调用方向</strong>：应用程序→API→框架</td>
+<td><strong>调用方向</strong>：框架→SPI→第三方实现</td>
+</tr>
+<tr>
+<td><strong>示例</strong>：Java 标准库的<code>java.util.List</code>接口</td>
+<td><strong>示例</strong>：JDBC 的<code>java.sql.Driver</code>接口</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p><strong>API</strong>：你调用别人提供的功能（如使用<code>HashMap</code>）</p>
+<style>.bpegvbzchxul{zoom: 67%;}</style><img src="/2025/07/03/Interview/Java%E9%9D%A2%E8%AF%95%E9%A2%98/image-20250708144051789.png" class="bpegvbzchxul" alt="image-20250708144051789">
+</li>
+<li><p><strong>SPI</strong>：别人调用你实现的扩展（如为JDBC提供新驱动）</p>
+<style>.rkmllhghndms{zoom: 67%;}</style><img src="/2025/07/03/Interview/Java%E9%9D%A2%E8%AF%95%E9%A2%98/image-20250708144106322.png" class="rkmllhghndms" alt="image-20250708144106322"></li>
+</ul>
+</div></div>
+
+<h3 id="单例模式有几种实现方式"><a href="#单例模式有几种实现方式" class="headerlink" title="单例模式有几种实现方式?"></a>单例模式有几种实现方式?</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><ol>
+<li><p><strong>饿汉式（线程安全，非懒加载）</strong></p>
+<p>类加载时直接初始化实例，借助 JVM 类加载机制保证线程安全（类加载过程是单线程的）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HungrySingleton</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 类加载时直接实例化</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">HungrySingleton</span> <span class="variable">INSTANCE</span> <span class="operator">=</span>  <span class="keyword">new</span> <span class="title class_">HungrySingleton</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//私有构造器，防止外部实例化</span></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">HungrySingleton</span><span class="params">()</span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//全局访问点</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> HungrySingleton <span class="title function_">getInstance</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>特点</strong>：</p>
+<ul>
+<li>优点：实现简单，线程安全（类加载时初始化）。</li>
+<li>缺点：非懒加载（类加载即实例化），若实例占用资源大且长期不使用，会浪费内存。</li>
+</ul>
+</li>
+<li><p><strong>懒汉式（线程不安全，懒加载）</strong></p>
+</li>
+</ol>
+<p>   延迟初始化实例，仅在第一次调用<code>getInstance()</code>时创建，但多线程环境下会产生多个实例（线程不安全）。</p>
+   <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LazySingletonUnsafe</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> LazySingletonUnsafe instance;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">LazySingletonUnsafe</span><span class="params">()</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 线程不安全：多线程同时进入if判断时，会创建多个实例</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> LazySingletonUnsafe <span class="title function_">getInstance</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="literal">null</span>)&#123;</span><br><span class="line">            instance = <span class="keyword">new</span> <span class="title class_">LazySingletonUnsafe</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>优点：懒加载，节省资源。</li>
+<li>缺点：线程不安全，多线程环境下失效，实际开发中禁止使用。</li>
+</ul>
+<ol start="3">
+<li><p><strong>懒汉式（线程安全，同步方法）</strong></p>
+<p>在<code>getInstance()</code>方法上添加<code>synchronized</code>关键字，强制多线程串行执行，保证线程安全。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LazySingletonSafeSyncMethod</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> LazySingletonSafeSyncMethod instance;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">LazySingletonSafeSyncMethod</span><span class="params">()</span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 同步方法：多线程需排队执行，保证线程安全</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> LazySingletonSafeSyncMethod <span class="title function_">getInstance</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="literal">null</span>)&#123;</span><br><span class="line">            instance = <span class="keyword">new</span> <span class="title class_">LazySingletonSafeSyncMethod</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>优点：线程安全，懒加载。</li>
+<li>缺点：<code>synchronized</code>修饰整个方法，并发效率低（即使实例已创建，每次调用仍需排队）。</li>
+</ul>
+</li>
+<li><p><strong>双重检查锁（DCL，线程安全，懒加载）</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DCLSingleton</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// volatile防止指令重排：避免&quot;半初始化&quot;实例被其他线程获取</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> DCLSingleton instance;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">DCLSingleton</span> <span class="params">()</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> DCLSingleton <span class="title function_">getInstance</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 第一次判空：避免已创建实例后仍进入同步块（提高效率）</span></span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (DCLSingleton.class)&#123;</span><br><span class="line">                <span class="comment">// 第二次判空：防止多线程同时通过第一次判空后，重复创建实例</span></span><br><span class="line">                <span class="keyword">if</span> (instance == <span class="literal">null</span>)&#123;</span><br><span class="line">                    instance = <span class="keyword">new</span> <span class="title class_">DCLSingleton</span>();</span><br><span class="line">                    <span class="comment">// 注：new操作分3步：1.分配内存 2.初始化 3.赋值给instance</span></span><br><span class="line">                    <span class="comment">// 若不加volatile，可能发生指令重排（1→3→2），导致其他线程获取&quot;半初始化&quot;实例</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>特点</strong>：</p>
+<ul>
+<li>优点：懒加载，线程安全，并发效率高（仅首次创建时同步）。</li>
+<li>关键：<code>volatile</code>关键字不可省略，否则可能因指令重排导致线程安全问题。</li>
+</ul>
+</li>
+<li><p><strong>静态内部类（线程安全，懒加载）</strong></p>
+<p>利用 JVM “静态内部类按需加载” 的特性实现懒加载，同时借助类加载机制保证线程安全。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StaticInnerClassSingleton</span> &#123;</span><br><span class="line">    <span class="comment">// 静态内部类：仅在调用getInstance()时才会加载</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">InnerClass</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">StaticInnerClassSingleton</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StaticInnerClassSingleton</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">StaticInnerClassSingleton</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> StaticInnerClassSingleton <span class="title function_">getInstance</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> InnerClass.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>原理</strong>：</p>
+<ul>
+<li>外部类加载时，静态内部类不会被加载，实现懒加载。</li>
+<li>首次调用<code>getInstance()</code>时，静态内部类加载，其静态变量<code>INSTANCE</code>初始化（JVM 保证类加载过程线程安全），确保唯一实例。<br><strong>特点</strong>：实现简洁，线程安全，懒加载，效率高，是推荐的实现方式之一。</li>
+</ul>
+</li>
+<li><p><strong>枚举单例（线程安全，天然防反射 &#x2F; 序列化）</strong></p>
+<p>利用枚举的特性（JVM 保证枚举实例唯一且不可变）实现单例，是《Effective Java》推荐的最佳方式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public enum EnumSingleton &#123;</span><br><span class="line">    INSTANCE; // 唯一实例</span><br><span class="line">    </span><br><span class="line">    // 枚举可定义方法</span><br><span class="line">    public void doSomething() &#123;</span><br><span class="line">        // 业务逻辑</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>特点</strong>：</p>
+<ul>
+<li>优点：线程安全（JVM 保证枚举实例仅被初始化一次），天然防止反射和序列化破坏单例，实现极简。</li>
+<li>缺点：无法懒加载（枚举类加载时即初始化实例），若实例依赖参数初始化，灵活性较低。</li>
+</ul>
+</li>
+</ol>
+</div></div>
+
+<h3 id="如何避免反射和序列化破坏单例"><a href="#如何避免反射和序列化破坏单例" class="headerlink" title="如何避免反射和序列化破坏单例?"></a>如何避免反射和序列化破坏单例?</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><ol>
+<li><p><strong>反射破坏单例及解决方案</strong></p>
+<p><strong>反射破坏原理</strong>：通过<code>Class.getDeclaredConstructor()</code>获取私有构造器，调用<code>setAccessible(true)</code>取消访问检查后，可多次调用<code>newInstance()</code>创建实例。</p>
+<p><strong>示例（破坏 DCL 单例）</strong>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestReflect</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 获取单例实例</span></span><br><span class="line">        <span class="type">DCLSingleton</span> <span class="variable">instance1</span> <span class="operator">=</span> DCLSingleton.getInstance();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 反射获取私有构造器</span></span><br><span class="line">        Constructor&lt;DCLSingleton&gt; constructor = DCLSingleton.class.getDeclaredConstructor();</span><br><span class="line">        constructor.setAccessible(<span class="literal">true</span>); <span class="comment">// 绕过私有访问限制</span></span><br><span class="line">        <span class="type">DCLSingleton</span> <span class="variable">instance2</span> <span class="operator">=</span> constructor.newInstance(); <span class="comment">// 创建新实例</span></span><br><span class="line">        </span><br><span class="line">        System.out.println(instance1 == instance2); <span class="comment">// false（单例被破坏）</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>解决方案</strong>：在私有构造器中添加判断，若已有实例则抛出异常，阻止重复创建。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="title function_">DCLSingleton</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 防止反射破坏：若已有实例，抛异常</span></span><br><span class="line">    <span class="keyword">if</span> (instance != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;禁止通过反射创建实例&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>序列化破坏单例及解决方案</strong></p>
+<p><strong>序列化破坏原理</strong>：单例实例序列化后写入磁盘，反序列化时会通过反射创建新实例（即使构造器私有），导致单例失效。</p>
+<p><strong>示例（破坏静态内部类单例）</strong>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestSerialize</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 获取单例实例</span></span><br><span class="line">        <span class="type">StaticInnerClassSingleton</span> <span class="variable">instance1</span> <span class="operator">=</span> StaticInnerClassSingleton.getInstance();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 序列化</span></span><br><span class="line">        <span class="type">ObjectOutputStream</span> <span class="variable">oos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectOutputStream</span>(<span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(<span class="string">&quot;singleton.obj&quot;</span>));</span><br><span class="line">        oos.writeObject(instance1);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 反序列化</span></span><br><span class="line">        <span class="type">ObjectInputStream</span> <span class="variable">ois</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectInputStream</span>(<span class="keyword">new</span> <span class="title class_">FileInputStream</span>(<span class="string">&quot;singleton.obj&quot;</span>));</span><br><span class="line">        <span class="type">StaticInnerClassSingleton</span> <span class="variable">instance2</span> <span class="operator">=</span> (StaticInnerClassSingleton) ois.readObject();</span><br><span class="line">        </span><br><span class="line">        System.out.println(instance1 == instance2); <span class="comment">// false（单例被破坏）</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>解决方案</strong>：在单例类中重写<code>readResolve()</code>方法，返回已有的单例实例，覆盖反序列化生成的新对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StaticInnerClassSingleton</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">    <span class="comment">// ... 其他代码同上 ...</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 反序列化时，JVM会调用此方法，返回已有实例</span></span><br><span class="line">    <span class="keyword">private</span> Object <span class="title function_">readResolve</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> InnerClass.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>枚举单例为何天然防破坏？</strong></p>
+<ul>
+<li><strong>防反射</strong>：JVM 对枚举的构造器做了特殊保护，反射调用<code>newInstance()</code>时会直接抛出<code>IllegalArgumentException</code>，无法创建新实例。</li>
+<li><strong>防序列化</strong>：枚举的序列化机制与普通类不同，反序列化时不会创建新实例，而是直接返回枚举常量（通过<code>Enum.valueOf()</code>获取已有实例）。</li>
+</ul>
+</li>
+</ol>
+</div></div>
+
+<h2 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a><strong>泛型</strong></h2><h3 id="Java中泛型擦除是什么？"><a href="#Java中泛型擦除是什么？" class="headerlink" title="Java中泛型擦除是什么？"></a>Java中泛型擦除是什么？</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><p>泛型擦除是 Java 泛型的核心机制，指在<strong>编译后</strong>，泛型类型参数会被擦除，替换为其<strong>上限类型</strong>（通常是<code>Object</code>），从而使代码在运行时<strong>不再保留泛型类型信息</strong>。</p>
+</div></div>
+
+
+
+<h2 id="Java集合框架"><a href="#Java集合框架" class="headerlink" title="Java集合框架"></a><strong>Java集合框架</strong></h2><h3 id="ArrayList-和-LinkedList-有什么区别？"><a href="#ArrayList-和-LinkedList-有什么区别？" class="headerlink" title="ArrayList 和 LinkedList 有什么区别？"></a>ArrayList 和 LinkedList 有什么区别？</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><table>
+<thead>
+<tr>
+<th><strong>维度</strong></th>
+<th><strong>ArrayList</strong></th>
+<th><strong>LinkedList</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>数据结构</strong></td>
+<td><strong>动态数组</strong></td>
+<td><strong>双向链表</strong></td>
+</tr>
+<tr>
+<td><strong>随机访问</strong></td>
+<td>支持高效随机访问（<code>O(1)</code>）</td>
+<td>不支持高效随机访问（<code>O(n)</code>）</td>
+</tr>
+<tr>
+<td><strong>插入 &#x2F; 删除效率</strong></td>
+<td>尾部插入快（<code>O(1)</code>），中间插入慢（<code>O(n)</code>）</td>
+<td>任意位置插入 &#x2F; 删除快（<code>O(1)</code>，需先定位）</td>
+</tr>
+<tr>
+<td><strong>内存占用</strong></td>
+<td>连续内存空间，可能有预分配冗余</td>
+<td>非连续内存，每个节点包含前后引用</td>
+</tr>
+<tr>
+<td><strong>扩容机制</strong></td>
+<td>自动扩容（默认增长原来的 1.5 倍）</td>
+<td>无需扩容，按需分配节点</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>频繁随机访问，较少插入删除</td>
+<td>频繁插入删除，较少随机访问</td>
+</tr>
+</tbody></table>
+</div></div>
+
+<h3 id="ArrayList线程安全吗？把ArrayList变成线程安全有哪些方法？"><a href="#ArrayList线程安全吗？把ArrayList变成线程安全有哪些方法？" class="headerlink" title="ArrayList线程安全吗？把ArrayList变成线程安全有哪些方法？"></a>ArrayList线程安全吗？把ArrayList变成线程安全有哪些方法？</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><p>不是线程安全的，ArrayList变成线程安全的方式有：</p>
+<ul>
+<li><p>使用Collections类的synchronizedList方法将ArrayList包装成线程安全的List：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; synchronizedList = Collections.synchronizedList(arrayList);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用CopyOnWriteArrayList类代替ArrayList，它是一个线程安全的List实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CopyOnWriteArrayList&lt;String&gt; copyOnWriteArrayList = <span class="keyword">new</span> <span class="title class_">CopyOnWriteArrayList</span>&lt;&gt;(arrayList);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用Vector类代替ArrayList，Vector是线程安全的List实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Vector&lt;String&gt; vector = <span class="keyword">new</span> <span class="title class_">Vector</span>&lt;&gt;(arrayList);</span><br></pre></td></tr></table></figure></li>
+</ul>
+</div></div>
+
+<h3 id="说一下CopyOnWriteArrayList"><a href="#说一下CopyOnWriteArrayList" class="headerlink" title="说一下CopyOnWriteArrayList"></a>说一下CopyOnWriteArrayList</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><p><strong><code>CopyOnWriteArrayList</code><strong>是Java为</strong>读多写少</strong>场景设计的<strong>线程安全列表</strong>，它通过<strong>写时复制机制</strong>避免了读操作的锁开销，实现了<strong>读写分离</strong>。但由于每次写操作都要复制数组，会带来内存和性能开销，因此适用于读密集、写较少且允许弱一致性的场景。在实际项目中，我们需要根据读写比例和一致性要求选择合适的容器。</p>
+<ul>
+<li>原理<ul>
+<li><strong>写操作</strong>：在执行<code>add()</code>、<code>remove()</code>等修改操作时，会先复制原数组，在新数组上完成修改，最后用新数组替换原数组。</li>
+<li><strong>读操作</strong>：直接访问原数组，无需加锁，因此读操作无阻塞。</li>
+</ul>
+</li>
+<li>优点：读操作高效，线程安全，迭代器弱一致性避免并发修改异常。</li>
+<li>缺点：写操作开销大（复制数组），占用更多内存，不适合写频繁的场景。</li>
+</ul>
+</div></div>
+
+<h3 id="说一下-Collections-synchronizedList"><a href="#说一下-Collections-synchronizedList" class="headerlink" title="说一下 Collections.synchronizedList"></a>说一下 Collections.synchronizedList</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><p><code>Collections.synchronizedList</code> 是 Java 提供的一个工具方法，它位于 <code>java.util.Collections</code> 类中。用于将普通列表（如 <code>ArrayList</code>、<code>LinkedList</code>）转换为线程安全的列表。它会对每个访问方法（如 get, set, add, remove）进行同步（加 synchronized 锁），从而保证线程安全。</p>
+</div></div>
+
+<h3 id="CopyOnWriteArrayList和Collections-synchronizedList的区别"><a href="#CopyOnWriteArrayList和Collections-synchronizedList的区别" class="headerlink" title="CopyOnWriteArrayList和Collections.synchronizedList的区别"></a>CopyOnWriteArrayList和Collections.synchronizedList的区别</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><table>
+<thead>
+<tr>
+<th>特性</th>
+<th><code>Collections.synchronizedList</code></th>
+<th><code>CopyOnWriteArrayList</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>实现方式</strong></td>
+<td>同步包装器，使用 <code>synchronized</code></td>
+<td>写时复制（Copy-On-Write）</td>
+</tr>
+<tr>
+<td><strong>锁粒度</strong></td>
+<td>全局锁（所有操作串行化）</td>
+<td>无锁读，写操作加锁</td>
+</tr>
+<tr>
+<td><strong>读性能</strong></td>
+<td>低（需获取锁）</td>
+<td>高（无需锁）</td>
+</tr>
+<tr>
+<td><strong>写性能</strong></td>
+<td>中（仅需获取锁）</td>
+<td>低（需复制数组）</td>
+</tr>
+<tr>
+<td><strong>迭代器安全性</strong></td>
+<td>不安全，需手动同步</td>
+<td>安全（基于快照）</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>读写频率相近，且需要弱一致性</td>
+<td>读多写少，且允许弱一致性</td>
+</tr>
+</tbody></table>
+</div></div>
+
+<h3 id="ArrayList的扩容机制？"><a href="#ArrayList的扩容机制？" class="headerlink" title="ArrayList的扩容机制？"></a>ArrayList的扩容机制？</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><p>当往 ArrayList 中添加元素时，会先检查是否需要扩容，如果当前容量+1 超过数组长度，就会进行扩容。</p>
+<p>扩容后的新数组长度是原来的 1.5 倍，然后再把原数组的值拷贝到新数组中。</p>
+</div></div>
+
+<h3 id="说一下HashMap的底层数据结构"><a href="#说一下HashMap的底层数据结构" class="headerlink" title="说一下HashMap的底层数据结构"></a>说一下HashMap的底层数据结构</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><p>HashMap 的底层是<strong>数组 + 链表 + 红黑树</strong>的复合结构（JDK1.7之前是<strong>数组 + 链表</strong> ）。</p>
+<ul>
+<li>数组是主体，每个元素是一个桶；当发生哈希冲突时，冲突的元素会形成链表；</li>
+<li>当链表长度超过 8 且数组长度 ≥64 时，链表会转换为红黑树以提升查询效率。</li>
+<li>这种设计平衡了空间和时间复杂度，既避免了开放寻址法的扩容开销，又通过树化优化了链表过长的问题。</li>
+<li>在 JDK 8 中，插入方式从头插法改为尾插法，避免了多线程环境下的链表成环问题，但仍不保证线程安全。</li>
+</ul>
+</div></div>
+
+<h3 id="哈希冲突解决方法有哪些？"><a href="#哈希冲突解决方法有哪些？" class="headerlink" title="哈希冲突解决方法有哪些？"></a>哈希冲突解决方法有哪些？</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><ul>
+<li>拉链法（链地址法）：每个哈希桶中维护一个链表（或其他数据结构），冲突的元素都存入该链表。<ul>
+<li>链表法：<ul>
+<li>原理：JDK 7 及以前的 <code>HashMap</code> 采用此方法。当冲突发生时，将元素插入链表头部（头插法）。</li>
+<li>优点：实现简单，无需扩容整个哈希表，适用于冲突频繁的场景。</li>
+<li>缺点：链表过长时查询效率为 O (n)。</li>
+</ul>
+</li>
+<li>链表 + 红黑树：<ul>
+<li>原理：JDK 8 后的 <code>HashMap</code> 优化：当链表长度超过阈值（8）且哈希表容量 ≥64 时，将链表转换为红黑树（查询效率 O (log n)）。</li>
+<li>优点：高效处理大量冲突，避免链表过长导致的性能问题。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>再哈希法：当发生冲突时，使用另一个哈希函数再次计算键的哈希值，直到找到一个空槽来存储键值对。</li>
+<li>开放寻址法：当发生冲突时，直接在哈希表中寻找下一个空闲位置。常见的开放寻址方法包括线性探测、二次探测和双重散列。</li>
+</ul>
+</div></div>
+
+<h3 id="HashMap和HashTable的区别"><a href="#HashMap和HashTable的区别" class="headerlink" title="HashMap和HashTable的区别"></a>HashMap和HashTable的区别</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><ol>
+<li>线程安全：HashMap 非线程安全，HashTable 线程安全（但性能差，推荐用 ConcurrentHashMap）。</li>
+<li>空值支持：HashMap 允许 null 键和 null 值，HashTable 不允许。</li>
+<li>历史设计：HashMap 继承自 AbstractMap，HashTable 继承自 Dictionary（已过时）。</li>
+<li>容量与扩容：HashMap 初始容量 16 且必须为 2 的幂，HashTable 初始 11，扩容为 2n+1。</li>
+<li>性能：HashMap 单线程性能更高，HashTable 因全局锁性能较差。</li>
+</ol>
+<blockquote>
+<p>在实际开发中，优先使用 HashMap，仅在需要线程安全时考虑 ConcurrentHashMap，避免使用 HashTable。</p>
+</blockquote>
+</div></div>
+
+<h3 id="ConcurrentHashMap和HashTable的区别"><a href="#ConcurrentHashMap和HashTable的区别" class="headerlink" title="ConcurrentHashMap和HashTable的区别"></a>ConcurrentHashMap和HashTable的区别</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><ol>
+<li>锁机制：ConcurrentHashMap 在 JDK 8 采用 CAS + synchronized 锁定桶节点，并发度更高；HashTable 使用全局锁。</li>
+<li>性能：ConcurrentHashMap 读无锁，写仅锁冲突节点，性能远优于 HashTable。</li>
+<li>数据结构：JDK 8 的 ConcurrentHashMap 采用数组+链表+红黑树；HashTable与 HashMap 一致，但所有操作同步。</li>
+<li>空值支持：两者均不允许 null 键值。</li>
+<li>迭代器：ConcurrentHashMap 弱一致性，不抛异常；HashTable 可能抛出 ConcurrentModificationException。</li>
+</ol>
+<blockquote>
+<p>在实际开发中，强烈推荐使用 ConcurrentHashMap 替代 HashTable，尤其在高并发场景下，其性能优势显著。</p>
+</blockquote>
+</div></div>
+
+<h3 id="HashSet和HashMap的区别"><a href="#HashSet和HashMap的区别" class="headerlink" title="HashSet和HashMap的区别"></a>HashSet和HashMap的区别</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><ol>
+<li>接口与功能：HashSet 实现 Set 接口，存储唯一元素；HashMap 实现 Map 接口，存储键值对。</li>
+<li>底层实现：HashSet 依赖 HashMap，将元素作为 key 存储，value 固定为 PRESENT。</li>
+<li>null 支持：两者均允许 1 个 null 键（HashSet 的 null 元素），但 HashMap 还允许多个 null 值。</li>
+<li>应用场景：HashSet 用于去重和存在性检查，HashMap 用于键值映射。</li>
+</ol>
+<blockquote>
+<p>在实际开发中，若只需存储不重复元素，选择 HashSet；若需键值关联，选择 HashMap。</p>
+</blockquote>
+</div></div>
+
+<h3 id="HashMap的put流程"><a href="#HashMap的put流程" class="headerlink" title="HashMap的put流程"></a>HashMap的put流程</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><ol>
+<li><p>计算 key 的哈希值（高 16 位与低 16 位异或），减少哈希冲突。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">hash</span><span class="params">(Object key)</span> &#123;</span><br><span class="line">    <span class="type">int</span> h;</span><br><span class="line">    <span class="keyword">return</span> (key == <span class="literal">null</span>) ? <span class="number">0</span> : (h = key.hashCode()) ^ (h &gt;&gt;&gt; <span class="number">16</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//确定桶位置。</span></span><br><span class="line">index = (n - <span class="number">1</span>) &amp; hash <span class="comment">// n 为数组长度，必须是 2 的幂次方</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>若数组未初始化，先进行扩容（初始容量 16）。</p>
+</li>
+<li><p>通过哈希值和数组长度取模确定桶位置。</p>
+</li>
+<li><p>处理桶内节点：</p>
+<ul>
+<li>若桶为空，直接插入新节点。</li>
+<li>若首节点 key 匹配，覆盖旧值。</li>
+<li>若是树节点，调用树插入逻辑。</li>
+<li>若是链表，遍历链表：<ul>
+<li>找到相同 key 则覆盖。</li>
+<li>未找到则链尾插入，若链表长度 ≥8 且数组长度 ≥64，将链表转换为红黑树。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>插入后检查元素数量是否超过阈值（容量 × 加载因子），超过则扩容。</p>
+</li>
+</ol>
+<blockquote>
+<p>JDK 8 对 put 方法进行了优化，采用尾插法避免多线程下的链表成环问题，并通过红黑树优化了链表过长时的性能。</p>
+</blockquote>
+</div></div>
+
+<h3 id="HashMap的扩容机制"><a href="#HashMap的扩容机制" class="headerlink" title="HashMap的扩容机制"></a>HashMap的扩容机制</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><ol>
+<li><p>当元素数量超过阈值（capacity * loadFactor）即 容量（初始化16） * 负载因子（默认 0.75） 时，触发扩容。</p>
+</li>
+<li><p>创建一个新的数组，容量为原来的2倍，并重新计算阈值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">newCap = oldCap &lt;&lt; <span class="number">1</span>（例如，<span class="number">16</span> → <span class="number">32</span>）。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>数据迁移</p>
+<ul>
+<li>通过 <code>hash &amp; oldCap</code> 将节点分为两类：结果为 0 则留在原索引，否则移至原索引+oldCap。</li>
+<li>JDK 8 优化：将链表拆分为低位链和高位链，避免链表反转，提高效率。</li>
+</ul>
+</li>
+<li><p>树化与反树化</p>
+<ul>
+<li>若链表长度 ≥8 且容量 ≥64，转换为红黑树。</li>
+<li>扩容后若树节点数 ≤6，红黑树退化为链表。</li>
+</ul>
+</li>
+</ol>
+</div></div>
+
+<h3 id="讲讲-LinkedHashMap"><a href="#讲讲-LinkedHashMap" class="headerlink" title="讲讲 LinkedHashMap"></a>讲讲 LinkedHashMap</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><p>LinkedHashMap 是 HashMap 的子类，它在哈希表的基础上增加了双向链表，用于维护元素的插入顺序或访问顺序。</p>
+<p>LinkedHashMap 在 HashMap 的基础上维护了一个双向链表，通过 before 和 after 标识前置节点和后置节点。</p>
+</div></div>
+
+<h3 id="讲讲TreeMap"><a href="#讲讲TreeMap" class="headerlink" title="讲讲TreeMap"></a>讲讲TreeMap</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">TreeMap 是基于红黑树实现的有序 Map，主要特点如下：</span><br><span class="line"></span><br><span class="line">1. **键有序**：</span><br><span class="line">   - 自然顺序：键必须实现 Comparable 接口。</span><br><span class="line">   - 自定义顺序：通过构造函数传入 Comparator。</span><br><span class="line"></span><br><span class="line">2. **核心数据结构**：</span><br><span class="line">   - 红黑树：自平衡二叉搜索树，确保操作的时间复杂度为 O(log n)。</span><br><span class="line">   - 每个节点包含颜色属性，通过旋转和变色维持平衡。</span><br><span class="line"></span><br><span class="line">3. **导航方法**：</span><br><span class="line">   - 提供 ceilingKey、floorKey 等方法，高效查找相邻键。</span><br><span class="line">   - 支持子Map操作，返回指定范围的视图。</span><br><span class="line"></span><br><span class="line">4. **适用场景**：</span><br><span class="line">   - 需要按键排序的场景（如时间范围查询、数值区间统计）。</span><br><span class="line">   - 需频繁查找相邻元素的场景。</span><br></pre></td></tr></table></figure>
+</div></div>
+
+<h3 id="讲讲ConcurrentHashMap"><a href="#讲讲ConcurrentHashMap" class="headerlink" title="讲讲ConcurrentHashMap"></a>讲讲ConcurrentHashMap</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><p><code>ConcurrentHashMap</code> 是 Java 提供的线程安全哈希表，主要特点如下：</p>
+<ol>
+<li><strong>JDK 8 优化</strong>：  <ul>
+<li>数据结构：数组 + 链表 + 红黑树，与 HashMap 一致。   </li>
+<li>锁机制：抛弃JDK1.7之前使用的分段锁，采用 CAS + synchronized 锁定桶头节点，并发度更高。</li>
+</ul>
+</li>
+<li><strong>核心优势</strong>：  <ul>
+<li>高效并发：读操作无锁，写操作仅锁冲突的桶，性能远优于 HashTable。</li>
+<li>弱一致性：迭代器不抛出 ConcurrentModificationException，允许遍历期间修改。</li>
+</ul>
+</li>
+<li><strong>原子操作</strong>：<ul>
+<li>提供 putIfAbsent、computeIfAbsent 等原子方法，避免复合操作的竞态条件。</li>
+</ul>
+</li>
+<li><strong>适用场景</strong>：<ul>
+<li>高并发读写场景（如缓存、计数器）。</li>
+<li>需线程安全但不希望使用全局锁的场景。</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p> 相比 HashTable，ConcurrentHashMap 的锁粒度更小，读操作无锁，性能显著提升；相比 Collections.synchronizedMap，它提供了更丰富的原子方法和更高的并发度。</p>
+</blockquote>
+</div></div>
+
+<h3 id="ConcurrentHashMap-为什么-key-和-value-不能为-null？"><a href="#ConcurrentHashMap-为什么-key-和-value-不能为-null？" class="headerlink" title="ConcurrentHashMap 为什么 key 和 value 不能为 null？"></a>ConcurrentHashMap 为什么 key 和 value 不能为 null？</h3><div class="hide-block"><button type="button" class="hide-button" style="">查看答案</button><div class="hide-content"><ol>
+<li><strong>避免歧义</strong>：<ul>
+<li>在并发场景下，若允许 null，当 get(key) 返回 null 时，无法区分是 key 不存在还是 value 为 null，可能导致逻辑错误。</li>
+</ul>
+</li>
+<li><strong>原子操作的语义</strong>：<ul>
+<li>原子方法（如 putIfAbsent）依赖返回值判断操作结果。若允许 null，返回 null 无法明确是插入成功还是 key 已存在，破坏原子性。</li>
+</ul>
+</li>
+<li><strong>并发复杂性</strong>：<ul>
+<li>弱一致性迭代器难以处理 null 值的语义，增加实现复杂度。</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>相比之下，HashMap 允许 null 是为了单线程下的灵活性，但在并发环境中，这种灵活性会带来安全隐患。因此，ConcurrentHashMap 选择严格设计，强制用户处理 null 的情况，避免潜在问题。</p>
+</blockquote>
+</div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://pybuzs.github.io">bbiao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://pybuzs.github.io/2025/07/03/Interview/Java%E9%9D%A2%E8%AF%95%E9%A2%98/">https://pybuzs.github.io/2025/07/03/Interview/Java面试题/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://pybuzs.github.io" target="_blank">片叶不沾身的花园</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/">面试题</a></div><div class="post-share"><div class="social-share" data-image="/image/default_cover2.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/image/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/image/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/image/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/image/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/07/09/Interview/Java%E5%B9%B6%E5%8F%91%E9%9D%A2%E8%AF%95%E9%A2%98/" title="Java并发面试题"><img class="cover" src="/image/default_cover1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Java并发面试题</div></div><div class="info-2"><div class="info-item-1">Java 并发面试题基础什么是 java 中的线程安全查看答案在 Java 中，线程安全是指一个类或对象在多线程环境下能够正确执行，不会出现数据不一致或其他异常。其核心在于处理共享可变状态的访问。   说说线程的几种创建方式查看答案 继承Thread类：  重写 run() 方法。  创建子类对象并调用 start() 方法启动线程。    实现Runnable接口  实现 run() 方法。  将实现类对象作为参数传递给 Thread 构造器，调用 start() 启动线程。    实现 Callable 接口 + FutureTask  实现 Callable&lt;V&gt; 接口，指定返回值类型。 实现 call() 方法，该方法有返回值。 使用 FutureTask&lt;V&gt; 包装 Callable 对象。 将 FutureTask 对象作为参数传递给 Thread 构造器，调用 start() 启动线程。 通过 FutureTask.get() 获取线程执行结果（可能阻塞）。   使用线程池（ExecutorService）  创建线程池（如 Executor...</div></div></div></a><a class="pagination-related" href="/2025/07/02/Interview/SpringBoot%E9%9D%A2%E8%AF%95%E9%A2%98/" title="SpringBoot面试题"><img class="cover" src="/image/default_cover1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">SpringBoot面试题</div></div><div class="info-2"><div class="info-item-1">SpringBoot面试题什么是Spring Boot？有哪些优点？Spring Boot 是基于 Spring 框架的快速开发脚手架，它的核心目标是 “简化 Spring 应用的开发、配置和部署流程”。它并非替代 Spring，而是通过 “约定大于配置” 的设计理念，整合 Spring 生态的底层能力（如 IOC、AOP），解决传统 Spring 开发中 “配置繁琐、依赖冲突、部署复杂” 等痛点，让开发者能更专注于业务逻辑，快速搭建可直接运行的生产级应用。  自动配置，减少冗余配置 传统 Spring 开发需要手动写大量 XML 或注解配置（比如配置数据源、MVC 映射等），而 Spring Boot 会根据引入的依赖（如引入spring-boot-starter-web）自动推断并配置相关组件（如 Tomcat、DispatcherServlet），无需手动干预，大幅减少配置工作量。  起步依赖，解决依赖管理难题 传统开发中，需要手动引入多个相关依赖（如 Web 开发需手动加spring-web、tomcat等），还可能因版本不兼容导致冲突。Spring Boot 将常用依赖...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/07/09/Interview/Java%E5%B9%B6%E5%8F%91%E9%9D%A2%E8%AF%95%E9%A2%98/" title="Java并发面试题"><img class="cover" src="/image/default_cover1.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-09</div><div class="info-item-2">Java并发面试题</div></div><div class="info-2"><div class="info-item-1">Java 并发面试题基础什么是 java 中的线程安全查看答案在 Java 中，线程安全是指一个类或对象在多线程环境下能够正确执行，不会出现数据不一致或其他异常。其核心在于处理共享可变状态的访问。   说说线程的几种创建方式查看答案 继承Thread类：  重写 run() 方法。  创建子类对象并调用 start() 方法启动线程。    实现Runnable接口  实现 run() 方法。  将实现类对象作为参数传递给 Thread 构造器，调用 start() 启动线程。    实现 Callable 接口 + FutureTask  实现 Callable&lt;V&gt; 接口，指定返回值类型。 实现 call() 方法，该方法有返回值。 使用 FutureTask&lt;V&gt; 包装 Callable 对象。 将 FutureTask 对象作为参数传递给 Thread 构造器，调用 start() 启动线程。 通过 FutureTask.get() 获取线程执行结果（可能阻塞）。   使用线程池（ExecutorService）  创建线程池（如 Executor...</div></div></div></a><a class="pagination-related" href="/2025/08/06/Interview/JVM%E9%9D%A2%E8%AF%95%E9%A2%98/" title="JVM面试题"><img class="cover" src="/image/default_cover1.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-08-06</div><div class="info-item-2">JVM面试题</div></div><div class="info-2"><div class="info-item-1">JVM 面试题Java 内存模型中堆(Heap)和栈(Stack)的区别?   对比维度 堆（Heap） 栈（Stack，通常指虚拟机栈）    存储内容 所有对象实例（new创建的对象）、数组 局部变量（方法内定义的变量）、方法调用信息（栈帧，包含操作数栈、局部变量表等）   线程共享性 所有线程共享，是线程不安全的（需同步机制保障） 线程私有，每个线程有独立的栈，线程间不共享   生命周期 与 JVM 进程一致（随 JVM 启动而创建，退出而销毁） 与线程 &#x2F; 方法调用绑定：线程启动时创建栈，方法调用时创建栈帧，方法结束时栈帧销毁   内存管理 由 JVM 自动管理，依赖垃圾回收器（GC）回收内存 无需 GC，随方法调用 &#x2F; 线程结束自动释放内存（栈帧出栈）   大小与调整 内存空间较大（通常几 GB），可通过-Xms（初始）、-Xmx（最大）参数调整 内存空间较小（通常几 MB），可通过-Xss参数调整单个线程的栈大小   异常类型 内存不足时触发OutOfMemoryError: Java heap space 栈深度超限触发StackOverflow...</div></div></div></a><a class="pagination-related" href="/2025/08/05/Interview/MyBatis%E9%9D%A2%E8%AF%95%E9%A2%98/" title="MyBrtis面试题"><img class="cover" src="/image/default_cover2.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-08-05</div><div class="info-item-2">MyBrtis面试题</div></div><div class="info-2"><div class="info-item-1">MyBrtis面试题</div></div></div></a><a class="pagination-related" href="/2025/07/02/Interview/SpringBoot%E9%9D%A2%E8%AF%95%E9%A2%98/" title="SpringBoot面试题"><img class="cover" src="/image/default_cover1.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-02</div><div class="info-item-2">SpringBoot面试题</div></div><div class="info-2"><div class="info-item-1">SpringBoot面试题什么是Spring Boot？有哪些优点？Spring Boot 是基于 Spring 框架的快速开发脚手架，它的核心目标是 “简化 Spring 应用的开发、配置和部署流程”。它并非替代 Spring，而是通过 “约定大于配置” 的设计理念，整合 Spring 生态的底层能力（如 IOC、AOP），解决传统 Spring 开发中 “配置繁琐、依赖冲突、部署复杂” 等痛点，让开发者能更专注于业务逻辑，快速搭建可直接运行的生产级应用。  自动配置，减少冗余配置 传统 Spring 开发需要手动写大量 XML 或注解配置（比如配置数据源、MVC 映射等），而 Spring Boot 会根据引入的依赖（如引入spring-boot-starter-web）自动推断并配置相关组件（如 Tomcat、DispatcherServlet），无需手动干预，大幅减少配置工作量。  起步依赖，解决依赖管理难题 传统开发中，需要手动引入多个相关依赖（如 Web 开发需手动加spring-web、tomcat等），还可能因版本不兼容导致冲突。Spring Boot 将常用依赖...</div></div></div></a><a class="pagination-related" href="/2025/06/23/Interview/MySQL%E9%9D%A2%E8%AF%95%E9%A2%98/" title="MySQL面试题"><img class="cover" src="/image/default_cover1.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-23</div><div class="info-item-2">MySQL面试题</div></div><div class="info-2"><div class="info-item-1">MySQL面试题 此笔记为本人备考面试时整理，内容多源于网络搜集，仅作后续查阅之用，无盈利意图。若有侵权，请联系删除。 参考资料： https://javaguide.cn/ https://www.xiaolincoding.com/ https://pdai.tech https://javabetter.cn/  一、MySQL基础1、数据库三大范式查看答案 1NF 要求字段值必须是不可再分的原子值。 反例：用户信息表中地址字段存储 “北京市海淀区”，未拆分为省、市、区，违反 1NF；正例：拆分为province、city、district，每个字段独立存储。  2NF 1NF的基础上，要求非主属性完全依赖主键，避免部分依赖（如订单明细拆分）。 场景：订单明细表（（订单号+商品ID为主键）+ 金额 ），若字段订单金额仅依赖订单号，则存在部分依赖（非主属性订单金额不依赖商品ID），违反 2NF；优化：拆分为订单表（订单号、金额）和订单明细表（订单号、商品 ID、数量）。  3NF 2NF的基础上，非主键字段之间不能有依赖关系，消除传递依赖，如学生表与班级表分离。 反例：学生表...</div></div></div></a><a class="pagination-related" href="/2025/07/02/Interview/Spring%E9%9D%A2%E8%AF%95%E9%A2%98/" title="Spring面试题"><img class="cover" src="/image/default_cover2.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-02</div><div class="info-item-2">Spring面试题</div></div><div class="info-2"><div class="info-item-1">Spring面试题Ioc说一说什么是 IoC？IoC（Inversion of Control）控制反转，不是什么技术，而是一种设计思想。将你设计好的对象交给容器控制，而不是传统的在你的对象内部直接控制。  谁控制谁，控制什么？ 传统Java SE程序设计，我们直接在对象内部通过new进行创建对象，是程序主动去创建依赖对象；而IoC是有专门一个容器来创建这些对象，即由Ioc容器来控制对象的创建；谁控制谁？当然是IoC 容器控制了对象；控制什么？那就是主要控制了外部资源获取（不只是对象包括比如文件等）。  为何是反转，哪些方面反转了？ 有反转就有正转，传统应用程序是由我们自己在对象中主动控制去直接获取依赖对象，也就是正转；而反转则是由容器来帮忙创建及注入依赖对象；为何是反转？因为由容器帮我们查找及注入依赖对象，对象只是被动的接受依赖对象，所以是反转；哪些方面反转了？依赖对象的获取被反转了。   传统程序设计下，都是主动去创建相关对象然后再组合起来：  当有了IoC&#x2F;DI的容器后，在客户端类中不再主动去创建这些对象了，如图  说一说什么是DI？DI (Dependency ...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/image/touxiang.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">bbiao</div><div class="author-info-description">不要假装努力，结果不会陪你演戏</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" href="https://pybuzs.github.io/"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java-%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">Java 面试题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-%E8%AF%AD%E6%B3%95%E5%9F%BA%E7%A1%80%E7%BB%83%E4%B9%A0%E9%A2%98"><span class="toc-number">1.1.</span> <span class="toc-text">Java 语法基础练习题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BF%BB%E8%BD%AC%E6%95%B4%E6%95%B0"><span class="toc-number">1.1.1.</span> <span class="toc-text">翻转整数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E6%8D%A2%E6%95%B4%E6%95%B0"><span class="toc-number">1.1.2.</span> <span class="toc-text">字符串转换整数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E5%92%8C%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">1.2.</span> <span class="toc-text">数组和字符串</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E4%B8%ADString%E3%80%81StringBuffer%E5%92%8CStringBuilder%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.2.1.</span> <span class="toc-text">Java中String、StringBuffer和StringBuilder的区别是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#String-str-new-String-%E2%80%9Cabc%E2%80%9D-%E5%88%9B%E5%BB%BA%E4%BA%86%E5%87%A0%E4%B8%AA%E5%AF%B9%E8%B1%A1%EF%BC%9F"><span class="toc-number">1.2.2.</span> <span class="toc-text">String str &#x3D; new String(“abc”) 创建了几个对象？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#String-str1-new-String-%E2%80%9Cabc%E2%80%9D-%E5%92%8C-String-str2-%E2%80%9Cabc%E2%80%9D-%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">1.2.3.</span> <span class="toc-text">String str1 &#x3D; new String(“abc”) 和 String str2 &#x3D; “abc” 的区别？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#intern%E6%96%B9%E6%B3%95%E6%9C%89%E4%BB%80%E4%B9%88%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="toc-number">1.2.4.</span> <span class="toc-text">intern方法有什么作用？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.3.</span> <span class="toc-text">面向对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E7%B1%BB%E5%92%8C%E6%8E%A5%E5%8F%A3%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB"><span class="toc-number">1.3.1.</span> <span class="toc-text">抽象类和接口有什么区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E4%B8%AD%E7%9A%84%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%E6%98%AF%E6%8C%89%E5%80%BC%EF%BC%8C%E8%BF%98%E6%98%AF%E6%8C%89%E5%BC%95%E7%94%A8%EF%BC%9F"><span class="toc-number">1.3.2.</span> <span class="toc-text">Java中的参数传递是按值，还是按引用？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8F%8D%E5%B0%84%EF%BC%9F"><span class="toc-number">1.3.3.</span> <span class="toc-text">什么是反射？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E5%9C%A8%E4%BD%A0%E5%B9%B3%E6%97%B6%E5%86%99%E4%BB%A3%E7%A0%81%E6%88%96%E8%80%85%E6%A1%86%E6%9E%B6%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E6%9C%89%E5%93%AA%E4%BA%9B"><span class="toc-number">1.3.4.</span> <span class="toc-text">反射在你平时写代码或者框架中的应用场景有哪些?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFJava%E4%B8%AD%E7%9A%84%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%EF%BC%9F"><span class="toc-number">1.3.5.</span> <span class="toc-text">什么是Java中的动态代理？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JDK%E7%9A%84%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E5%92%8CCGLIB%E7%9A%84%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">1.3.6.</span> <span class="toc-text">JDK的动态代理和CGLIB的动态代理有什么区别？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFJava-%E7%9A%84SPI-%E6%9C%BA%E5%88%B6%EF%BC%9F"><span class="toc-number">1.3.7.</span> <span class="toc-text">什么是Java 的SPI 机制？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SPI-%E4%B8%8E-API-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.3.8.</span> <span class="toc-text">SPI 与 API 的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E6%9C%89%E5%87%A0%E7%A7%8D%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="toc-number">1.3.9.</span> <span class="toc-text">单例模式有几种实现方式?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E5%8F%8D%E5%B0%84%E5%92%8C%E5%BA%8F%E5%88%97%E5%8C%96%E7%A0%B4%E5%9D%8F%E5%8D%95%E4%BE%8B"><span class="toc-number">1.3.10.</span> <span class="toc-text">如何避免反射和序列化破坏单例?</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%9B%E5%9E%8B"><span class="toc-number">1.4.</span> <span class="toc-text">泛型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E4%B8%AD%E6%B3%9B%E5%9E%8B%E6%93%A6%E9%99%A4%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.4.1.</span> <span class="toc-text">Java中泛型擦除是什么？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6"><span class="toc-number">1.5.</span> <span class="toc-text">Java集合框架</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ArrayList-%E5%92%8C-LinkedList-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">1.5.1.</span> <span class="toc-text">ArrayList 和 LinkedList 有什么区别？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ArrayList%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E5%90%97%EF%BC%9F%E6%8A%8AArrayList%E5%8F%98%E6%88%90%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E6%9C%89%E5%93%AA%E4%BA%9B%E6%96%B9%E6%B3%95%EF%BC%9F"><span class="toc-number">1.5.2.</span> <span class="toc-text">ArrayList线程安全吗？把ArrayList变成线程安全有哪些方法？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B4%E4%B8%80%E4%B8%8BCopyOnWriteArrayList"><span class="toc-number">1.5.3.</span> <span class="toc-text">说一下CopyOnWriteArrayList</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B4%E4%B8%80%E4%B8%8B-Collections-synchronizedList"><span class="toc-number">1.5.4.</span> <span class="toc-text">说一下 Collections.synchronizedList</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CopyOnWriteArrayList%E5%92%8CCollections-synchronizedList%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.5.5.</span> <span class="toc-text">CopyOnWriteArrayList和Collections.synchronizedList的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ArrayList%E7%9A%84%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6%EF%BC%9F"><span class="toc-number">1.5.6.</span> <span class="toc-text">ArrayList的扩容机制？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B4%E4%B8%80%E4%B8%8BHashMap%E7%9A%84%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">1.5.7.</span> <span class="toc-text">说一下HashMap的底层数据结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="toc-number">1.5.8.</span> <span class="toc-text">哈希冲突解决方法有哪些？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HashMap%E5%92%8CHashTable%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.5.9.</span> <span class="toc-text">HashMap和HashTable的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ConcurrentHashMap%E5%92%8CHashTable%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.5.10.</span> <span class="toc-text">ConcurrentHashMap和HashTable的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HashSet%E5%92%8CHashMap%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.5.11.</span> <span class="toc-text">HashSet和HashMap的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HashMap%E7%9A%84put%E6%B5%81%E7%A8%8B"><span class="toc-number">1.5.12.</span> <span class="toc-text">HashMap的put流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HashMap%E7%9A%84%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6"><span class="toc-number">1.5.13.</span> <span class="toc-text">HashMap的扩容机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%B2%E8%AE%B2-LinkedHashMap"><span class="toc-number">1.5.14.</span> <span class="toc-text">讲讲 LinkedHashMap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%B2%E8%AE%B2TreeMap"><span class="toc-number">1.5.15.</span> <span class="toc-text">讲讲TreeMap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%B2%E8%AE%B2ConcurrentHashMap"><span class="toc-number">1.5.16.</span> <span class="toc-text">讲讲ConcurrentHashMap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ConcurrentHashMap-%E4%B8%BA%E4%BB%80%E4%B9%88-key-%E5%92%8C-value-%E4%B8%8D%E8%83%BD%E4%B8%BA-null%EF%BC%9F"><span class="toc-number">1.5.17.</span> <span class="toc-text">ConcurrentHashMap 为什么 key 和 value 不能为 null？</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/08/06/Interview/JVM%E9%9D%A2%E8%AF%95%E9%A2%98/" title="JVM面试题"><img src="/image/default_cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JVM面试题"/></a><div class="content"><a class="title" href="/2025/08/06/Interview/JVM%E9%9D%A2%E8%AF%95%E9%A2%98/" title="JVM面试题">JVM面试题</a><time datetime="2025-08-06T02:05:00.000Z" title="发表于 2025-08-06 10:05:00">2025-08-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/08/05/Interview/MyBatis%E9%9D%A2%E8%AF%95%E9%A2%98/" title="MyBrtis面试题"><img src="/image/default_cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MyBrtis面试题"/></a><div class="content"><a class="title" href="/2025/08/05/Interview/MyBatis%E9%9D%A2%E8%AF%95%E9%A2%98/" title="MyBrtis面试题">MyBrtis面试题</a><time datetime="2025-08-05T02:37:41.000Z" title="发表于 2025-08-05 10:37:41">2025-08-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/09/Interview/Java%E5%B9%B6%E5%8F%91%E9%9D%A2%E8%AF%95%E9%A2%98/" title="Java并发面试题"><img src="/image/default_cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java并发面试题"/></a><div class="content"><a class="title" href="/2025/07/09/Interview/Java%E5%B9%B6%E5%8F%91%E9%9D%A2%E8%AF%95%E9%A2%98/" title="Java并发面试题">Java并发面试题</a><time datetime="2025-07-09T06:20:18.000Z" title="发表于 2025-07-09 14:20:18">2025-07-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/03/Interview/Java%E9%9D%A2%E8%AF%95%E9%A2%98/" title="Java面试题"><img src="/image/default_cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java面试题"/></a><div class="content"><a class="title" href="/2025/07/03/Interview/Java%E9%9D%A2%E8%AF%95%E9%A2%98/" title="Java面试题">Java面试题</a><time datetime="2025-07-03T04:35:57.000Z" title="发表于 2025-07-03 12:35:57">2025-07-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/02/Interview/SpringBoot%E9%9D%A2%E8%AF%95%E9%A2%98/" title="SpringBoot面试题"><img src="/image/default_cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="SpringBoot面试题"/></a><div class="content"><a class="title" href="/2025/07/02/Interview/SpringBoot%E9%9D%A2%E8%AF%95%E9%A2%98/" title="SpringBoot面试题">SpringBoot面试题</a><time datetime="2025-07-02T15:29:57.000Z" title="发表于 2025-07-02 23:29:57">2025-07-02</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 By bbiao</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.0-b2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><div class="aplayer no-destroy" data-id="14100448450" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><script src="/styles/fish.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      true
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
